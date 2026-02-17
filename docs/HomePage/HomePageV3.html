@@ -1,0 +1,454 @@
+<!-- Primera versión de mi portafolio online (Esqueleto HTML)-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- 
+    ========================================
+    METADATOS ESENCIALES
+    ========================================
+    -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio V3 - Home</title>
+    <link rel="stylesheet" href="HP_stylesV3.css">
+
+    <!--SEO Básico-->
+    <title>Iván Rodas - Developer Profile | Web Dev in formation</title>
+    <meta name="description" content="Professional profile of Iván Rodas. Web Dev in formation">
+    <meta name="keywords"
+        content="professional profile, web developer, web dev, portfolio, HTML, CSS, JavaScript, web develpoment">
+    <meta name="author" content="Iván Rodas">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph para Redes Sociales -->
+    <meta property="og:title" content="Iván Rodas - My Personal Profile">
+    <meta property="og:description"
+        content="Discover my learning trip for web develop  ment, my projects and my passion for tech.">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="profile">
+    <meta property="og:site_name" content="My Personal Profile">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Iván Rodas - Web Developer">
+    <meta name="twitter:description" content="My personal profile as web developer.">
+    <meta name="twitter:image" content="https://miperfilpersonal.com/assets/images/twitter-card.jpg">
+    <meta name="twitter:creator" content="@nishix_03">
+
+    <!-- URLs Canónicas -->
+    <link rel="canonical" href="https://miperfilpersonal.com/">
+    <link rel="alternate" hreflang="es" href="https://miperfilpersonal.com/es/">
+    <link rel="alternate" hreflang="en" href="https://miperfilpersonal.com/en/">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <!--Google Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:slnt,wght,CRSV,ELSH,ELXP@-8..0,100..900,0..1,0..100,0..100&family=Orbitron:wght@400..900&family=Press+Start+2P&family=Share+Tech+Mono&family=VT323&display=swap"
+        rel="stylesheet">
+
+
+    <!-- CDN - libreria de iconos✨ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+</head>
+
+<body>
+    <!-- 
+    ========================================
+    HEADER PRINCIPAL
+    ========================================
+    -->
+
+    <nav class="sidebar">
+
+        <li class="sidebar__option sidebar__option--home">
+            <i class="fa-solid fa-house"></i>
+            <span class="sidebar__label sidebar__label--home">Home</span>
+        </li>
+
+        <li class="sidebar__option sidebar__option--aboutme">
+            <i class="fa-solid fa-address-card"></i>
+            <span class="sidebar__label sidebar__label--aboutme">About me</span>
+        </li>
+
+        <li class="sidebar__option sidebar__option--proyects">
+            <i class="fa-brands fa-react"></i>
+            <span class="sidebar__label sidebar__label--proyects">Proyects</span>
+        </li>
+
+        <li class="sidebar__option sidebar__option--blog">
+            <i class="fa-sharp fa-solid fa-blog"></i>
+            <span class="sidebar__label sidebar__label--blog">Blog</span>
+        </li>
+
+        <li class="sidebar__option sidebar__option--newsletter">
+            <i class="fa-solid fa-envelope"></i>
+            <span class="sidebar__label sidebar__label--blog">Newsletter</span>
+        </li>
+
+        <li class="sidebar__option sidebar__option--contact">
+            <i class="fa-solid fa-address-book"></i>
+            <span class="sidebar__label sidebar__label--contact">Contact methods</span>
+        </li>
+
+        <li class="sidebar__option sidebar__option--chat">
+            <i class="fa-solid fa-comment-dots"></i>
+            <span class="sidebar__label sidebar__label--chat">Chat assistant</span>
+        </li>
+    </nav>
+
+    <header class="header">
+        <!-- Logo y Marca Personal -->
+        <div class="header__container">
+            <div class="header__brand">
+                <h1 class="header__name">Iván Rodas ⚛︎</h1>
+                <p class="header__tagline">Software Engineer: FullStack Web Developer</p>
+            </div>
+
+            <!-- Navegación Principal -->
+            <nav class="nav__mobile" aria-label="Main Navigation">
+                <div class="nav__list">
+                    <li class="nav__item">
+                        <a href="/HomePage/HomePageV1.html" aria-current="page"
+                            class="nav__link nav__link--active">Home</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="/sobre-mi.html" class="nav__link">About me</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="/habilidades.html" class="nav__link">Skills</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="/proyectos.html" class="nav__link">Proyects</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="/blog.html" class="nav__link">Blog</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="/contacto.html" class="nav__link">Contact</a>
+                    </li>
+                </div>
+            </nav>
+
+
+
+            <!-- Acciones Rápidas -->
+            <div class="header__actions">
+                <li class="actions__item">
+                    <a href="/assets/documents/cv-ivan-rodas.pdf" download aria-label="Descargar CV en PDF"
+                        class="action__link">📄 Download
+                        my CV</a>
+                </li>
+
+                <li class="actions__item">
+                    <p class="actions__subitem">Language Selector: </p>
+                    <select aria-label="Language Selection" class="actions_subitem">
+                        <option value="sp" selected>SP</option>
+                        <option value="en">EN</option>
+                    </select>
+                </li>
+                <!-- Selector de Idioma -->
+                <div class="actions__item">
+
+                </div>
+
+            </div>
+    </header>
+
+    <!-- 
+    ========================================
+    CONTENIDO PRINCIPAL
+    ========================================
+    -->
+
+    <main id="contenido__principal" role="main">
+
+
+        <!-- Hero Section -->
+        <section id="hero" aria-labelledby="hero">
+            <div class="hero__container">
+                <h1 class="hero__title">¡Hi! I'm Iván Rodas (Nishix_03)</h1>
+                <p class="hero__subtitle"><strong>Software Engineer: FullStack Web Developer</strong></p>
+
+                <!-- Imagen de Perfil -->
+                <section class="hero__description">
+                    <figure class="hero__figure">
+                        <picture>
+                            <source media="(min-width: 768px)" srcset="/docs/assets/photos/example.jpeg"
+                                type="image/webp">
+                            <source media="(min-width: 768px)" srcset="/HomePage/assets/photos/example.jpeg">
+                            <img src="/HomePage/assets/photos/example.jpeg" alt="Iván Rodas - Software Engineer"
+                                width="200" height="200" loading="eager" class="figure__photo">
+                        </picture>
+                        <figcaption class="photo_desc">Example of photo</figcaption>
+                    </figure>
+
+                    <p class="hero__description__text">I'm learning <span class="HTML">HTML</span> and <span
+                            class="CSS">CSS</span> in order to create
+                        web
+                        sites.
+                        Also im looking foward to learn Backend using <span class="Java">Java</span> (SpringBoot).
+                        <strong>My passion</strong>: Transform ideas into incredible web
+                        experiences.
+                    </p>
+                </section>
+
+                <!-- Call to Actions -->
+                <div class="hero__buttons">
+                    <a href="#my-blog" class="hero__button button--secondary">View My Blog</a>
+                    <a href="#my-skills" class="hero__button button--primary">View My Skills</a>
+                    <a href="#proyectos-destacados" class="hero__button button--primary">View My Proyects</a>
+                    <a href="/contacto.html" class="hero__button button--secondary">Contact me</a>
+                </div>
+
+                <!-- Estadísticas Rápidas -->
+                <div class="hero__stats">
+
+                    <div class="hero__stat" id="hero__stat1">
+                        <data class="stat__data" value="1">1+</data>
+                        <span class="stat__label">Months learning</span>
+                    </div>
+
+                    <div class="hero__stat" id="hero__stat2">
+                        <data class="stat__data" value="1">1+</data>
+                        <span class="stat__label">Created Proyects</span>
+                    </div>
+
+                    <div class="hero__stat" id="hero__stat3">
+                        <data class="stat__data" value="3">2+</data>
+                        <span class="stat__label">Technologies</span>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Sobre Mí -->
+        <section id="about" aria-labelledby="about-titulo">
+            <div class="about__container">
+                <div class="trip__container">
+
+                    <h3 class="trip__title">My trip into Software Development</h3>
+
+                    <div class="trip__description">
+                        <p class="desc__main">
+                            I am a <strong>software engineer in training</strong>, currently learning <span
+                                class="HTML">HTML</span> and <span class="CSS">CSS</span> to
+                            create
+                            beautiful
+                            and
+                            functional
+                            websites.
+                        </p>
+
+                        <p class="desc__second">
+                            I'm passionate about technology and design. Every day I discover new ways to improve
+                            my
+                            skills
+                            and
+                            create
+                            <em>better web experiences</em>.
+                        </p>
+                    </div>
+                </div>
+
+                <blockquote class="cite__container">
+                    <p class="cite__content">
+                        "Software is art. I'm the painter"
+                    </p>
+                    <cite class="cite__label">— My philosophy</cite>
+                </blockquote>
+
+                <!-- Valores Personales -->
+
+                <div class="values__container">
+                    <h3 class="values__title">My Values</h3>
+                    <dl class="value__list">
+                        <div class="value__item">
+                            <dt class="value__name"><strong>🎯 Dedication:</strong></dt>
+                            <dd class="value__desc">Committed to my daily learning</dd>
+                        </div>
+
+                        <div class="value__item">
+                            <dt class="value__name"><strong>📚 Curiosity:</strong></dt>
+                            <dd class="value__desc">Always exploring new technologies</dd>
+                        </div>
+
+                        <div class="value__item">
+                            <dt class="value__name"><strong>🤝 Community:</strong></dt>
+                            <dd class="value__desc">Learning and sharing with others</dd>
+                        </div>
+
+                        <div class="value__item">
+                            <dt class="value__name"><strong>💡 Creativity:</strong></dt>
+                            <dd class="value__desc">Seeking innovative solutions</dd>
+                        </div>
+                    </dl>
+                </div>
+
+
+        </section>
+
+
+        <!-- Habilidades Técnicas -->
+        <section id="my-skills" aria-labelledby="skills-titulo">
+            <h3 class="skills-titulo">My Skills</h3>
+
+            <p class="skills__subtitle">The detailed progress bars about my knowledge</p>
+            <ul class="skills__list">
+
+                <li class="skill__item skill__item--html" id="skill1__container">
+
+                    <div class="skill__icon">
+                        <span class="skill__label skill__label--html">HTML5 (45%)</span>
+                    </div>
+
+                    <div class="skill__bar">
+                        <div class="skill__progress skill__progress--html"></div>
+                    </div>
+
+                </li>
+
+                <li class="skill__item skill__item--css" id="skill2__container">
+
+                    <div class="skill__icon">
+                        <span class="skill__label skill__label--css">CSS3 (0%)</span>
+                    </div>
+
+                    <div class="skill__bar">
+                        <div class="skill__progress skill__progress--css"></div>
+                    </div>
+
+                </li>
+
+                <li class="skill__item skill__item--js" id="skill3__container">
+
+                    <div class="skill__icon">
+                        <span class="skill__label skill__label--js">JavaScript (0%)</span>
+                    </div>
+
+                    <div class="skill__bar">
+                        <div class="skill__progress skill__progress--js"></div>
+                    </div>
+
+                </li>
+
+                <li class="skill__item skill__item--java" id="skill4__container">
+
+                    <div class="skill__icon">
+                        <span class="skill__label skill__label--java">Java (SpringBoot)</span>
+                    </div>
+
+                    <div class="skill__bar">
+                        <div class="skill__progress skill__progress--java"></div>
+                    </div>
+
+                </li>
+
+            </ul>
+        </section>
+
+        <!-- TODO: Blog Reciente 
+        <section id="my-blog" aria-labelledby="blog-titulo">
+            <h2 id="blog-titulo">Learning Blog</h2>
+            <p>
+                Sharing my experience learning about creating Software
+            </p>
+
+        <article>
+            <time datetime="2025-01-15">15 Enero 2025</time>
+            <h3>
+                <a href="/blog/mi-primer-mes.html">
+                    Learning the basics for Web Development
+                </a>
+            </h3>
+            <p>
+                Reflections about my learning process for HTML, CSS and JS.
+            </p>
+            <span>📖 5 mins of lecture</span>
+        </article>
+        </section> -->
+    </main>
+
+
+    <!-- 
+    ========================================
+    FOOTER COMPLETO
+    ========================================
+    -->
+
+    <!-- TODO: Contacto 
+    <section class="contact__methods" aria-labelledby="footer-contact">
+        <h2 id="footer-contact">Contact</h2>
+        <div class="contact__method">
+            <h3 class="contact__method-title">📧 Email</h3>
+            <a href="mailto:ivannishix@gmail.com" class="contact__link">
+                ivannishix@gmail.com
+            </a>
+        </div>
+
+        <div class="contact__method">
+            <h3 class="contact__method-title">💻 GitHub</h3>
+            <a href="" class="contact__link">
+                @nishix_03
+            </a>
+        </div>
+
+        <div class="contact__method">
+            <h3 class="contact__method-title">💼 LinkedIn</h3>
+            <a href="" class="contact__link">
+                /in/nishix_03
+            </a>
+        </div>
+        </div>
+    </section>
+-->
+
+    <footer class="footer" role="contentinfo">
+        <div class="footer__container">
+
+        </div>
+
+        <!-- Enlaces del Footer -->
+        <nav class="footer__nav" aria-label="Enlaces del footer">
+            <a href="/HomePage/HomePageV1.html" class="footer__link">Home</a>
+            <a href="/sobre-mi.html" class="footer__link">About me</a>
+            <a href="/proyectos.html" class="footer__link">Proyects</a>
+            <a href="/blog.html" class="footer__link">Blog</a>
+            <a href="/contacto.html" class="footer__link">Contact</a>
+        </nav>
+
+
+        <!-- Footer Bottom -->
+        <div>
+            <p class="footer__copyright">&copy; 2025 Iván Rodas - My Personal Profile. All rights reserved.</p>
+
+            <nav class="legal__links" aria-label="Enlaces legales">
+                <a class="legal__link" href="/privacidad.html">Privacy</a>
+                <a class="legal__link" href="/terminos.html">Terms</a>
+                <a class="legal__link" href="/accesibilidad.html">Accesibility</a>
+            </nav>
+
+            <p class="footer__credits">
+                Developed by: Nishix_03
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>
