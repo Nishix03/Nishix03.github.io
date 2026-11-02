@@ -1,0 +1,56 @@
+html {
+  background: var(--color-bg);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+a {
+  color: var(--color-mint);
+}
+
+.link:hover {
+  color: var(--color-neon);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Foco visible: contorno neón de 2 px (A19). */
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-neon);
+  outline-offset: 3px;
+  transition: outline-offset 100ms var(--ease-p3r);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: var(--font-pixel);
+}
+
+.display {
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

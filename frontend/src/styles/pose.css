@@ -1,0 +1,234 @@
+/*
+  Figura de pose por apartado (plan §15.3). Hoy es el boceto SVG animado; cuando existan los renders
+  3D se sustituye el <svg> por la tira WebP con steps() sin tocar este marco ni los tiempos.
+  Mobile first: debajo del contenido, hasta 280 px. Desde 1024 px se coloca al lado, a tamaño mediano.
+*/
+.pose-fig {
+  display: grid;
+  box-sizing: border-box;
+  place-items: center;
+  flex: 1 1 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  padding: 22px;
+  border: 2px dashed var(--line-strong);
+  background: linear-gradient(
+    160deg,
+    rgba(73, 224, 240, 0.14),
+    rgba(57, 255, 136, 0.05) 70%,
+    rgba(7, 17, 12, 0)
+  );
+  clip-path: polygon(8% 0, 100% 3%, 92% 100%, 0 97%);
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-mint);
+}
+@media (min-width: 1024px) {
+  .pose-fig {
+    flex: 0 0 var(--pose-w, 240px);
+    height: var(--pose-h, 330px);
+    max-width: none;
+    margin: 0;
+  }
+  .pose-fig--sticky {
+    position: sticky;
+    top: 90px;
+  }
+  .pose-fig--end {
+    align-self: flex-end;
+  }
+}
+.pose-fig__tag {
+  margin-top: 6px;
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  color: var(--color-neon);
+}
+.pose-fig__timeline {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--color-ink);
+  text-align: left;
+}
+
+/* Animaciones del boceto (2,5 s, 12 fps de guion). Cada una mueve solo una parte del cuerpo. */
+.sk-breathe {
+  animation: sk-breathe 2.5s var(--ease-breathe) infinite;
+}
+.sk-present {
+  animation: sk-present 2.5s var(--ease-breathe) infinite;
+}
+.sk-glance {
+  animation: sk-glance 2.5s var(--ease-breathe) infinite;
+}
+.sk-type {
+  animation: sk-type 0.17s steps(2) infinite;
+}
+.sk-lookup {
+  animation: sk-lookup 2.5s var(--ease-breathe) infinite;
+}
+.sk-tile {
+  animation: float 2.5s var(--ease-breathe) infinite;
+}
+.sk-leg-a {
+  animation: frame-a 0.5s steps(1) infinite;
+}
+.sk-leg-b {
+  opacity: 0;
+  animation: frame-b 0.5s steps(1) infinite;
+}
+.sk-walk {
+  animation: bob 0.25s var(--ease-breathe) infinite;
+}
+.sk-pack {
+  animation: sk-pack 0.5s var(--ease-breathe) 0.08s infinite;
+}
+.sk-read {
+  animation: sk-read 2.5s var(--ease-breathe) infinite;
+}
+.sk-nod {
+  animation: sk-nod 2.5s var(--ease-breathe) infinite;
+}
+.sk-invite {
+  animation: sk-invite 2.5s var(--ease-breathe) infinite;
+}
+.sk-mail {
+  animation: sk-mail 2.5s var(--ease-breathe) infinite;
+}
+.sk-pose-in {
+  animation: fade-in 0.15s var(--ease-p3r) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-leg-b {
+    opacity: 0;
+  }
+}
+
+@keyframes sk-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.015);
+  }
+}
+@keyframes sk-present {
+  0%,
+  20% {
+    transform: rotate(0deg);
+  }
+  44%,
+  64% {
+    transform: rotate(30deg);
+  }
+  92%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes sk-glance {
+  0%,
+  48% {
+    transform: rotate(0deg);
+  }
+  56%,
+  64% {
+    transform: rotate(-5deg);
+  }
+  72%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes sk-type {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+@keyframes sk-lookup {
+  0%,
+  32% {
+    transform: rotate(0deg);
+  }
+  40%,
+  52% {
+    transform: rotate(-6deg) translateY(-2px);
+  }
+  60%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes sk-pack {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(3px);
+  }
+}
+@keyframes sk-read {
+  0%,
+  40% {
+    transform: rotate(0deg);
+  }
+  48%,
+  64% {
+    transform: rotate(7deg);
+  }
+  72%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes sk-nod {
+  0%,
+  20% {
+    transform: rotate(0deg);
+  }
+  32% {
+    transform: rotate(4deg);
+  }
+  44%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes sk-invite {
+  0%,
+  28% {
+    transform: rotate(0deg);
+  }
+  52%,
+  72% {
+    transform: rotate(-58deg);
+  }
+  96%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes sk-mail {
+  0%,
+  26% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  34%,
+  72% {
+    opacity: 1;
+    transform: none;
+  }
+  80%,
+  100% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}

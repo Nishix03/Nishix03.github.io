@@ -1,0 +1,399 @@
+/*
+  Animaciones del boceto, sin cambios de tiempos ni curvas.
+  Regla del plan §11.1: solo transform, opacity, filter y clip-path (compositor, sin tocar el layout).
+  Dos capas en los sprites: la tira WebP cambia de cuadro con steps() (ver <Sprite />);
+  "fx-bob", "fx-float", "fx-fly"... mueven con transform continuo.
+*/
+
+/* ---------- Entradas de página ---------- */
+.page-enter {
+  animation: circle-in 0.6s var(--ease-p3r) both;
+}
+.sweep {
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 60%;
+  background: var(--sel);
+  transform: translateX(-140%) skewX(-20deg);
+  animation: sweep 0.55s var(--ease-p3r) both;
+  pointer-events: none;
+  z-index: 30;
+}
+.sweep--white {
+  background: var(--color-paper);
+  animation-delay: 0.06s;
+  width: 40%;
+}
+.fx-flip {
+  transform-origin: 50% 50%;
+  animation: flip-in 0.45s var(--ease-p3r) both;
+}
+.fx-cascade {
+  animation: cascade 0.35s var(--ease-p3r) both;
+}
+.fx-seg {
+  transform-origin: left center;
+  animation: seg-in 0.25s var(--ease-p3r) both;
+}
+.fx-fade {
+  animation: fade-in 0.15s var(--ease-p3r) both;
+}
+
+/* ---------- Sprites: movimiento continuo ---------- */
+.fx-bob {
+  animation: bob 1.6s var(--ease-breathe) infinite;
+}
+.fx-walk {
+  animation: bob 0.7s var(--ease-breathe) infinite;
+}
+.fx-float {
+  animation: float 2.6s var(--ease-breathe) infinite;
+}
+.fx-fly {
+  animation: fly 8s var(--ease-breathe) infinite;
+}
+.fx-patrol {
+  animation: patrol 18s ease-in-out infinite;
+}
+.fx-trek {
+  animation: trek 11s linear infinite;
+}
+.fx-glow {
+  animation: breathe 2.4s var(--ease-breathe) infinite;
+}
+.fx-firefly {
+  animation: orbit 6s var(--ease-breathe) infinite;
+}
+.fx-swirl {
+  animation: spin 40s linear infinite;
+}
+.fx-menace {
+  animation: menace 2.4s var(--ease-breathe) infinite;
+}
+.fx-needle {
+  animation: needle 2.8s var(--ease-breathe) infinite;
+}
+.fx-eco-beat {
+  transform-origin: 50% 100%;
+  animation: eco-beat 0.6s var(--ease-p3r) infinite;
+}
+.fx-beat-key {
+  animation: beat-key 0.6s var(--ease-p3r) infinite;
+}
+
+/* ---------- Sprites: sacudida ocasional ---------- */
+.fx-glitch {
+  animation: glitch 5s steps(1) infinite;
+}
+
+/* ---------- Pausa fuera de pantalla o con la pestaña oculta (A14) ---------- */
+[data-paused='true'],
+[data-paused='true'] *,
+:root[data-hidden='true'] * {
+  animation-play-state: paused !important;
+}
+
+/* ---------- Movimiento reducido: estado final, sin recorrido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .hero__bubble,
+  .sweep {
+    opacity: 0;
+  }
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes circle-in {
+  from {
+    clip-path: circle(0% at 92% 4%);
+  }
+  to {
+    clip-path: circle(150% at 92% 4%);
+  }
+}
+@keyframes sweep {
+  from {
+    transform: translateX(-140%) skewX(-20deg);
+  }
+  to {
+    transform: translateX(260%) skewX(-20deg);
+  }
+}
+@keyframes flip-in {
+  from {
+    transform: perspective(900px) rotateY(-90deg);
+    opacity: 0;
+  }
+  to {
+    transform: perspective(900px) rotateY(0deg);
+    opacity: 1;
+  }
+}
+@keyframes cascade {
+  from {
+    opacity: 0;
+    transform: translate(48px, 18px) skewX(-12deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes seg-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes throb {
+  0%,
+  100% {
+    transform: scaleX(1) scaleY(1);
+  }
+  50% {
+    transform: scaleX(1.02) scaleY(1.08);
+  }
+}
+@keyframes chat-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+@keyframes frame-a {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes frame-b {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes fly {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(70px, -40px);
+  }
+  50% {
+    transform: translate(140px, 10px);
+  }
+  75% {
+    transform: translate(50px, 50px);
+  }
+}
+@keyframes patrol {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+}
+@keyframes glitch {
+  0%,
+  90% {
+    transform: translateX(0);
+  }
+  91% {
+    transform: translateX(3px);
+  }
+  93% {
+    transform: translateX(-2px);
+  }
+  95%,
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+@keyframes orbit {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(22px, -14px);
+  }
+  50% {
+    transform: translate(8px, -30px);
+  }
+  75% {
+    transform: translate(-12px, -10px);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes menace {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate(4px, -6px);
+    opacity: 1;
+  }
+}
+@keyframes needle {
+  0%,
+  100% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+@keyframes trek {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+@keyframes eco-beat {
+  0% {
+    transform: translateY(0) scale(1.05, 0.94);
+  }
+  20% {
+    transform: translateY(-6px) scale(0.98, 1.03);
+  }
+  50%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+}
+@keyframes beat-key {
+  0% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.15);
+  }
+  40%,
+  100% {
+    transform: scale(1);
+  }
+}
+/* Hero (plan §10.6) */
+@keyframes drift {
+  from {
+    transform: translateX(-40px) skewX(-20deg);
+  }
+  to {
+    transform: translateX(40px) skewX(-20deg);
+  }
+}
+@keyframes rise {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-640px);
+    opacity: 0;
+  }
+}
+@keyframes sil-drop {
+  from {
+    transform: translate(-260px, -520px) rotate(-75deg);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0) rotate(-24deg);
+    opacity: 1;
+  }
+}
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(1.5deg);
+  }
+}
