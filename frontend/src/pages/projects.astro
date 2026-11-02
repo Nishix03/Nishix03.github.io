@@ -1,0 +1,303 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageShell from '../components/PageShell.astro';
+import PoseFigure from '../components/PoseFigure.astro';
+import TarotBack from '../components/TarotBack.astro';
+import Sprite from '../components/Sprite.astro';
+import { getContent } from '../content';
+
+const { projects, ui } = getContent();
+const page = ui.pages.projects;
+const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
+---
+
+<BaseLayout title={`${page.title} — ${ui.siteTitle}`}>
+  <PageShell
+    word={page.word}
+    num={page.num}
+    wordSize={220}
+    wordTop={60}
+    wordRight={-40}
+    wordRotate={-12}
+  >
+    <div class="projects__head fx-cascade">
+      <h2 class="projects__title display">{page.title}</h2>
+    </div>
+    <p class="projects__hint mono fx-cascade" style="animation-delay: .06s">
+      {page.hint}
+    </p>
+
+    <div class="projects__layout">
+      <ol
+        class="projects__list"
+        data-select-group
+        data-select-attr="aria-pressed"
+        data-select-targets="#project-cards,#project-details,#project-numerals"
+      >
+        {projects.map((project, i) => (
+          <li class="fx-cascade" style={`animation-delay: ${(0.1 + i * 0.06).toFixed(2)}s`}>
+            <button
+              class="project-row"
+              type="button"
+              data-select-item
+              aria-pressed={i === 0 ? 'true' : 'false'}
+            >
+              <span class="project-row__slash" aria-hidden="true" />
+              <span class="project-row__plate" aria-hidden="true" />
+              <span class="project-row__in">
+                <span class="project-row__badge">{project.numeral}</span>
+                <span class="projects__row-text">
+                  <span class="projects__arcana mono">{project.arcana}</span>
+                  <span class="projects__name">{project.name}</span>
+                  <span class="projects__tag mono">{project.tag}</span>
+                </span>
+                <span class="projects__rank">
+                  <span class="projects__rank-label">{page.rank}</span>
+                  <span class="projects__rank-value">{project.rank}</span>
+                </span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ol>
+
+      <div class="projects__display">
+        <!-- Reverso de carta detrás, inclinado; Argenta vuela sobre su esquina -->
+        <div class="projects__card-back" id="project-cards" aria-hidden="true">
+          {projects.map((project, i) => (
+            <div class="projects__panel" data-panel hidden={i !== 0}>
+              <TarotBack
+                numeral={project.numeral}
+                title={project.arcanaTitle}
+                symbol={project.symbol}
+              />
+            </div>
+          ))}
+        </div>
+        <div class="actor projects__argenta" aria-hidden="true" data-loop>
+          <div class="fx-float" style="position:absolute;inset:0">
+            <Sprite sprite="argenta" fallback="Argenta" />
+          </div>
+        </div>
+
+        <div id="project-details" aria-live="polite">
+          {projects.map((project, i) => (
+            <article class="detail fx-flip" data-panel hidden={i !== 0}>
+              <div class="detail__inner">
+                <div class="detail__row fx-cascade" style="animation-delay: .15s">
+                  <h3 class="detail__name">{project.name}</h3>
+                  <span class="detail__status mono">{project.status}</span>
+                </div>
+                <div
+                  class="detail__stars fx-cascade"
+                  role="img"
+                  aria-label={`Level ${project.rank} of 5`}
+                  style="animation-delay: .2s"
+                >
+                  {stars(project.rank)}
+                </div>
+                <div class="detail__shot fx-cascade" style="animation-delay: .25s">
+                  {project.screenshot}
+                </div>
+                <div class="detail__type mono fx-cascade" style="animation-delay: .3s">
+                  [ {project.type} ]
+                </div>
+                <p class="detail__desc fx-cascade" style="animation-delay: .35s">
+                  {project.description}
+                </p>
+                <div class="detail__stack fx-cascade" style="animation-delay: .4s">
+                  {project.stack}
+                </div>
+                <a
+                  class="detail__cta link fx-cascade"
+                  href={project.href}
+                  style="animation-delay: .45s"
+                >
+                  {project.cta}
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <PoseFigure
+        variant="projects"
+        class="pose-fig--end"
+        arcanaNumerals={projects.map((p) => p.numeral)}
+        style="--pose-w:230px;--pose-h:340px;animation-delay:.3s"
+      />
+    </div>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .projects__head {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    margin-bottom: 6px;
+  }
+  .projects__title {
+    margin: 0;
+    font-size: clamp(44px, 7vw, 84px);
+    line-height: 0.9;
+  }
+  .projects__hint {
+    margin: 0 0 32px;
+    color: var(--color-mint);
+    font-size: 15px;
+  }
+  .projects__layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    align-items: flex-start;
+  }
+  .projects__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1 1 420px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .projects__row-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .projects__arcana,
+  .projects__tag {
+    display: block;
+    opacity: 0.75;
+  }
+  .projects__arcana {
+    font-size: 11px;
+  }
+  .projects__name {
+    display: block;
+    font-weight: 900;
+    font-size: 21px;
+  }
+  .projects__tag {
+    margin-top: 4px;
+    font-size: 12px;
+    opacity: 0.85;
+  }
+  .projects__rank {
+    flex: none;
+    text-align: right;
+    font-weight: 900;
+    font-style: italic;
+  }
+  .projects__rank-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .projects__rank-value {
+    font-size: 42px;
+    line-height: 0.9;
+  }
+
+  .projects__display {
+    position: relative;
+    flex: 1 1 340px;
+    max-width: 380px;
+    min-width: 280px;
+    min-height: 560px;
+  }
+  .projects__card-back {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 540px;
+    transform: translate(34px, -22px) rotate(7deg);
+  }
+  .projects__panel {
+    position: absolute;
+    inset: 0;
+  }
+  .projects__argenta {
+    right: 6px;
+    top: -78px;
+    width: 80px;
+    height: 60px;
+    z-index: 3;
+  }
+
+  .detail {
+    position: relative;
+    z-index: 1;
+    padding: 12px;
+    background: linear-gradient(135deg, #1f8f5a, #49e0f0 50%, #39ff88);
+    border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    animation-delay: 0.08s;
+  }
+  .detail__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 500px;
+    padding: 16px;
+    box-sizing: border-box;
+    background: var(--color-surface);
+    border-radius: 8px;
+  }
+  .detail__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .detail__name {
+    margin: 0;
+    font-weight: 900;
+    font-size: 20px;
+  }
+  .detail__status {
+    font-size: 12px;
+    color: var(--color-neon);
+  }
+  .detail__stars {
+    color: var(--color-amber);
+    font-size: 14px;
+    letter-spacing: 3px;
+  }
+  .detail__shot {
+    aspect-ratio: 4 / 3;
+    display: grid;
+    place-items: center;
+    padding: 12px;
+    border: 1px dashed rgba(168, 240, 200, 0.4);
+    text-align: center;
+    color: var(--color-mint);
+    font-size: 13px;
+  }
+  .detail__type {
+    font-size: 12px;
+    color: var(--color-mint);
+  }
+  .detail__desc {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .detail__stack {
+    padding-top: 8px;
+    border-top: 1px solid rgba(168, 240, 200, 0.2);
+    font-size: 12px;
+    color: var(--color-mint);
+  }
+  .detail__cta {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 800;
+  }
+</style>

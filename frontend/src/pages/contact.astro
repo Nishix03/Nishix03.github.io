@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageShell from '../components/PageShell.astro';
+import PoseFigure from '../components/PoseFigure.astro';
+import Sprite from '../components/Sprite.astro';
+import { getContent } from '../content';
+
+const { ui, contactIntro, contacts, footer } = getContent();
+const page = ui.pages.contact;
+const isExternal = (href: string) => href.startsWith('http');
+---
+
+<BaseLayout title={`Contact — ${ui.siteTitle}`}>
+  <PageShell
+    word={page.word}
+    num={page.num}
+    wordSize={240}
+    wordTop={40}
+    wordRight={-60}
+    padTop={90}
+  >
+    <div class="contact__layout">
+      <div class="contact__main">
+        <h2 class="contact__title display fx-cascade">
+          {page.title}
+          <br />
+          <span class="contact__accent">{page.accent}</span>
+        </h2>
+        <p class="contact__intro fx-cascade" style="animation-delay: .06s">
+          {contactIntro}
+        </p>
+        <ul class="contact__list" data-select-group data-arrow-nav>
+          {contacts.map((contact, i) => (
+            <li class="fx-cascade" style={`animation-delay: ${(0.12 + i * 0.06).toFixed(2)}s`}>
+              <a
+                class="option"
+                href={contact.href}
+                data-select-item
+                data-sel={String(i === 0)}
+                rel={isExternal(contact.href) ? 'noopener' : undefined}
+                target={isExternal(contact.href) ? '_blank' : undefined}
+                style={`font-size:${contact.size}px;color:var(--color-ink)`}
+              >
+                <span class="option__slash" aria-hidden="true" />
+                <span class="option__plate" aria-hidden="true" />
+                <span class="option__label">{contact.label}</span>
+                <span class="option__sub">{contact.sub}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <PoseFigure variant="contact" style="--pose-w:250px;--pose-h:340px" />
+
+      <!-- Lumi con su farol: la luciérnaga orbita el farol -->
+      <div class="contact__lumi" aria-hidden="true" data-loop>
+        <div class="contact__lumi-stage">
+          <div class="fx-glow contact__lumi-glow"></div>
+          <div class="fx-bob" style="position:absolute;inset:0;animation-duration:2s">
+            <Sprite sprite="lumi" fallback="Lumi" />
+          </div>
+          <div class="fx-firefly contact__firefly"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer slot="after" class="footer">
+      <span>{footer.credit}</span>
+      <span class="mono">{footer.orbs}</span>
+    </footer>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .contact__layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    align-items: flex-end;
+  }
+  .contact__main {
+    flex: 999 1 480px;
+    min-width: 0;
+  }
+  .contact__title {
+    margin: 0 0 16px;
+    font-size: clamp(48px, 8vw, 104px);
+    line-height: 0.9;
+  }
+  .contact__accent {
+    color: var(--color-neon);
+  }
+  .contact__intro {
+    margin: 0 0 28px;
+    max-width: 48ch;
+    font-size: 17px;
+    color: var(--color-mint);
+  }
+  .contact__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .contact__lumi {
+    flex: 0 0 160px;
+    height: 140px;
+    position: relative;
+  }
+  .contact__lumi-stage {
+    position: absolute;
+    left: 10px;
+    bottom: 0;
+    width: 80px;
+    height: 75px;
+  }
+  .contact__lumi-glow {
+    position: absolute;
+    left: 40px;
+    top: 20px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 179, 64, 0.45), rgba(255, 179, 64, 0) 70%);
+  }
+  .contact__firefly {
+    position: absolute;
+    left: 70px;
+    top: 10px;
+    width: 5px;
+    height: 5px;
+    background: #fff6b0;
+    box-shadow: 0 0 6px var(--color-amber);
+  }
+  .footer {
+    position: relative;
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 20px var(--gutter) 36px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 14px;
+    border-top: 1px solid rgba(168, 240, 200, 0.12);
+    font-size: 13px;
+    color: var(--color-mint);
+  }
+</style>
