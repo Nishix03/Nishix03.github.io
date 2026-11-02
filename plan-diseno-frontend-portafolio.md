@@ -495,14 +495,31 @@ Iván renderiza en Blender varias animaciones 3D de su personaje y las publica c
 | Animación | Dónde aparece | Bucle |
 |---|---|---|
 | Caída en diagonal + reposo | Hero, sin opción seleccionada al cargar | Póster + vídeo con alfa (§15.4), 3-4 s |
-| Saca una carta del mazo | Hero al seleccionar **Projects**, y cabecera de la página Projects | 12 fps, 1-1,5 s |
-| Teclea en un teclado flotante | Hero al seleccionar **Stack**, y página Stack | 12 fps, 1 s |
-| Camina mirando una brújula | Hero al seleccionar **Journey**, página Journey y caminata por la barra | 12 fps, 8 cuadros |
-| Saluda y señala la pantalla | Hero al seleccionar **Contact**, y página Contact | 12 fps, 1,5 s |
+| De pie, girado a tres cuartos, presenta el proyecto con la mano abierta | Hero al seleccionar **Projects**, y página Projects (mirando hacia la carta) | 15 fps, 2,5 s |
+| Trabaja en un portátil, teclea con calma y levanta la mirada una vez | Hero al seleccionar **Stack**, y página Stack | 15 fps, 2,5 s |
+| Camina a paso tranquilo mirando al frente | Hero al seleccionar **Journey**, página Journey y caminata por la barra | 15 fps, 2,5 s (8 cuadros para la barra) |
+| De frente, asiente levemente y abre la mano en gesto de invitación | Hero al seleccionar **Contact**, y página Contact | 15 fps, 2,5 s |
 
 **En el hero, como en P3R:** al mover la selección por la lista, el recorte grande cambia a la animación de esa opción con un fundido de 150 ms (prototipo: el texto del recorte cambia con la selección).
 
 **Versión mínima para la v1:** la del hero (póster + bucle) y las cuatro como **imágenes fijas** si no da el tiempo; las animaciones se cambian después sin tocar el código, solo el archivo.
+
+**Dirección de las poses: profesional, no infantil**
+- Postura natural y relajada; peso del cuerpo en una pierna. Nada de saltos, brazos en alto, puños, guiños ni caras exageradas.
+- Un solo gesto lento por bucle (0,6-1 s) y el resto respiración y parpadeo. Rotaciones de cabeza o torso de 5° como máximo.
+- Sin rebote ni overshoot (la misma regla de §11.1).
+- Expresión neutra y amable; mirada a cámara solo en Contact y en el vistazo de Stack.
+- Misma cámara en todas (tres cuartos, a la altura de los ojos), misma luz y mismo encuadre de cuerpo entero, para que se vean como un solo personaje.
+- La ropa es la del día a día de Iván (sudadera verde de marca, §15.1). Para Projects y Contact, la misma ropa: la seriedad la da la pose, no un disfraz.
+
+**Tamaño y posición en escritorio (≥ 1024 px)**
+- Las animaciones de cada página se ven **medianas**: unos 230-250 px de ancho y 320-340 px de alto, como una columna lateral que no compite con el contenido.
+- **Projects:** tres columnas (lista, carta, personaje); el personaje a la derecha de la carta, girado hacia ella.
+- **Stack:** la cuadrícula de tecnologías a la izquierda y el personaje en una columna fija a la derecha (`position: sticky`) que acompaña al hacer scroll.
+- **Journey:** el personaje a la derecha del título, la tarjeta de estudios y los datos; la línea de tiempo pasa por debajo a todo el ancho.
+- **Contact:** el personaje entre los enlaces y Lumi.
+- **Hero:** el recorte P3R baja de 560 × 640 a **420 × 500** para equilibrarse con la lista y el texto.
+- **Móvil y tablet (< 1024 px):** las animaciones de página no se muestran (ni se descargan, con `<picture>` y `media`); el hero muestra solo el póster, más pequeño. Así el contenido va primero y se ahorran datos.
 
 ### 15.3b Formato: por qué no GIF
 - **GIF no:** solo 256 colores (el sombreado cel y los degradados del contorno se ven con bandas), transparencia de todo o nada (bordes dentados sobre el fondo verde) y archivos 5-10 veces más pesados que WebP o AVIF.
