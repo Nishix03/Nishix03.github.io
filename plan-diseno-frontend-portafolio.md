@@ -710,7 +710,7 @@ Iván los quitó porque hacían ver el portafolio un poco infantil. Desaparecen 
 
 ### 17.4 Contacto
 - **LinkedIn:** opción propia en Contact, entre GitHub y Platzi, con la selección P3R. **Falta la URL** del perfil (formato `linkedin.com/in/<usuario>`); en el boceto va un marcador. Se abre en una pestaña nueva con `rel="noopener"`.
-- **WhatsApp:** opción en Contact, justo debajo del email, con un enlace directo `https://wa.me/<número>?text=<mensaje>`. El número va con código de país y sin `+`, espacios ni guiones (Perú: `51` + 9 dígitos). El mensaje viene ya escrito y codificado para URL: «Hi Iván, I saw your portfolio» (en `/es`: «Hola Iván, vi tu portafolio»). **Falta el número**; en el boceto va `51XXXXXXXXX`.
+- **WhatsApp:** opción en Contact, justo debajo del email, con un enlace directo `https://wa.me/<número>?text=<mensaje>`. El número va con código de país y sin `+`, espacios ni guiones (Perú: `51` + 9 dígitos). El mensaje viene ya escrito y codificado para URL: «Hi Iván, I saw your portfolio» (en `/es`: «Hola Iván, vi tu portafolio»). Enlace final: `https://wa.me/51995258351?text=...` (número dado por Iván el 2 nov 2026).
   - **Privacidad:** el número queda visible para cualquiera (y para bots que lo recogen). Opciones: usar un número solo para trabajo o WhatsApp Business, y no escribir el número como texto en la página: solo dentro del enlace.
 - Email: **ivannishix@gmail.com** (enlace `mailto:`). Es el correo correcto; la errata `ivannihix@gmail.com` de §2 solo afecta a commits antiguos.
 
