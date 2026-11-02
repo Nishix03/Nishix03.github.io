@@ -10,14 +10,14 @@ Estado: decisiones cerradas tras la entrevista; los puntos abiertos están al fi
 - **Marca:** "Iván Rodas" como nombre, con un avatar pixel art animado como mascota. `Nishix_03` es el handle secundario.
 - **Idioma:** inglés por defecto, español opcional.
 
-> Ojo con "agentes de IA para negocios": LeeContigo IA es IA educativa, no agentes de negocio. Mientras no exista un demo propio, usar "AI-powered features" y no prometer agentes.
+> Ojo con "agentes de IA para negocios": LeeContigo IA es IA educativa, no agentes de negocio. Además, en LeeContigo tu parte fue el sistema de XP, no la integración de la IA (la hizo el equipo). Mientras no exista un demo de IA propio, usar "AI-powered features" solo si se explica de dónde sale, y no prometer agentes.
 
 ## 2. Contenido real (sin relleno)
 
 | Bloque | Contenido | Nota |
 |---|---|---|
-| Caso estrella | **GastroClinicWebV1** (repo **privado**: solo capturas, sin enlace al código): landing con gestor de citas para la empresa de tus padres, más el demo de IA. Objetivo: sustituir una herramienta SaaS de pago. | **Aún no está en producción.** Se construye y se despliega antes del portafolio (ver fase 0). **No se publica ninguna cifra de precio, ahorro ni ganancia**; el valor se cuenta con resultados cualitativos (por ejemplo "reemplaza un servicio de pago por una solución propia y a medida"). Sin datos médicos en capturas. |
-| Caso con premio | **LeeContigo IA**: 1.er lugar, hackathon futurX 2026 (14-24 oct, +500 participantes, 9 países). Tu parte: plan de reparto de commits y la barra de experiencia / sistema de niveles (visual + lógica). | Marcar como trabajo de equipo (IngeFuturX), con tu parte explícita. **Repo público y demo en vivo** (`lee-contigo-ia.vercel.app`): se enlazan ambos. Antes de publicar, revisar los defectos visibles de la demo (restos de "=====", logo y "Cuentos" apuntando al mismo sitio, tarjetas solo con emoji). |
+| Caso estrella | **GastroClinicWebV1** (repo **privado**: solo capturas, sin enlace al código): landing con gestor de citas para la empresa de tus padres, y panel interno. Objetivo: sustituir una herramienta SaaS de pago. | **Hoy es un frontend público y un panel interno de demostración** (Astro 7, React 19, TypeScript, Tailwind 4, GSAP y Motion), con datos ficticios en memoria, **sin backend, sin autenticación y sin IA**. El backend lo estás aprendiendo por etapas (plan de 15 etapas y 45 ejercicios), y el doctor priorizó la historia clínica con exámenes sobre cualquier otra cosa. Se muestra como **«en desarrollo»**; la producción no se espera dentro del tope de 6-8 semanas. **No se publica ninguna cifra de precio, ahorro ni ganancia**; el valor se cuenta con resultados cualitativos (por ejemplo "reemplaza un servicio de pago por una solución propia y a medida"). Sin datos médicos en capturas. |
+| Caso con premio | **LeeContigo IA**: 1.er lugar, hackathon futurX 2026 (14-24 oct, +500 participantes, 9 países). Tu parte: plan de reparto de commits y la barra de experiencia / sistema de niveles (visual + lógica). | Marcar como trabajo de equipo (IngeFuturX), con tu parte explícita. **IA real:** el tutor genera pistas estructuradas y «Crea tu cuento» genera relatos con un modelo (AI Gateway con respaldo gratuito de OpenRouter). **Tu repo `Nishix03/Lee-Contigo-IA` es un fork:** el original es `Alvaro-mendoza-12/Lee-Contigo-IA`; enlazar el original. **Tu aporte verificado en el original:** 6 PRs fusionados (#4, #7, #13, #14, #15, #16) y 23 commits. Incluye el sistema de XP completo (lógica, barra, selector de nivel, candados y desbloqueos, tope de cuentos creados, borrar progreso), la experiencia en las preguntas, la celebración y la fiesta con personajes, los sonidos, el botón «Ver guía», la fila «Ya los leíste», el arreglo del scroll del tutorial, y las pruebas e2e con **garantías verificables G1 a G5** (por ejemplo: ninguna pista contiene la respuesta, el XP solo se gana leyendo, sin scroll horizontal a 320 px). También cambiaste el comportamiento del tutor al agotar las pistas. **No** integraste el modelo de IA: eso lo hizo sobre todo Alvaro. **Atribución:** 21 de tus 23 commits salen con autor `nishix_03` y el correo `ivannihix@gmail.com`, una errata de `ivannishix@gmail.com` (falta la «s»). GitHub no lo vincula a tu cuenta, así que el repo solo te cuenta 2 commits. La errata afecta también a 65 commits de `prototipos-web-chiclayo` y 8 de este portafolio. Arreglo hacia delante: corregir el correo en la configuración de git (también en WSL). El historial no se reescribe. Como evidencia se usan los PRs, que sí figuran a tu nombre, y el recuento por autor `nishix_03`. Demo en vivo: `lee-contigo-ia.vercel.app`. Su propio README declara que no se afirma que mejore el aprendizaje y que el contenido espera revisión docente; el portafolio no debe afirmar más que eso. Antes de publicar, revisar los defectos visibles de la demo (restos de "=====", logo y "Cuentos" apuntando al mismo sitio, tarjetas solo con emoji). |
 | Caso "sistema" | **Prototipos web por rubro · Chiclayo** (`prototipos-web-chiclayo`, público, en GitHub Pages): 6 rubros (restaurante, barbería, dental, spa, veterinaria, gimnasio) sobre un núcleo común. Cada negocio cambia un archivo `negocio.json` validado con esquema. | **Un solo caso con los 6 rubros dentro**, no seis tarjetas. Evidencia a mostrar: núcleo + `negocio.json`, ADRs, pruebas de teclado (Playwright), axe, Lighthouse con mediana de 5, fotos con licencia verificada. Todos son demos con aviso "(demo)"; nunca presentar contenido ficticio como real. |
 | Otros trabajos | Task manager (HTML/CSS/JS) y gestor de citas Java Swing. Sin caso de estudio. | Arreglar antes el saludo "User" y la bio cortada del task manager. |
 | Certificados | Franja discreta: Platzi Expert+, 17 cursos de Web, ruta Fundamentos completada. | No es sección protagonista. |
@@ -81,7 +81,7 @@ Encima: `LV n` y el total de XP como "power level" (guiño a Dragon Ball). La lu
 | Stat | Qué mide | Evidencia actual |
 |---|---|---|
 | Learning | Cursos, rutas, certificados | Platzi: 17 cursos de Web, ruta Fundamentos |
-| Teamwork | Trabajo en equipo | futurX 2026 (plan de commits y sistema de niveles de LeeContigo) |
+| Teamwork | Trabajo en equipo | futurX 2026: LeeContigo, con 6 PRs fusionados en el repo del equipo (XP, sonidos, tutorial, garantías) y el plan de reparto de commits |
 | Shipping | Proyectos desplegados | Task manager en Pages; 6 prototipos Chiclayo en Pages (oct 2026); LeeContigo en Vercel (oct 2026); GastroClinic y demo de IA cuando estén |
 
 **Regla de XP (auditable):** cada hito pesa por tipo. Curso = 1, ruta o certificado = 2, proyecto personal = 2, logro en equipo = 3, proyecto en producción = 3. El XP total es la suma visible de la lista, no un número inventado. Los niveles son umbrales fijos sobre esa suma.
@@ -94,7 +94,7 @@ El rango de cada stat sale de la misma regla (§10.1).
 - Java, SQL y bases de datos (oct 2026).
 - Prototipos web Chiclayo: 6 rubros publicados (oct 2026).
 - Ganar futurX 2026 (oct 2026).
-- **Bloqueados (candado, en gris):** GastroClinic en producción y demo de IA publicado. Se desbloquean al cumplirse. Se muestran como camino, nunca como logro.
+- **Bloqueados (candado, en gris):** GastroClinic con backend conectado, GastroClinic en producción y GastroClinic con IA. Se desbloquean al cumplirse. Se muestran como camino, nunca como logro.
 
 **Interacción (decidido):**
 - Se anima con el scroll, **sin fijar la pantalla** (sin pinning): no secuestra el scroll y funciona en móvil.
@@ -122,7 +122,7 @@ Al no haber fecha, la protección contra el "nunca termina" son las puertas de s
 
 | Fase | Entrega | Puerta de salida |
 |---|---|---|
-| Prerrequisito. Trabajo previo | GastroClinic en producción; rediseño visual de los 6 rubros según su lista de verificación; agente de IA sobre los prototipos | Producción real con al menos un uso verificable. Si pasa de 6-8 semanas, el portafolio v1 sale igual con GastroClinic como "en desarrollo" |
+| Prerrequisito. Trabajo previo | Rediseño visual de los 6 rubros según su lista de verificación; marcador de posición del asistente en los prototipos (solo interfaz); capturas y material de GastroClinic y LeeContigo | Los 6 rubros según su lista. **GastroClinic no es prerrequisito:** sale como «en desarrollo» con lo que haya (frontend y panel de demostración), porque su backend y su producción exceden el tope de 6-8 semanas |
 | 0. Contenido y assets | Textos EN/ES, capturas de GastroClinic y LeeContigo, sprites y avatar | Todo el contenido existe en un archivo, antes de escribir código |
 | 1. Fundaciones | Tokens, tipografía, layout, píldora de navegación, hero con avatar | Se ve bien en móvil y escritorio |
 | 2. Contenido | Proyectos, stack, otros trabajos, certificados, contacto, i18n | **Versión publicable** |
@@ -133,10 +133,14 @@ Al no haber fecha, la protección contra el "nunca termina" son las puertas de s
 
 1. ~~Lista de gustos~~ recibida (anime, videojuegos, Yu-Gi-Oh). Falta elegir qué guiños entran, ver §4.
 2. **GastroClinic:** confirmar el permiso para mostrarla y qué se puede enseñar sin datos de pacientes. Regla fija: ninguna cifra de precio, ahorro o ganancia en el portafolio.
-3. **Demo de IA (decidido: ambos):** un chatbot / agente para negocios sobre los prototipos, usando `negocio.json` como base de conocimiento, y después una versión para GastroClinic. Mientras no esté publicado, el hero dice "AI-powered features" y no "agentes".
-   - Orden: primero el agente sobre los prototipos (datos ficticios y sin riesgo); la versión de GastroClinic solo cuando ya esté en producción.
+3. **IA real (decidido): LeeContigo y GastroClinic.** Los prototipos solo llevan un marcador de posición de interfaz (ver §9 de `plan-mejora-prototipos-chiclayo.md`) y no sostienen el mensaje de IA.
+   - **LeeContigo:** IA real y ya en vivo, hecha por el equipo. Tu parte es la capa de experiencia, motivación y calidad (XP, sonidos, tutorial, pruebas y garantías), no la integración del modelo. Sirve como evidencia de haber trabajado en un producto con IA y de haber verificado su comportamiento con pruebas, no de haber integrado un modelo tú.
+   - **GastroClinic:** hoy no tiene IA ni backend. Tu entrevista al doctor muestra que **él no pidió IA** («no añadir resumen de IA como requisito confirmado»); la idea del agente la planteaste tú. Es un añadido tuyo y hay que presentarlo como tal.
+   - **Riesgo:** la IA sobre historias clínicas implica enviar datos de salud a terceros. Si se hace, empezar por funciones **sin datos clínicos** (por ejemplo, guiar el llenado de la solicitud de cita o redactar avisos). Revisar antes la Ley 29733 y las normas de historia clínica electrónica en Perú (por verificar con fuentes oficiales). Puedes reutilizar el enfoque de privacidad de LeeContigo: la IA no recibe las respuestas del usuario y se evita pedir datos personales.
+   - **En el portafolio:** el hito «GastroClinic con IA» queda con candado hasta que exista. Mientras tanto el hero no dice «construyo agentes de IA»; puede decir que formaste parte de un equipo que ganó con un tutor con IA. Mientras no esté publicado, el hero dice "AI-powered features" y no "agentes".
+   - Si más adelante se construye un agente real, empezar con datos ficticios; la versión de GastroClinic solo cuando ya esté en producción.
    - Los datos de salud son sensibles. Antes de que un agente toque citas reales, revisar qué exige la Ley 29733 de protección de datos personales en Perú (por verificar con una fuente oficial).
-3a. **Alcance antes del lanzamiento:** hoy hay tres trabajos grandes por delante: GastroClinic en producción, rediseño visual de los 6 rubros y dos demos de IA. Juntos hacen que el portafolio no salga nunca. Reglas para evitarlo:
+3a. **Alcance antes del lanzamiento:** el trabajo grande que queda antes de lanzar es el rediseño visual de los 6 rubros (GastroClinic y su IA salen como «en desarrollo» y no bloquean). Si se les suma el backend de GastroClinic, el portafolio no sale nunca. Reglas para evitarlo:
    - El tope de 6-8 semanas ya aceptado sigue vigente y manda sobre todo lo demás.
    - "Mejorar el diseño visual" se define con una lista de verificación por rubro (se acuerda antes de empezar), no como pulido abierto.
    - Si al llegar al tope un rubro no cumple su lista, se publica igual con la etiqueta "demo" y se anota como pendiente.
