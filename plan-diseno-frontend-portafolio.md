@@ -532,7 +532,7 @@ El hero (al mover la selección por la lista) muestra estas mismas cuatro versio
 - **Journey:** el personaje a la derecha del título, la tarjeta de estudios y los datos; la línea de tiempo pasa por debajo a todo el ancho.
 - **Contact:** el personaje entre los enlaces y Lumi.
 - **Hero:** el recorte P3R baja de 560 × 640 a **420 × 500** para equilibrarse con la lista y el texto.
-- **Móvil y tablet (< 1024 px):** las animaciones de página no se muestran (ni se descargan, con `<picture>` y `media`); el hero muestra solo el póster, más pequeño. Así el contenido va primero y se ahorran datos.
+- **Móvil y tablet (< 1024 px):** la animación de cada subpágina **también aparece**, acompañando a la información: baja debajo del contenido principal de la página, centrada y más pequeña (hasta 280 px de ancho), con una hoja de sprites a mitad de resolución (`srcset`). El hero muestra solo el póster, más pequeño.
 
 ### 15.3b Formato: por qué no GIF
 - **GIF no:** solo 256 colores (el sombreado cel y los degradados del contorno se ven con bandas), transparencia de todo o nada (bordes dentados sobre el fondo verde) y archivos 5-10 veces más pesados que WebP o AVIF.
@@ -571,6 +571,7 @@ Decidido por Iván después del boceto. Prototipo navegable en la mesa de trabaj
 ### 16.1 Una página por apartado
 - La lista del hero dice **«Projects»** (no «View projects»), igual que la cabecera.
 - Rutas: `/` (hero), `/projects`, `/stack`, `/journey` (incluye certificados) y `/contact`; en español, las mismas bajo `/es/`. Sustituye al scroll de una sola página de la versión anterior de §3.
+- **Cabecera:** 40 px de separación entre las opciones, para que el tajo de selección y el desplazamiento de 12 px de la opción activa no toquen a la siguiente.
 - Cada página tiene su palabra gigante de fondo, su número grande y el botón «Esc Return» para volver al hero.
 - Ventaja: cada página carga solo lo suyo (el Journey y sus sprites no pesan en el hero). Riesgo: más navegación; por eso la cabecera siempre muestra las cuatro opciones.
 
