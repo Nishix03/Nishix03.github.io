@@ -504,6 +504,19 @@ Iván renderiza en Blender varias animaciones 3D de su personaje y las publica c
 
 **Versión mínima para la v1:** la del hero (póster + bucle) y las cuatro como **imágenes fijas** si no da el tiempo; las animaciones se cambian después sin tocar el código, solo el archivo.
 
+**Una versión del personaje por página (acorde a su tema)**
+
+Es el mismo personaje, con la misma ropa base, la misma cámara y la misma luz. Lo que cambia es el objeto que lleva y el gesto, ligados a lo que trata cada página:
+
+| Página | Versión | Objeto y detalle | Truco de rendimiento |
+|---|---|---|---|
+| Projects | Presentador | Sostiene una **tableta** que muestra la carta del proyecto seleccionado y la presenta con la mano abierta | La pantalla de la tableta es un hueco transparente en el render. Encima, CSS coloca la imagen del proyecto elegido. Así hay **una sola animación** para los 5 proyectos |
+| Stack | Desarrollador | Trabaja en un **portátil**; a su lado flotan 2-3 baldosas pixel de la cuadrícula (JS, TS, CC) | Las baldosas son las mismas del Stack, animadas con CSS; no van dentro del render |
+| Journey | Explorador | **Mochila** y una **libreta** de lo aprendido; camina a lo largo de la línea de tiempo | La misma hoja de sprites sirve para la columna y para la caminata por la barra (a menor escala) |
+| Contact | Anfitrión | **Teléfono** en una mano y la otra abierta, invitando; aparece un pequeño icono de correo | El icono de correo es SVG con CSS, no parte del render |
+
+El hero (al mover la selección por la lista) muestra estas mismas cuatro versiones, así que **no hay renders extra**: son 4 animaciones + la caída del hero, nada más.
+
 **Dirección de las poses: profesional, no infantil**
 - Postura natural y relajada; peso del cuerpo en una pierna. Nada de saltos, brazos en alto, puños, guiños ni caras exageradas.
 - Un solo gesto lento por bucle (0,6-1 s) y el resto respiración y parpadeo. Rotaciones de cabeza o torso de 5° como máximo.
