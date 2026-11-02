@@ -16,8 +16,9 @@ Estado: decisiones cerradas tras la entrevista; los puntos abiertos están al fi
 
 | Bloque | Contenido | Nota |
 |---|---|---|
-| Caso estrella | **GastroClinicWebV1**: landing con gestor de citas para la empresa de tus padres, más el demo de IA. Objetivo: sustituir una herramienta SaaS de pago. | **Aún no está en producción.** Se construye y se despliega antes del portafolio (ver fase 0). **No se publica ninguna cifra de precio, ahorro ni ganancia**; el valor se cuenta con resultados cualitativos (por ejemplo "reemplaza un servicio de pago por una solución propia y a medida"). Sin datos médicos en capturas. |
-| Caso con premio | **LeeContigo IA**: 1.er lugar, hackathon futurX 2026 (14-24 oct, +500 participantes, 9 países). Tu parte: plan de reparto de commits y la barra de experiencia / sistema de niveles (visual + lógica). | Marcar como trabajo de equipo (IngeFuturX), con tu parte explícita. |
+| Caso estrella | **GastroClinicWebV1** (repo **privado**: solo capturas, sin enlace al código): landing con gestor de citas para la empresa de tus padres, más el demo de IA. Objetivo: sustituir una herramienta SaaS de pago. | **Aún no está en producción.** Se construye y se despliega antes del portafolio (ver fase 0). **No se publica ninguna cifra de precio, ahorro ni ganancia**; el valor se cuenta con resultados cualitativos (por ejemplo "reemplaza un servicio de pago por una solución propia y a medida"). Sin datos médicos en capturas. |
+| Caso con premio | **LeeContigo IA**: 1.er lugar, hackathon futurX 2026 (14-24 oct, +500 participantes, 9 países). Tu parte: plan de reparto de commits y la barra de experiencia / sistema de niveles (visual + lógica). | Marcar como trabajo de equipo (IngeFuturX), con tu parte explícita. **Repo público y demo en vivo** (`lee-contigo-ia.vercel.app`): se enlazan ambos. Antes de publicar, revisar los defectos visibles de la demo (restos de "=====", logo y "Cuentos" apuntando al mismo sitio, tarjetas solo con emoji). |
+| Caso "sistema" | **Prototipos web por rubro · Chiclayo** (`prototipos-web-chiclayo`, público, en GitHub Pages): 6 rubros (restaurante, barbería, dental, spa, veterinaria, gimnasio) sobre un núcleo común. Cada negocio cambia un archivo `negocio.json` validado con esquema. | **Un solo caso con los 6 rubros dentro**, no seis tarjetas. Evidencia a mostrar: núcleo + `negocio.json`, ADRs, pruebas de teclado (Playwright), axe, Lighthouse con mediana de 5, fotos con licencia verificada. Todos son demos con aviso "(demo)"; nunca presentar contenido ficticio como real. |
 | Otros trabajos | Task manager (HTML/CSS/JS) y gestor de citas Java Swing. Sin caso de estudio. | Arreglar antes el saludo "User" y la bio cortada del task manager. |
 | Certificados | Franja discreta: Platzi Expert+, 17 cursos de Web, ruta Fundamentos completada. | No es sección protagonista. |
 | Tech stack | Solo lo que de verdad usas (unas 12 tecnologías). | La referencia con 50 logos infla el perfil; evitarla. |
@@ -81,7 +82,7 @@ Encima: `LV n` y el total de XP como "power level" (guiño a Dragon Ball). La lu
 |---|---|---|
 | Learning | Cursos, rutas, certificados | Platzi: 17 cursos de Web, ruta Fundamentos |
 | Teamwork | Trabajo en equipo | futurX 2026 (plan de commits y sistema de niveles de LeeContigo) |
-| Shipping | Proyectos desplegados | Task manager en Pages; GastroClinic y demo de IA cuando estén |
+| Shipping | Proyectos desplegados | Task manager en Pages; 6 prototipos Chiclayo en Pages (oct 2026); LeeContigo en Vercel (oct 2026); GastroClinic y demo de IA cuando estén |
 
 **Regla de XP (auditable):** cada hito pesa por tipo. Curso = 1, ruta o certificado = 2, proyecto personal = 2, logro en equipo = 3, proyecto en producción = 3. El XP total es la suma visible de la lista, no un número inventado. Los niveles son umbrales fijos sobre esa suma.
 El rango de cada stat sale de la misma regla (§10.1).
@@ -91,6 +92,7 @@ El rango de cada stat sale de la misma regla (§10.1).
 - Ruta Fundamentos del Desarrollo Web (feb 2026).
 - Curso de Introducción al Backend (abr 2026).
 - Java, SQL y bases de datos (oct 2026).
+- Prototipos web Chiclayo: 6 rubros publicados (oct 2026).
 - Ganar futurX 2026 (oct 2026).
 - **Bloqueados (candado, en gris):** GastroClinic en producción y demo de IA publicado. Se desbloquean al cumplirse. Se muestran como camino, nunca como logro.
 
@@ -120,7 +122,7 @@ Al no haber fecha, la protección contra el "nunca termina" son las puertas de s
 
 | Fase | Entrega | Puerta de salida |
 |---|---|---|
-| Prerrequisito. GastroClinic | Landing + gestor de citas + demo de IA, desplegados | Producción real con al menos un uso verificable. Si pasa de 6-8 semanas, el portafolio v1 sale igual con GastroClinic como "en desarrollo" |
+| Prerrequisito. Trabajo previo | GastroClinic en producción; rediseño visual de los 6 rubros según su lista de verificación; agente de IA sobre los prototipos | Producción real con al menos un uso verificable. Si pasa de 6-8 semanas, el portafolio v1 sale igual con GastroClinic como "en desarrollo" |
 | 0. Contenido y assets | Textos EN/ES, capturas de GastroClinic y LeeContigo, sprites y avatar | Todo el contenido existe en un archivo, antes de escribir código |
 | 1. Fundaciones | Tokens, tipografía, layout, píldora de navegación, hero con avatar | Se ve bien en móvil y escritorio |
 | 2. Contenido | Proyectos, stack, otros trabajos, certificados, contacto, i18n | **Versión publicable** |
@@ -131,7 +133,14 @@ Al no haber fecha, la protección contra el "nunca termina" son las puertas de s
 
 1. ~~Lista de gustos~~ recibida (anime, videojuegos, Yu-Gi-Oh). Falta elegir qué guiños entran, ver §4.
 2. **GastroClinic:** confirmar el permiso para mostrarla y qué se puede enseñar sin datos de pacientes. Regla fija: ninguna cifra de precio, ahorro o ganancia en el portafolio.
-3. **Demo de IA:** se construye junto a GastroClinic. Mientras no esté publicado, el hero dice "AI-powered features" y no "agentes".
+3. **Demo de IA (decidido: ambos):** un chatbot / agente para negocios sobre los prototipos, usando `negocio.json` como base de conocimiento, y después una versión para GastroClinic. Mientras no esté publicado, el hero dice "AI-powered features" y no "agentes".
+   - Orden: primero el agente sobre los prototipos (datos ficticios y sin riesgo); la versión de GastroClinic solo cuando ya esté en producción.
+   - Los datos de salud son sensibles. Antes de que un agente toque citas reales, revisar qué exige la Ley 29733 de protección de datos personales en Perú (por verificar con una fuente oficial).
+3a. **Alcance antes del lanzamiento:** hoy hay tres trabajos grandes por delante: GastroClinic en producción, rediseño visual de los 6 rubros y dos demos de IA. Juntos hacen que el portafolio no salga nunca. Reglas para evitarlo:
+   - El tope de 6-8 semanas ya aceptado sigue vigente y manda sobre todo lo demás.
+   - "Mejorar el diseño visual" se define con una lista de verificación por rubro (se acuerda antes de empezar), no como pulido abierto.
+   - Si al llegar al tope un rubro no cumple su lista, se publica igual con la etiqueta "demo" y se anota como pendiente.
+3b. **Cómo se cuenta la IA:** transparente, como "ingeniería asistida por IA", con ADRs y pruebas como evidencia. Hay que poder explicar cada decisión de arquitectura en una entrevista.
 4. ~~Metas de rendimiento~~ cerrado: Lighthouse 95+ (Performance y Accesibilidad) y cero violaciones en axe.
 5. ~~Task manager~~ cerrado: se arregla rápido (saludo "User", bio cortada, título inconsistente) y va a "Otros trabajos". Lo corriges tú primero y yo reviso, como pide tu CLAUDE.md.6. ~~Pixel art contra P3R~~ resuelto en §10.4.
 7. ~~Paleta, peso de P3R y extras (§10.3)~~ confirmados.
@@ -255,8 +264,8 @@ Reglas tomadas de las skills `gsap-*`, `css-animations`, `ui-motion` y `web-anim
 
 | Fase | Skills |
 |---|---|
-| 0. Contenido y assets | `copywriting-kit:landing-page-copy`, `copy-edit` y `brand-voice` (textos EN/ES), `design:ux-copy` (microcopy del menú y la pista de teclado), `anthropic-skills:extraer-design-system` (tokens de tus 5 referencias; por comprobar si aplica) |
-| 1. Fundaciones | `stack-tecnologico` (stack y reglas), `hzblj-skills:tailwind`, `ui-typography`, `ui-surfaces`, `frontend-design`, `anti-ui-slop`, `ui-ux-pro-max`, `atomic-design`, `component-architecture` |
+| 0. Contenido y assets | `copywriting-kit:copy-edit` y `brand-voice` (textos EN/ES; `landing-page-copy` se descarta, ver §12.4), `design:ux-copy` (microcopy del menú y la pista de teclado), `anthropic-skills:extraer-design-system` (tokens de tus 5 referencias; por comprobar si aplica) |
+| 1. Fundaciones | `stack-tecnologico` (stack y reglas), `hzblj-skills:tailwind`, `ui-typography`, `ui-surfaces`, `frontend-design` (con las exigencias de §13), `atomic-design`, `component-architecture` |
 | 2. Contenido publicable | `hzblj-skills:ui-interactions`, `css-animations`, `compound-components` (menú), `hooks`, `type-safety`, `performance`, `seo-audit` y `ai-seo` (metadatos, Open Graph) |
 | 3. Extras (Journey, menú, easter egg) | `hzblj-skills:gsap-timelines`, `gsap-scroll-trigger`, `gsap-text`, `gsap-react`, `gsap-performance`, `ui-motion`, `audit-suite:web-animation-design`, `make-interfaces-feel-better`, `emil-design-engineering`; agente `hzblj-skills:animation-specialist` para el Journey |
 | 4. Calidad | `design:accessibility-review`, `audit-suite:audit-as-a11y-eng`, `audit-as-perf-eng`, `audit-as-design-eng`, `audit-as-frontend-eng`, `full-audit`, `web-design-guidelines`, `superpowers:verification-before-completion`, `agent-browser` para la revisión visual |
@@ -274,8 +283,53 @@ Reglas tomadas de las skills `gsap-*`, `css-animations`, `ui-motion` y `web-anim
 - `hzblj-skills:project` (estructura de monorepo): este sitio no la necesita.
 - `motion` (el stack lo reserva para apps React; aquí GSAP y CSS cubren todo).
 
-### 12.4 Conflictos y cuidados
+### 12.4 Alineado con tu ADR 009
+Tu repo de prototipos ya decidió dejar de usar, para diseñar, `ui-ux-pro-max` (da el promedio de cada rubro, lo genérico), `anti-ui-slop` (su servicio de referencias no está conectado) y `landing-page-copy` (titulares largos). Este portafolio hereda esa decisión: diseño con `frontend-design` y las exigencias de §13, tokens ordenados con `design:design-system`, y copy con `copy-edit` y `brand-voice` respetando titulares cortos.
+
+### 12.5 Conflictos y cuidados
 - **Skills pensadas para Next.js/React:** las de GSAP traen ejemplos con `'use client'`. En Astro solo se aplica la parte de `useGSAP` en islas y el módulo `motion` en las secciones estáticas.
 - **Convenciones de código de esas skills** (flechas `const`, exports con nombre, `type` sobre `interface`) frente a las de tu `CLAUDE.md` (BEM, CSS plano). Hay que decidir qué manda cuando se migre a Astro y actualizar `CLAUDE.md`.
 - **Tu forma de trabajar:** tu `CLAUDE.md` pide explicarte cada cambio en español y dejar que corrijas primero los errores simples. Al usar estas skills, cada paso se explica; el código lo escribimos juntos y no de golpe.
 - **Axe como MCP:** el servidor `axe-accessibility` falló al conectarse en esta sesión. Mientras tanto se usa `@axe-core/playwright` desde las pruebas, que ya está en el stack.
+
+## 13. Lista de verificación: "diseño mejorado" de cada prototipo
+
+Aplica a los 6 rubros (restaurante, barbería, dental, spa, veterinaria, gimnasio). Decidido: los **6 al mismo nivel**, aprueba **Iván con los storyboards finales**, y el piso de rendimiento es el de tu **ADR 008**.
+Se construye sobre las 5 exigencias del ADR 009, que ya existen y tienen un script (`npm run control -- <rubro>`). Lo nuevo son los criterios 6, 7 y 10 a 13.
+
+| # | Criterio | Cómo se verifica | Tipo |
+|---|---|---|---|
+| 1 | **La primera pantalla informa** (360 y 1440 px, sin scroll): nombre, titular, estado con el horario de hoy y enlace al horario completo, y el botón de la función estrella | Control de exigencias, con captura | Medible |
+| 2 | **Titulares cortos:** principal de 6 palabras o menos, 2 líneas como máximo en escritorio y 3 en celular; de sección, 5 palabras o menos | Control de exigencias | Medible |
+| 3 | **3D inmersivo y coherente** con la interfaz: la escena ocupa el encuadre. Si se sustituye por una foto recortada y la página se entiende igual, no pasa | Captura y juicio de Iván | Juicio |
+| 4 | **Nada de plantilla:** sin hero partido en dos, sin par de botones redondeados como único llamado, sin grillas de 3 tarjetas iguales, y al menos 2 componentes propios del rubro. Con nombre y fotos tapados, no puede servir a cualquier negocio | Storyboards y juicio de Iván | Juicio |
+| 5 | **Un solo lenguaje** de principio a fin: el hero y el resto comparten tipografía, materia y ritmo | Cuadros de mitad de scroll y de función estrella | Juicio |
+| 6 | **Identidad distinta entre rubros:** en la hoja de contactos con los 6 heros (`scripts/hoja.mjs`) cada uno se distingue a simple vista | Hoja de contactos | Juicio |
+| 7 | **Aprobación de Iván:** storyboard final (3 cuadros a 360 y 1440 px) y la línea "Aprobado por Iván + fecha" en `docs/visual/<rubro>.md`. Sin ella el rubro no cuenta como mejorado | Archivo del rubro | Juicio |
+| 8 | **Rendimiento (ADR 008):** Lighthouse 12 sobre build + preview, mediana de 5. Meta 90 o más en las 4 categorías; de 85 a 89 con 3D se acepta y se anota en el ADR; por debajo de 85 se aligera la escena. LCP menor a 2.5 s en 4G y CLS menor a 0.1. **Sin regresión** frente a la tabla de abajo | `npm run lighthouse -- <rubro>` | Medible |
+| 9 | **Accesibilidad y teclado:** axe en 0 violaciones, `npm run test:teclado` en verde, y con movimiento reducido o ahorro de datos se ve el póster, no el 3D | `npm run a11y` y `test:teclado` | Medible |
+| 10 | **Contenido honesto:** aviso "(demo)" visible, nombre verificado en Google Maps (pendientes: «Remanso Spa», «Trufa Veterinaria», «Latido Gym»), sin reseñas ni credenciales ficticias presentadas como reales, fotos con licencia y crédito | Revisión de Iván | Juicio |
+| 11 | **Material para el portafolio:** póster, video de 20 a 30 s a 360 px (`scripts/video.mjs`), 3 capturas (inicio, mitad del scroll, función estrella), una frase con la decisión de diseño clave y la URL del demo | Archivos en `docs/visual/<rubro>/` | Medible |
+| 12 | **Explicable:** `docs/visual/<rubro>.md` cuenta en 3 líneas por qué se eligió esa dirección y qué se descartó, de forma que puedas contarlo sin leer | Prueba oral de Iván | Juicio |
+| 13 | **Sin regresión de lógica:** los ganchos `data-*` y las pruebas existentes pasan; una rama y un PR por rubro, con lint, build, `test:teclado`, `a11y`, Lighthouse y checks de GitHub en verde; nunca push directo a `main` | PR | Medible |
+
+**Línea base de rendimiento (de `PROGRESO.md`, Lighthouse móvil / escritorio):** restaurante 92 / 89, barbería 86 / 98, dental 93 / 100, spa 93 / 99, veterinaria 92 / 99, gimnasio 91 / 98. Ninguno puede bajar de su cifra actual.
+
+### Estado inicial
+- **Restaurante:** la dirección C «El pase» fue elegida con tu aprobación (ronda 2). Falta pasar toda la lista.
+- **Barbería, dental, spa, veterinaria, gimnasio:** su dirección la eligió Claude Code con una tabla de puntaje en modo autónomo. Todos están en **pendiente de aprobación de Iván** (criterio 7).
+
+### Proceso por rubro
+1. Iván revisa la página actual contra los criterios 1 a 6 y anota qué falla.
+2. Solo si falla 3, 4 o 5, o si no la aprueba (criterio 7), se hacen **3 direcciones nuevas** como variantes (`?direccion=a|b|c`) y se capturan con el Control.
+3. Iván elige y aprueba con los storyboards.
+4. Se construye, corriendo el Control antes de construir y al final, hasta que todo pase.
+5. PR con los checks. Un rubro se cierra completo antes de empezar el siguiente, para que el lanzamiento nunca dependa de un trabajo a medias.
+
+Las auditorías (`make-interfaces-feel-better`, `emil-design-engineering`, `audit-as-design-eng`, `accessibility-review`) corrigen pero no borran un efecto, salvo que rompa el presupuesto medido, y entonces queda anotado.
+
+### Regla de salida
+Al llegar al tope de 6-8 semanas, un rubro sin aprobación (criterio 7) se muestra en el portafolio como "versión 1, en mejora"; los aprobados se muestran sin etiqueta. Nunca se presenta como mejorado lo que no pasó la lista.
+
+### Riesgo
+Elegiste los 6 al mismo nivel, que es el camino más largo. Si a la mitad del tope hay menos de 3 rubros aprobados, conviene recortar a 3 de vitrina y dejar el resto con la etiqueta.
