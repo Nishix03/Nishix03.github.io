@@ -488,17 +488,36 @@ Decidido por Iván: el protagonista del hero y de las secciones es un **personaj
 5. **Render** con fondo transparente (`Film > Transparent`) a secuencia PNG.
 6. **Codex** escribe y documenta los scripts repetibles: preparar la escena con `bpy`, renderizar todas las poses y exportar con `ffmpeg`. Cada script debe poder explicarse en una entrevista (§9, punto 3b). El uso de IA se declara en los créditos.
 
-### 15.3 Poses (alcance cerrado)
+### 15.3 Una animación por opción (alcance cerrado)
 
-| Pose | Sección | Formato | Duración |
-|---|---|---|---|
-| Caída en diagonal + reposo (pelo y capucha que se mecen, respiración, parpadeo) | Hero y menú | Póster AVIF + vídeo con transparencia | Bucle de 3-4 s a 24 fps |
-| Sostener una carta (guiño Yu-Gi-Oh) | Projects | Hoja de sprites WebP | 8 cuadros |
-| Caminar | Journey (barra de XP) | Hoja de sprites WebP, pequeña | 8 cuadros |
-| Celebrar el RANK UP | Journey | Hoja de sprites WebP | 6-8 cuadros |
-| Saludo | Contact | Imagen fija (la anima CSS) | — |
+Iván renderiza en Blender varias animaciones 3D de su personaje y las publica como **animaciones 2D** (secuencias de imágenes). Cada opción del menú tiene la suya:
 
-**Versión mínima para la v1:** solo la del hero (póster + bucle). Las demás poses pueden salir primero como imágenes fijas animadas con CSS (balanceo, entrada) y pasar a hojas de sprites después.
+| Animación | Dónde aparece | Bucle |
+|---|---|---|
+| Caída en diagonal + reposo | Hero, sin opción seleccionada al cargar | Póster + vídeo con alfa (§15.4), 3-4 s |
+| Saca una carta del mazo | Hero al seleccionar **Projects**, y cabecera de la página Projects | 12 fps, 1-1,5 s |
+| Teclea en un teclado flotante | Hero al seleccionar **Stack**, y página Stack | 12 fps, 1 s |
+| Camina mirando una brújula | Hero al seleccionar **Journey**, página Journey y caminata por la barra | 12 fps, 8 cuadros |
+| Saluda y señala la pantalla | Hero al seleccionar **Contact**, y página Contact | 12 fps, 1,5 s |
+
+**En el hero, como en P3R:** al mover la selección por la lista, el recorte grande cambia a la animación de esa opción con un fundido de 150 ms (prototipo: el texto del recorte cambia con la selección).
+
+**Versión mínima para la v1:** la del hero (póster + bucle) y las cuatro como **imágenes fijas** si no da el tiempo; las animaciones se cambian después sin tocar el código, solo el archivo.
+
+### 15.3b Formato: por qué no GIF
+- **GIF no:** solo 256 colores (el sombreado cel y los degradados del contorno se ven con bandas), transparencia de todo o nada (bordes dentados sobre el fondo verde) y archivos 5-10 veces más pesados que WebP o AVIF.
+- **Para bucles cortos (las cuatro opciones):** **hoja de sprites WebP con alfa** animada con `steps()` (técnica A14, ya usada en el pixel art). Una sola imagen por animación, se controla con CSS (pausa, movimiento reducido) y no hay que decodificar un vídeo.
+- **Alternativa:** WebP o AVIF animado (`<img src="pose.avif">`). Más simple de montar, pero no se puede pausar con CSS: solo vale si se reemplaza por el póster con `prefers-reduced-motion`.
+- **Hero (bucle largo):** vídeo WebM con alfa, como en §15.4.
+- **Exportación:** Blender → secuencia PNG con alfa → script (Codex) que monta la hoja WebP y un JSON con el tamaño del cuadro y los fps.
+
+### 15.3c Cómo se cargan sin perder rendimiento
+- **Al entrar al hero solo se descarga el póster.** Las cuatro hojas de las opciones se descargan **después de la carga** (`requestIdleCallback`) o al primer hover/foco sobre la lista, nunca antes del LCP.
+- **Cada página carga solo su animación** (con una página por apartado, §16.1, esto sale solo).
+- Hojas con `loading="lazy"` y `decoding="async"`; tamaño fijo con `width` y `height` para que no haya CLS.
+- Una sola animación 3D activa a la vez en pantalla; la del hero se pausa al abrir NishixAI o al salir de pantalla.
+- **Presupuesto:** cada hoja ≤ 150 KB (12 fps, a la mitad de resolución en móvil con `srcset`). Total de animaciones de opciones ≤ 600 KB, todas fuera del camino crítico.
+- Con movimiento reducido o `Save-Data`: primer cuadro fijo.
 
 ### 15.4 Cómo se sirve sin bajar el rendimiento
 - **Póster como LCP:** el primer cuadro en AVIF (con respaldo WebP), con `width` y `height` y `fetchpriority="high"`. Es lo primero que se ve y lo que mide Lighthouse.
@@ -589,7 +608,7 @@ Iván los quitó porque hacían ver el portafolio un poco infantil. Desaparecen 
 - Email: **ivannishix@gmail.com** (enlace `mailto:`). Es el correo correcto; la errata `ivannihix@gmail.com` de §2 solo afecta a commits antiguos.
 
 ### 17.5 Chat «NishixAI» (prototipo)
-- **Dónde:** botón «NishixAI» en la cabecera, con su baldosa pixel «NX» y la selección P3R. Abre un panel a la derecha (entrada de 300 ms con `clip-path` y `translateY`), cabecera blanca con el tajo del color de selección y botón de cerrar.
+- **Dónde:** botón «NishixAI» en la cabecera, separado del selector EN/ES (margen de 34 px para que el tajo de selección no lo tape), con su baldosa pixel «NX» y la selección P3R. Abre un panel a la derecha (entrada de 300 ms con `clip-path` y `translateY`), cabecera blanca con el tajo del color de selección y botón de cerrar.
 - **Qué hace en el boceto:** nada programado. Muestra un saludo, cinco preguntas sugeridas (quién es Iván, futurX 2026, proyecto actual, estudios en Platzi, disponibilidad) con **respuestas escritas a mano**, y un campo de texto que responde que en el prototipo solo funcionan las sugeridas. El panel dice «Prototype · pre-written answers» para no aparentar una IA que todavía no existe.
 - **Respuestas honestas:** salen solo de los datos verificados de este plan (§2, §16.5, §17.3). Si no sabe algo, lo dice.
 
