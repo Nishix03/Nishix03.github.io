@@ -587,3 +587,16 @@ Iván los quitó porque hacían ver el portafolio un poco infantil. Desaparecen 
 
 ### 17.4 Contacto
 - Email: **ivannishix@gmail.com** (enlace `mailto:`). Es el correo correcto; la errata `ivannihix@gmail.com` de §2 solo afecta a commits antiguos.
+
+### 17.5 Chat «NishixAI» (prototipo)
+- **Dónde:** botón «NishixAI» en la cabecera, con su baldosa pixel «NX» y la selección P3R. Abre un panel a la derecha (entrada de 300 ms con `clip-path` y `translateY`), cabecera blanca con el tajo del color de selección y botón de cerrar.
+- **Qué hace en el boceto:** nada programado. Muestra un saludo, cinco preguntas sugeridas (quién es Iván, futurX 2026, proyecto actual, estudios en Platzi, disponibilidad) con **respuestas escritas a mano**, y un campo de texto que responde que en el prototipo solo funcionan las sugeridas. El panel dice «Prototype · pre-written answers» para no aparentar una IA que todavía no existe.
+- **Respuestas honestas:** salen solo de los datos verificados de este plan (§2, §16.5, §17.3). Si no sabe algo, lo dice.
+
+**Para la versión real (fase 3 o posterior, no bloquea la v1):**
+1. **Fuente única de verdad:** un archivo `sobre-ivan.md` con los datos del portafolio. El modelo responde **solo** con eso; si la pregunta no está cubierta, dice que no lo sabe y ofrece el email.
+2. **Backend propio** (el Spring Boot de la fase de backend, §7): la clave de la API del modelo nunca va en el navegador. Límite de mensajes por visitante y tope de gasto mensual.
+3. **Privacidad:** no se piden ni guardan datos personales del visitante; se avisa de que es un asistente de IA.
+4. **Accesibilidad:** foco dentro del panel mientras está abierto, Esc lo cierra y devuelve el foco al botón, mensajes nuevos anunciados con `aria-live`.
+5. **Mensaje del hero:** cuando NishixAI funcione de verdad, será el **demo de IA propio** que pide §9 (punto 3) para sostener "AI-powered features"; hasta entonces no cuenta como evidencia.
+6. Si se publica antes de tener backend, se queda con respuestas fijas y la etiqueta de prototipo.
