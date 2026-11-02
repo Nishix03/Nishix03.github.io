@@ -375,12 +375,13 @@ Boceto en Claude Design: https://claude.ai/artifact/GmSkxVXCPR1wZ5qTJ5U9ac (pág
 | Personaje | Rejilla | Escala | Dónde aparece | Papel |
 |---|---|---|---|---|
 | **Iván pixel** (avatar tipo bloque; guiño Roblox) | 16×20 | ×4 | Solo la ventana retro del easter egg | **Sustituido por el personaje 3D (§15)** en hero, menú y secciones |
-| **Pixel** (gato menta con sombrero de paja; guiño One Piece) | 13×10 | ×7 | Contact | Compañero. Solo decorativo |
-| **Bug** (bicho cian) | 10×8 | ×4 | Stack (corre por la cuadrícula), easter egg retro | Chiste interno: "cazar bugs". Solo decorativo |
+| **Argenta** (dragón plateado de fantasía, redondo, con cuernos cortos, alas pequeñas y ojos verde neón; guiño a los dragones de cartas) | 16×12 | ×5 | Projects, posado sobre el mazo | Compañero. Alas a 2 cuadros, respiración y cola |
+| **Tuerca** (robot mascota de arcade, oxidado, con pantalla de tubo por cara; guiño al terror de animatrónicos) | 12×16 | ×4 | Stack (patrulla la cuadrícula) | Compañero. Tirón "glitch" ocasional y antena que parpadea despacio |
+| **Eco** (cantante pequeño con moño de pelo azul marino, auriculares verde neón al cuello, chaqueta menta y micrófono; guiño a FNF) | 14×16 | ×5 | Menú, junto a las flechas de ritmo | Compañero. Rebota a 100 bpm y alterna boca abierta y cerrada al compás de las flechas |
+| **Lumi** (pequeño explorador con impermeable amarillo, bufanda verde y farol; guiño a los RPG de corazón amable) | 16×15 | ×5 | Contact | Compañero. Farol que respira y una luciérnaga que lo rodea |
 | **Mariposa** (azul cian; guiño Persona) | 9×7 | ×5 | Hero (revolotea sobre la silueta), menú | Adorno vivo del lenguaje P3R |
-| **Carta** (carta coleccionable con ojos y patitas; guiño Yu-Gi-Oh) | 10×13 | ×5 | Projects, junto a la carta holo | Compañero. Brillo holo con `filter: hue-rotate` |
 
-Todos comparten la paleta de 16 colores, el contorno oscuro de 1 px y una escala **entera**, para que ningún píxel se deforme. **Son personajes originales que "se disfrazan" con un motivo de cada saga** (un sombrero de paja, un visor, una mariposa, una carta): nunca los personajes, logos ni siluetas oficiales de §4. Así el guiño se reconoce sin convertir el portafolio en una fan page ni arriesgar derechos de autor.
+Todos comparten la paleta de 16 colores, el contorno oscuro de 1 px y una escala **entera**, para que ningún píxel se deforme. **Son personajes originales que "se disfrazan" con un motivo de cada saga** (un dragón de cartas, un robot de feria, un explorador con farol, una mariposa): nunca los personajes, logos ni siluetas oficiales de §4. Así el guiño se reconoce sin convertir el portafolio en una fan page ni arriesgar derechos de autor.
 
 ### 14.1b Adornos por gusto (un guiño protagonista por sección)
 
@@ -388,14 +389,36 @@ Todos comparten la paleta de 16 colores, el contorno oscuro de 1 px y una escala
 |---|---|---|---|
 | Persona 3 Reload | Silueta plana gigante del avatar (sin rostro), burbujas cuadradas que suben, rayos de luz, mariposa | Hero y menú | Ver §10.6 |
 | Roblox | Avatar de bloques, solo en la ventana retro del easter egg | Easter egg | P1 |
-| Yu-Gi-Oh | Carta viva, carta holo con estrellas de nivel | Projects | Flotación + inclinación ±6° + holo |
-| FNF | Flechas de ritmo ←↓↑→ que laten al compás | Stack (cabecera) y pista del menú | Golpe de escala 1→1.15→1 a 100 bpm, escalonado |
+| Yu-Gi-Oh | **Reverso de carta coleccionable propio** (§14.5), carta holo con estrellas de nivel y el dragón Argenta | Projects | Remolino del reverso que gira despacio; alas de Argenta |
+| FNAF | Tuerca, el robot oxidado | Stack | Tirón glitch cada ~5 s (sin destellos) |
+| Undertale | Lumi, el explorador con farol | Contact | Farol que respira; luciérnaga |
+| FNF | Eco, el cantante, y flechas de ritmo ←↓↑→ que laten al compás | Pista del menú | Golpe de escala 1→1.15→1 a 100 bpm, escalonado |
 | Dragon Ball | Visor tipo scouter en el avatar del Journey, esfera naranja con estrella en el hito ganado, contador 0/7 de esferas | Journey y footer | Flotación; brillo del visor |
 | JoJo | Letras pixel «ゴゴゴ» flotando junto al RANK UP; estrellas como insignias de nivel | Journey | Vaivén y opacidad lenta (nunca destellos) |
 | Uncharted | Brújula pixel en el «diario de expedición» | Journey | Aguja que oscila ±8° |
-| One Piece | Sombrero de paja del gato | Contact | Cola P4 |
 
 La regla de §4 se precisa así: **un guiño protagonista por sección**; el Journey es la excepción ya aceptada en el punto abierto 8 y se construye en capas (si baja Lighthouse, se recortan JoJo y Uncharted primero).
+
+### 14.5 Reverso de carta coleccionable (propio)
+
+Iván quiere que la carta de Projects se vea como el **reverso de una carta coleccionable**. Se toma la idea (remolino que atrae la mirada, marco, óvalo oscuro en el centro), no el reverso oficial de Yu-Gi-Oh: sin el logo de Konami, sin el logotipo del juego y sin el marco naranja con el remolino marrón, que son su imagen de marca.
+
+- **Proporción** 59 × 86 (la de una carta real).
+- **Marco** verde oscuro con filete neón de 2 px.
+- **Remolino** con `repeating-radial-gradient` (anillos) y una capa `conic-gradient` que gira despacio (40 s por vuelta) con `transform: rotate`.
+- **Centro:** óvalo oscuro con el monograma «IR» en fuente pixel.
+- **Uso:** detrás de la carta de GastroClinic, como un mazo, y en la vista de detalle al «voltear» un proyecto (`rotateY` de 180°, 600 ms, con `backface-visibility: hidden`).
+- Con movimiento reducido el remolino queda quieto.
+
+### 14.6 Encargo a Codex: versiones definitivas
+
+Los sprites del boceto son **bocetos de dirección**. Codex hace las versiones definitivas con estas reglas:
+1. **Se mantienen como personajes originales.** Argenta, Tuerca, Lumi y Eco evocan el género de tus favoritos (dragón de cartas, terror de animatrónicos, RPG amable, duelo de ritmo), pero no se acercan al diseño de Blue-Eyes White Dragon, Springtrap, Frisk ni Boyfriend: ni su silueta, ni sus colores distintivos, ni sus rasgos (cresta, orejas de conejo rotas, jersey de rayas, corazones de colores, pelo azul en punta, gorra roja hacia atrás). Las imágenes de referencia de Iván sirven solo para el tono y la energía, no se calcan.
+2. **Misma rejilla, paleta y contorno** que el resto (§5 y §14.1), a escala entera.
+3. **Cuadros por animación:** Argenta 4 (alas) + 6 (reposo); Tuerca 2 (pasos) + 3 (glitch); Lumi 6 (reposo) + 4 (farol); Eco 4 (rebote) + 2 (boca).
+4. **Entrega:** una hoja de sprites PNG por personaje y un JSON con el tamaño del cuadro y los fps, listo para `steps()` (A14). Fuente editable en Aseprite o Piskel.
+5. **Revisión de Iván** antes de integrar, igual que los demás assets.
+6. Los créditos dicen que los sprites se hicieron con ayuda de IA.
 
 ### 14.2 Qué significa "fluida" en pixel art
 
