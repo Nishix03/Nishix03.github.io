@@ -67,7 +67,7 @@ Debe ser `<nav>` con enlaces reales, accesible por teclado, con botón visible y
 - **Animación:** sprite sheets con CSS `steps()`, sin librería. GSAP solo para revelados de scroll y la barra de XP. Para que se vea **fluida**, cada personaje combina dos capas (cuadros + movimiento continuo), ver §14.
 - **Rendimiento y accesibilidad:** pausar fuera de pantalla con `IntersectionObserver`, respetar `prefers-reduced-motion`, y marcar los sprites decorativos como `aria-hidden`.
 - Máximo 8 sprites animados a la vez.
-- `three` queda descartado.
+- `three` queda descartado. El personaje 3D (§15) se renderiza en Blender y llega a la web como imagen y vídeo, nunca como modelo en tiempo real.
 
 ## 6. Gráfico final de avance (XP y niveles)
 
@@ -123,7 +123,7 @@ Al no haber fecha, la protección contra el "nunca termina" son las puertas de s
 | Fase | Entrega | Puerta de salida |
 |---|---|---|
 | Prerrequisito. Trabajo previo | Rediseño visual de los 6 rubros según su lista de verificación; marcador de posición del asistente en los prototipos (solo interfaz); capturas y material de GastroClinic y LeeContigo | Los 6 rubros según su lista. **GastroClinic no es prerrequisito:** sale como «en desarrollo» con lo que haya (frontend y panel de demostración), porque su backend y su producción exceden el tope de 6-8 semanas |
-| 0. Contenido y assets | Textos EN/ES, capturas de GastroClinic y LeeContigo, sprites y avatar | Todo el contenido existe en un archivo, antes de escribir código |
+| 0. Contenido y assets | Textos EN/ES, capturas de GastroClinic y LeeContigo, sprites de adorno y **personaje 3D mínimo** (póster + bucle del hero, §15) | Todo el contenido existe en un archivo, antes de escribir código |
 | 1. Fundaciones | Tokens, tipografía, layout, píldora de navegación, hero con avatar | Se ve bien en móvil y escritorio |
 | 2. Contenido | Proyectos, stack, otros trabajos, certificados, contacto, i18n | **Versión publicable** |
 | 3. Extras | Gráfico de XP, Ctrl+K, easter egg Win98 | Cada extra pasa axe y respeta movimiento reducido |
@@ -186,7 +186,7 @@ Los valores marcados con (*) fueron supuestos míos y ya están **confirmados** 
 
 ### 10.4 Pixel art y P3R: resuelto
 P3R manda en el marco (menú, tipografía, transiciones, rangos). El pixel art vive dentro: avatar, esferas y sprites decorativos.
-**Avatar (decidido, ampliado en §14):** un personaje principal pixel en hero, Journey y esferas, más dos compañeros pequeños con el mismo estilo y paleta. La silueta plana P3R aparece solo como recorte grande de fondo, sin rostro, como en las capturas.
+**Avatar (cambiado, ver §15):** el protagonista es **tu personaje 3D** hecho en Blender a partir de tus fotos, con la composición y el movimiento del menú P3R, en hero, menú y secciones. El reparto pixel (gato, Bug, mariposa, Carta y adornos) se queda como capa pequeña de "juego". El avatar pixel de Iván solo sobrevive en la ventana retro del easter egg.
 Así se evita el collage de dos estilos y se hace un solo juego de assets de personaje.
 
 ### 10.5 Riesgos
@@ -203,7 +203,7 @@ Referencia: vídeo «Pause Menu - Persona 3 Reload» (YouTube, `4d6x1CIgLSc`). F
 | En el vídeo | En el hero |
 |---|---|
 | Al pausar, el mundo se tiñe de un solo color y aparecen burbujas y rayos de luz (sensación de estar bajo el agua) | Fondo Dark Hour que entra con un círculo `clip-path` desde arriba a la derecha; burbujas **cuadradas** (pixel) que suben en bucle; tres rayos diagonales que se desplazan despacio |
-| El personaje entra cayendo en diagonal, girado, casi cabeza abajo, y queda cortado por el borde | Silueta plana gigante del avatar (sin rostro, un solo color) que cae girando hasta -24° y queda cortada por el borde derecho |
+| El personaje entra cayendo en diagonal, girado, casi cabeza abajo, y queda cortado por el borde | **Tu personaje 3D** (render cel con fondo transparente, §15) que cae girando hasta -24° y queda cortado por el borde derecho |
 | Palabra gigante «MENU» / «SYSTEM» vertical, pegada al borde y cortada | Franja menta a la izquierda con «IVÁN» gigante en negro, vertical y cortada |
 | Ítems en cascada: cada uno con tamaño distinto, cursiva gruesa, inclinados, entrando desde abajo a la derecha con poco retraso entre sí | Lista rotada -8°: el nombre como ítem seleccionado y debajo los CTA (View projects, Stack, Journey, Contact) en tamaños decrecientes; entrada escalonada de 60 ms con `skewX` |
 | Ítem seleccionado: fragmento blanco con texto negro y un tajo de color detrás | Fragmento blanco con texto negro y tajo neón detrás que entra con `clip-path: inset()` |
@@ -219,7 +219,7 @@ Referencia: vídeo «Pause Menu - Persona 3 Reload» (YouTube, `4d6x1CIgLSc`). F
 | 300-800 ms | La palabra lateral sube | `translateY(100%) → 0` |
 | 450-1100 ms | Cascada de la lista, 60 ms entre ítems | `opacity`, `translate`, `skewX(-12deg) → 0` |
 | 900-1150 ms | Tajo neón del ítem seleccionado | `clip-path: inset(0 100% 0 0) → inset(0)` |
-| 1100-1450 ms | El avatar cae a la plataforma con aplastamiento de 1 px y pasa a reposo | P3 de §14 |
+| 1100-1450 ms | Tu personaje 3D (póster) cae en diagonal y se asienta; luego arranca su bucle de vídeo | `transform` sobre el póster y vídeo con alfa (§15.4) |
 | Después | Burbujas, rayos y vaivén de ±1,5° de la silueta | Bucles lentos; se pausan fuera de pantalla |
 
 Con `prefers-reduced-motion`: todo en su estado final, sin burbujas ni vaivén. Sin JS: estado final visible (regla de §11.1). Las burbujas cuentan como decoración CSS, no como sprites, pero se limitan a 10.
@@ -374,7 +374,7 @@ Boceto en Claude Design: https://claude.ai/artifact/GmSkxVXCPR1wZ5qTJ5U9ac (pág
 
 | Personaje | Rejilla | Escala | Dónde aparece | Papel |
 |---|---|---|---|---|
-| **Iván** (avatar tipo bloque, sudadera verde con cierre neón; guiño Roblox) | 16×20 | ×10 en hero, ×3 en Journey | Hero, Journey (camina por la barra de XP con visor tipo scouter), RANK UP, menú | Protagonista. Único personaje con rostro |
+| **Iván pixel** (avatar tipo bloque; guiño Roblox) | 16×20 | ×4 | Solo la ventana retro del easter egg | **Sustituido por el personaje 3D (§15)** en hero, menú y secciones |
 | **Pixel** (gato menta con sombrero de paja; guiño One Piece) | 13×10 | ×7 | Contact | Compañero. Solo decorativo |
 | **Bug** (bicho cian) | 10×8 | ×4 | Stack (corre por la cuadrícula), easter egg retro | Chiste interno: "cazar bugs". Solo decorativo |
 | **Mariposa** (azul cian; guiño Persona) | 9×7 | ×5 | Hero (revolotea sobre la silueta), menú | Adorno vivo del lenguaje P3R |
@@ -387,7 +387,7 @@ Todos comparten la paleta de 16 colores, el contorno oscuro de 1 px y una escala
 | Gusto | Adorno pixel | Sección | Animación |
 |---|---|---|---|
 | Persona 3 Reload | Silueta plana gigante del avatar (sin rostro), burbujas cuadradas que suben, rayos de luz, mariposa | Hero y menú | Ver §10.6 |
-| Roblox | El propio avatar de bloques | Hero | P1 |
+| Roblox | Avatar de bloques, solo en la ventana retro del easter egg | Easter egg | P1 |
 | Yu-Gi-Oh | Carta viva, carta holo con estrellas de nivel | Projects | Flotación + inclinación ±6° + holo |
 | FNF | Flechas de ritmo ←↓↑→ que laten al compás | Stack (cabecera) y pista del menú | Golpe de escala 1→1.15→1 a 100 bpm, escalonado |
 | Dragon Ball | Visor tipo scouter en el avatar del Journey, esfera naranja con estrella en el hito ganado, contador 0/7 de esferas | Journey y footer | Flotación; brillo del visor |
@@ -426,3 +426,47 @@ Reglas que lo hacen creíble:
 - Todos son `aria-hidden="true"`; ninguno transmite información que no esté también en texto.
 - Con `prefers-reduced-motion`: primer cuadro fijo y sin desplazamiento.
 - Los sprites se generan con IA y se limpian a mano a la paleta (riesgo de §5); su origen se declara en los créditos.
+
+## 15. Personaje 3D de Iván (Blender)
+
+Decidido por Iván: el protagonista del hero y de las secciones es un **personaje 3D propio**, modelado en Blender a partir de **tus fotos**, con ayuda de ChatGPT Codex. Entra **en la v1**. El reparto pixel se queda como adorno (§14).
+
+### 15.1 Qué se toma de P3R y qué no
+- **Se toma el lenguaje:** sombreado tipo cel (plano, en dos o tres tonos), contorno de tinta, la caída en diagonal girada, el encuadre cortado por el borde, los colores monocromos sobre el fondo y la cámara baja y cercana.
+- **No se copia al protagonista de P3R:** ni su peinado que tapa un ojo, ni los auriculares, ni el uniforme, ni el brazalete, ni el Evoker. Tampoco la pose de apuntarse a la cabeza. El personaje eres **tú**: tu cara, tu pelo, y como prenda de marca la sudadera verde con cierre neón.
+- Motivo: el estilo no tiene dueño, pero el diseño de un personaje sí (© Atlus/Sega). Además, si el personaje se parece a uno famoso, el portafolio parece una fan page.
+
+### 15.2 Flujo de trabajo
+1. **Fotos de referencia:** de frente, de perfil y a tres cuartos, con luz pareja y la misma ropa. **No se suben al repo** (el repo es público): viven fuera, junto al archivo `.blend`.
+2. **Modelado estilizado** en Blender usando las fotos como imágenes de referencia. Proporciones de anime, pocas caras y pelo hecho en mechones grandes.
+3. **Rig y poses:** Rigify (viene incluido en Blender). Tres o cuatro poses y bucles cortos como máximo (§15.3).
+4. **Look cel:** EEVEE, `Shader to RGB` + `Color Ramp` para el sombreado plano y el modificador **Line Art** para el contorno. Paleta Dark Hour (verde, cian, menta y blanco), no el azul de P3R.
+5. **Render** con fondo transparente (`Film > Transparent`) a secuencia PNG.
+6. **Codex** escribe y documenta los scripts repetibles: preparar la escena con `bpy`, renderizar todas las poses y exportar con `ffmpeg`. Cada script debe poder explicarse en una entrevista (§9, punto 3b). El uso de IA se declara en los créditos.
+
+### 15.3 Poses (alcance cerrado)
+
+| Pose | Sección | Formato | Duración |
+|---|---|---|---|
+| Caída en diagonal + reposo (pelo y capucha que se mecen, respiración, parpadeo) | Hero y menú | Póster AVIF + vídeo con transparencia | Bucle de 3-4 s a 24 fps |
+| Sostener una carta (guiño Yu-Gi-Oh) | Projects | Hoja de sprites WebP | 8 cuadros |
+| Caminar | Journey (barra de XP) | Hoja de sprites WebP, pequeña | 8 cuadros |
+| Celebrar el RANK UP | Journey | Hoja de sprites WebP | 6-8 cuadros |
+| Saludo | Contact | Imagen fija (la anima CSS) | — |
+
+**Versión mínima para la v1:** solo la del hero (póster + bucle). Las demás poses pueden salir primero como imágenes fijas animadas con CSS (balanceo, entrada) y pasar a hojas de sprites después.
+
+### 15.4 Cómo se sirve sin bajar el rendimiento
+- **Póster como LCP:** el primer cuadro en AVIF (con respaldo WebP), con `width` y `height` y `fetchpriority="high"`. Es lo primero que se ve y lo que mide Lighthouse.
+- **Bucle del hero:** `<video autoplay muted loop playsinline poster="...">` en **WebM VP9 con canal alfa** (`-c:v libvpx-vp9 -pix_fmt yuva420p`). Para Safari, **HEVC con alfa**. Ojo: codificarlo exige un Mac. Si no hay Mac disponible, Safari muestra el póster fijo.
+- **Se carga después del LCP** (`preload="none"` y se activa al terminar la carga). Se pausa fuera de pantalla con `IntersectionObserver` y con la pestaña oculta.
+- **Secciones:** hojas de sprites WebP animadas con `steps()`, la misma técnica de A14. Así se reutiliza el código y cada animación cuesta una sola imagen.
+- **Movimiento reducido o `Save-Data`:** solo el póster, sin vídeo.
+- **La caída del hero** se hace con CSS (`transform` sobre el póster, §10.6), no dentro del vídeo: así el vídeo es un bucle corto y ligero.
+- **Presupuesto (meta, se mide en la fase 4):** póster ≤ 80 KB, vídeo del hero ≤ 600 KB, cada hoja de sprites ≤ 150 KB. Si no se cumple, se baja la resolución o los fps antes que la meta de Lighthouse 95.
+
+### 15.5 Riesgo de alcance
+Aprender modelado, rig y sombreado cel es el trabajo más largo de todo el plan, y ahora está **dentro de la v1** y bajo el tope de 6-8 semanas. Para protegerlo:
+- **Primero la versión mínima** (hero), con un límite de tiempo acordado antes de empezar.
+- Las poses de las secciones son mejoras, no requisitos: salen como imágenes fijas si el tiempo no alcanza.
+- Pausar el 3D si amenaza el rediseño de los 6 rubros, que sigue siendo el prerrequisito.
