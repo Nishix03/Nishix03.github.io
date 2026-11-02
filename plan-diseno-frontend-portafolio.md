@@ -707,6 +707,7 @@ Iván los quitó porque hacían ver el portafolio un poco infantil. Desaparecen 
 - Contact abre a prácticas (internships), puestos junior y proyectos freelance pequeños.
 
 ### 17.4 Contacto
+- **LinkedIn:** opción propia en Contact, entre GitHub y Platzi, con la selección P3R. **Falta la URL** del perfil (formato `linkedin.com/in/<usuario>`); en el boceto va un marcador. Se abre en una pestaña nueva con `rel="noopener"`.
 - Email: **ivannishix@gmail.com** (enlace `mailto:`). Es el correo correcto; la errata `ivannihix@gmail.com` de §2 solo afecta a commits antiguos.
 
 ### 17.5 Chat «NishixAI» (prototipo)
