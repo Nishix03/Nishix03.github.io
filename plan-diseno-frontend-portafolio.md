@@ -5,7 +5,7 @@ Estado: decisiones cerradas tras la entrevista; los puntos abiertos están al fi
 
 ## 1. Posicionamiento
 
-- **Mensaje del hero:** desarrollador full-stack que entrega, con funciones impulsadas por IA.
+- **Mensaje del hero:** estudiante de Ingeniería de Sistemas (4.º ciclo, USAT) que entrega trabajo full-stack, con funciones impulsadas por IA. Nunca se presenta como ingeniero titulado (§17.3).
 - **Audiencia:** mixta. Manda el mensaje full-stack; empleo y freelance van como CTA secundarios (CV y contacto).
 - **Marca:** "Iván Rodas" como nombre, con un avatar pixel art animado como mascota. `Nishix_03` es el handle secundario.
 - **Idioma:** inglés por defecto, español opcional.
@@ -69,7 +69,7 @@ Debe ser `<nav>` con enlaces reales, accesible por teclado, con botón visible y
 - Máximo 8 sprites animados a la vez.
 - `three` queda descartado. El personaje 3D (§15) se renderiza en Blender y llega a la web como imagen y vídeo, nunca como modelo en tiempo real.
 
-## 6. Gráfico final de avance (XP y niveles)
+## 6. Gráfico final de avance (XP y niveles) — **sustituido por §17.2**
 
 Versión combinada: mecánica de XP de LeeContigo + marco P3R + habitante pixel.
 
@@ -561,3 +561,29 @@ Por verificar: si LeeContigo usó HTML, CSS y JavaScript o TypeScript en las par
 ### 16.5 Perfil de Platzi
 - Botón «View my Platzi profile» en Journey (junto a los certificados) y opción «Platzi» en Contact.
 - URL: https://platzi.com/p/ivannishix/ (verificada el 2 nov 2026). En Contact aparece como «@ivannishix».
+
+## 17. Ajustes tras revisar el prototipo (2 nov 2026)
+
+### 17.1 Sin menú de pantalla completa
+Con una página por apartado, el menú de pantalla completa repetía lo que ya hacen el hero y la cabecera. Se elimina (también el botón MENU y el atajo Ctrl+K):
+- **El hero hace de menú P3R:** su lista (Projects, Stack, Journey, Contact) usa la selección P3R y abre cada página.
+- **En las demás páginas**, la cabecera muestra las cuatro opciones con la misma selección, y «Esc Return» vuelve al hero.
+- Lo que vivía en el menú pasa al hero: la pista de teclado (↑↓ Move, Enter Confirm), las flechas de ritmo y **Eco**.
+- Ventaja: una isla de React menos que hidratar (solo queda el Journey) y menos código que probar con axe.
+- Se anulan en consecuencia: A2 (abrir y cerrar el menú), A17 pasa a la pista del hero, y §10.2 se lee con este cambio.
+
+### 17.2 Sin nivel, XP ni power level
+Iván los quitó porque hacían ver el portafolio un poco infantil. Desaparecen la caja «LV 2 · 10 XP», el power level, el XP por hito, las tres stats y el «RANK UP!».
+- **El Journey pasa a ser una línea de tiempo:** estudios arriba, luego hitos con fecha. Los bloqueados siguen como camino por delante, nunca como logros.
+- **Datos reales en lugar de puntos:** 17 cursos de Platzi aprobados, 1 ruta completada, 1.er puesto en futurX 2026 (equipo), 6 prototipos de rubro publicados.
+- El hito más reciente se marca con un fragmento «LATEST» del color de selección. Las «ゴゴゴ» (JoJo) se quedan a su lado.
+- La barra segmentada y el avatar 3D caminando se mantienen: muestran avance sin puntuarlo.
+- El **RANK** de Projects y Stack se mantiene, porque sale de evidencia (§10.1) y no de un juego de puntos. La esfera de Dragon Ball queda solo para el easter egg (contador del footer).
+
+### 17.3 Estudios
+- **Estudiante de Ingeniería de Sistemas, 4.º ciclo, USAT** (Chiclayo, Perú). Aparece en la etiqueta del hero, en el mensaje principal, en una tarjeta «EDUCATION · IN PROGRESS» del Journey y en Contact.
+- Regla de honestidad: nunca «Systems Engineer» ni «Ingeniero»; siempre «student» / «estudiante», con el ciclo actualizado cada semestre.
+- Contact abre a prácticas (internships), puestos junior y proyectos freelance pequeños.
+
+### 17.4 Contacto
+- Email: **ivannishix@gmail.com** (enlace `mailto:`). Es el correo correcto; la errata `ivannihix@gmail.com` de §2 solo afecta a commits antiguos.
