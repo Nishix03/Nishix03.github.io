@@ -23,9 +23,9 @@ Estado: decisiones cerradas tras la entrevista; los puntos abiertos están al fi
 | Certificados | Franja discreta: Platzi Expert+, 17 cursos de Web, ruta Fundamentos completada. | No es sección protagonista. |
 | Tech stack | Solo lo que de verdad usas (unas 12 tecnologías). | La referencia con 50 logos infla el perfil; evitarla. |
 
-Reglas de honestidad: nada de barras de skill en porcentajes, nada de métricas inventadas, y el origen de los sprites (IA) se declara en los créditos.
+Reglas de honestidad: nada de métricas inventadas, y el origen de los sprites y del render 3D (IA) se declara en los créditos. **Cambio decidido por Iván:** el Stack sí muestra un porcentaje de dominio con una barrita pequeña (§16.3). Para que siga siendo honesto, se rotula como **«self-assessed» (autoevaluado)** y convive con el RANK, que sí sale de evidencia.
 
-## 3. Estructura de la página (scroll narrativo, una sola página por idioma)
+## 3. Estructura del sitio (cambiada: una página por apartado, ver §16)
 
 1. **Hero:** nombre, mensaje, avatar pixel animado, CTA "View projects" + "Contact".
 2. **Projects:** tarjetas con problema, qué se entregó y stack. GastroClinic y LeeContigo grandes.
@@ -35,7 +35,7 @@ Reglas de honestidad: nada de barras de skill en porcentajes, nada de métricas 
 6. **Certificates:** franja.
 7. **Contact + footer.**
 
-**Navegación (actualizada, ver §10):** una barra mínima fija (botón MENU, idioma, tema) y el **menú de pantalla completa estilo P3R**, que se abre con el botón o con Ctrl+K. Máximo 6 ítems.
+**Navegación (actualizada, ver §10 y §16):** cabecera con las cuatro opciones (Projects, Stack, Journey, Contact) con la selección P3R, y además una barra mínima fija (botón MENU, idioma, tema) y el **menú de pantalla completa estilo P3R**, que se abre con el botón o con Ctrl+K. Máximo 6 ítems.
 Debe ser `<nav>` con enlaces reales, accesible por teclado, con botón visible y no solo el atajo.
 
 ## 4. Sistema visual
@@ -271,6 +271,11 @@ Reglas tomadas de las skills `gsap-*`, `css-animations`, `ui-motion` y `web-anim
 | A18 | Volver arriba ("Rollback") | Clic | `scrollTo` nativo con `behavior: 'smooth'`. | `auto` |
 | A19 | Foco visible | Teclado | Contorno de 2 px neón y `outline-offset` con transición de 100 ms. | Igual |
 
+| A20 | Transición entre páginas | Navegar a otro apartado | Barrido diagonal del color de selección y uno blanco detrás (550 ms) y la página nueva entra con `clip-path: circle()` desde arriba a la derecha (600 ms). Ver §16.2 | Cambio instantáneo |
+| A21 | Selección P3R de opciones | Hover, foco, flechas | Tajo del color de selección con `scaleX` 0→1 y placa blanca con `opacity`, 150 ms; desplazamiento `x` +12; el tajo «late» suave (`scaleY` 1→1.08, 1,2 s). Pulsación 0.96 | Cambio sin transición |
+| A22 | Selección de proyecto | Hover, foco, clic en la fila | La fila hace A21 y su numeral gira -8°; la carta de detalle entra girando (`rotateY` -90°→0, 450 ms) y su contenido cae escalonado (50 ms) | Cambio instantáneo |
+| A23 | Barras de dominio | Entrar en Stack | 10 segmentos que se llenan con `scaleX`, 20 ms entre segmento y 40 ms entre tarjetas | Barras llenas |
+
 **Descartado a propósito:** pantalla de carga, `three`, pinning del Journey, transiciones entre idiomas, sonido.
 
 ### 11.3 Implementación en Astro
@@ -493,3 +498,31 @@ Aprender modelado, rig y sombreado cel es el trabajo más largo de todo el plan,
 - **Primero la versión mínima** (hero), con un límite de tiempo acordado antes de empezar.
 - Las poses de las secciones son mejoras, no requisitos: salen como imágenes fijas si el tiempo no alcanza.
 - Pausar el 3D si amenaza el rediseño de los 6 rubros, que sigue siendo el prerrequisito.
+
+## 16. Páginas, selección P3R, Stack y Platzi
+
+Decidido por Iván después del boceto. Prototipo navegable en la mesa de trabajo «Portafolio — prototipo por páginas» (botón Play).
+
+### 16.1 Una página por apartado
+- Rutas: `/` (hero), `/projects`, `/stack`, `/journey` (incluye certificados) y `/contact`; en español, las mismas bajo `/es/`. Sustituye al scroll de una sola página de la versión anterior de §3.
+- Cada página tiene su palabra gigante de fondo, su número grande y el botón «Esc Return» para volver al hero.
+- Ventaja: cada página carga solo lo suyo (el Journey y sus sprites no pesan en el hero). Riesgo: más navegación; por eso la cabecera siempre muestra las cuatro opciones.
+
+### 16.2 Transición entre páginas
+- **Técnica preferida:** transiciones de vista entre documentos, nativas del navegador: `@view-transition { navigation: auto; }` en CSS y `view-transition-name` en la cabecera para que no se mueva. Sin JavaScript extra. Navegadores sin soporte: cambio de página normal (mejora progresiva).
+- **Alternativa:** el `<ClientRouter />` de Astro, si hace falta controlar la animación con JS. Se decide en la fase 1 tras probar las dos.
+- **Animación (A20):** barrido diagonal del color de selección + barrido blanco, y círculo `clip-path` que revela la página nueva. Con movimiento reducido: cambio instantáneo.
+
+### 16.3 Selección P3R con color característico
+- Toda opción seleccionable (cabecera, lista del hero, filas de proyectos, enlaces de contacto, menú) usa el mismo componente: placa blanca, texto negro y un **tajo del color de selección** detrás (A21).
+- **Color de selección:** rojo coral `#ff3e5f` en el boceto, el equivalente al tajo rojo de P3R. Es el único color fuera de la paleta verde y solo aparece en la selección y en los barridos, por eso destaca. Alternativas probadas en el boceto (Tweaks): neón, cian y ámbar. Pendiente: confirmación de Iván. Contraste: el texto queda negro sobre blanco, así que el coral no afecta a la legibilidad.
+- Como en el juego, siempre hay una opción seleccionada: el cursor se mueve con el ratón, el foco o las flechas.
+
+### 16.4 Stack con iconos pixel y barras
+- **Icono pixel por tecnología:** baldosa de 9×7 píxeles con las dos letras de la tecnología (H5, C3, JS, TS, AS, RE, TW, GS, PW, JV, SQ, GT) en una fuente pixel de 3×5 y el color de marca de cada una. Se generan con un script, no a mano. No se copian los logotipos oficiales: solo se usan sus colores y siglas para identificarlas.
+- **Porcentaje + barrita:** 10 segmentos, 100 × 6 px (pequeña, como pidió Iván). Rotulado «self-assessed».
+- **Valores:** los del boceto son provisionales; los fija Iván. Regla para que sean creíbles: ningún porcentaje por encima de lo que respalda su RANK (por ejemplo, nada de 90 % con RANK 1).
+
+### 16.5 Perfil de Platzi
+- Botón «View my Platzi profile» en Journey (junto a los certificados) y opción «Platzi» en Contact.
+- **Falta la URL real** del perfil público (formato `platzi.com/p/<usuario>`); en el boceto va un marcador.
