@@ -181,4 +181,101 @@ Así se evita el collage de dos estilos y se hace un solo juego de assets de per
 - **Movimiento:** barridos y círculos son grandes. Cero destellos por encima de 3 por segundo, y todo desactivado con `prefers-reduced-motion`.
 - **Lectores de pantalla:** las palabras gigantes y los números decorativos van `aria-hidden`.
 - **Rendimiento:** degradados con CSS o SVG, sin imágenes pesadas ni desenfoques grandes.
-- **Alcance:** esta interfaz pasa a ser la parte más costosa del proyecto. El Journey con calendario y el menú completo van en la fase 3, no en la v1.
+- **Alcance:** esta interfaz pasa a ser la parte más costosa del proyecto. El Journey y el menú completo van en la fase 3, no en la v1.
+
+## 11. Animaciones
+
+Reglas tomadas de las skills `gsap-*`, `css-animations`, `ui-motion` y `web-animation-design` (ver §12). Lo que la regla no cubre se marca como decisión propia.
+
+### 11.1 Reglas globales
+
+| Regla | Valor |
+|---|---|
+| Propiedades animables | Solo `transform`, `opacity`, `filter` y `clip-path`. Nunca `top/left/width/height/margin/padding`. |
+| `transition: all` | Prohibido. Siempre propiedades con nombre. |
+| Motor | CSS para estado interactivo (hover, foco, toggles: es interrumpible). GSAP para secuencias, scroll y texto. **No** se añade `motion`/`framer-motion`. |
+| Tokens (un solo archivo `motion.ts` + variables CSS) | `--ease: cubic-bezier(0.2, 0, 0, 1)`, `--dur-fast: 150ms`, `--dur: 300ms`, `--dur-wipe: 600ms`. En GSAP: `EASE_OUT = 'power3.out'`, `EASE_IN = 'power2.in'`. |
+| Entrada | opacity 0→1, `y` 12→0, blur 4px→0 (solo en elementos pequeños), 300 ms, stagger 100 ms (80 ms por palabra en títulos). |
+| Salida | Más suave y corta que la entrada: `y` -12 fijo, 150 ms, `power2.in`. |
+| Pulsación | `scale: 0.96`, 150 ms. Nunca menos de 0.95. |
+| Cambio de icono | Dos iconos montados: escala 0.25→1, opacity 0→1, blur 4→0, 300 ms, sin rebote. |
+| Rebote / overshoot | Ninguno. |
+| Primera carga | Los elementos que ya están en su estado por defecto no se animan. Excepción: la entrada intencional del hero. |
+| Movimiento reducido | Se ve siempre el estado final, sin recorrido. Nunca un elemento atascado en `opacity: 0`. |
+| Sin JS | El estado inicial oculto solo existe bajo una clase `js` en `<html>`. Sin JS, todo el contenido es visible. |
+| Seguridad contra destellos | Máximo 3 destellos por segundo y ningún cambio brusco de brillo a pantalla completa. Los barridos son de color sólido, no estroboscópicos. |
+| Presupuesto | Máximo 8 sprites animados a la vez, un solo timeline con `scrub` activo, unos 12 ScrollTriggers en total. |
+
+### 11.2 Catálogo
+
+| ID | Animación | Disparador | Técnica y valores | Movimiento reducido |
+|---|---|---|---|---|
+| A1 | Entrada del hero | Primera carga | Timeline GSAP: etiqueta, título (SplitText por palabras, 80 ms), subtítulo y CTA (100 ms). El avatar entra al final y queda en reposo. | Todo visible de inmediato |
+| A2 | Abrir y cerrar el menú | Botón MENU o Ctrl+K | Círculo `clip-path: circle()` desde el botón, 600 ms. Después, ítems rotados -8° con stagger de 100 ms (máximo 6). Se controla con un timeline que se invierte (`reverse`), así se interrumpe sin saltos. Cierre: 150 ms con `y` -12. | Aparición instantánea, sin círculo |
+| A3 | Ítem activo del menú | Foco, hover o flechas ↑↓ | Fragmento diagonal con CSS `transition` de `clip-path` y `transform`, 150 ms. | Cambio sin transición |
+| A4 | Revelado de secciones | Scroll | `ScrollTrigger.batch()`, `start: 'top 85%'`, una sola vez. Nunca un trigger por elemento. | Sin recorrido |
+| A5 | Palabra gigante de fondo | Scroll (solo escritorio) | Parallax con `scrub: 1`, `ease: 'none'`, `fastScrollEnd`. En móvil no hay parallax. | Estática |
+| A6 | Fila de proyecto | Hover, foco, clic | `x` +12 y fragmento, 150 ms; pulsación 0.96. | Sin desplazamiento |
+| A7 | Carta de proyecto con holo | Puntero fino | Inclinación máxima de 8° con `gsap.quickTo`, brillo con variables CSS `--mx/--my` desde un solo `pointermove`. Solo `(hover: hover)`. | Desactivada |
+| A8 | Detalle del hito (diario) | Abrir un hito | Entrada por bloques: fecha, título, nota, aprendizaje, 100 ms. Salida 150 ms. | Aparición instantánea |
+| A9 | Journey: avance | Scroll, `scrub: 1`, **sin pin** | `scaleX` de la barra y `x` del avatar (transform) en el mismo trigger. En móvil: lista vertical, sin caminata. | Estado final |
+| A10 | RANK UP | Cruzar un hito | Fragmento `clip-path` abre 250 ms, texto entra 300 ms, se queda 1,2 s y sale 150 ms. Una pulsación de opacidad de 120 ms como máximo de 0,15; no es un destello. | Tarjeta estática |
+| A11 | Insignia de nivel (JoJo) | Subir de nivel | Escala 0.25→1, opacity 0→1, 300 ms, sin rebote. | Sin animación |
+| A12 | Power level | Cambio de XP | `gsap` interpola `textContent` hasta 800 ms con `tabular-nums`. Nunca con `setState` por fotograma. | Valor final directo |
+| A13 | Navegar el Journey con teclado | ←→ | `timeline.tweenTo(etiqueta)`, 500 ms por paso. | Salto directo |
+| A14 | Sprites pixel | Continua | Hoja de sprites con CSS `steps(n)` a 8-12 fps, moviendo una tira interna con `transform: translateX` dentro de un contenedor con `overflow: hidden` (no `background-position`, que no usa el compositor). Pausa fuera de pantalla con `IntersectionObserver` y con `document.hidden`. | Primer fotograma fijo |
+| A15 | Interruptor Día/Noche | Clic | Cambio de variables CSS con `document.startViewTransition` y círculo desde el botón; sin soporte, cambio instantáneo. Icono sol/luna con el cruce de la regla global. | Instantáneo |
+| A16 | Esferas de Dragon Ball | Clic | Flotación suave. Al recogerla vuela al contador, 500 ms `power3.in`. Con 7: círculo de 600 ms y abre la ventana retro (escala 0.96→1 y opacity, 200 ms). | Aparece sin vuelo |
+| A17 | Flechas de ritmo (FNF) | Pulsar ↑↓←→ | La flecha correspondiente hace un golpe de escala 1→1.15→1 en 80 ms y cambia de color. | Solo cambio de color |
+| A18 | Volver arriba ("Rollback") | Clic | `scrollTo` nativo con `behavior: 'smooth'`. | `auto` |
+| A19 | Foco visible | Teclado | Contorno de 2 px neón y `outline-offset` con transición de 100 ms. | Igual |
+
+**Descartado a propósito:** pantalla de carga, `three`, pinning del Journey, transiciones entre idiomas, sonido.
+
+### 11.3 Implementación en Astro
+- **Islas React** (menú, Journey): `useGSAP` con `scope`, `contextSafe` para animaciones en eventos, y nunca animar estado de React. El limpiado es automático.
+- **Secciones estáticas de Astro:** un único módulo `motion` con `gsap.context()` y `gsap.matchMedia()`. Los plugins se registran una sola vez.
+- `gsap.matchMedia()` define dos ramas: `(prefers-reduced-motion: no-preference)` y `reduce`; además `(min-width: ...)` para escritorio y móvil.
+- ScrollTrigger: `trigger`, `start` y `end` siempre explícitos. Llamar a `ScrollTrigger.refresh()` tras `document.fonts.ready`. Los `markers` solo en desarrollo.
+- El estado inicial oculto vive en CSS bajo `.js`, para evitar parpadeo y para que sin JS todo siga visible.
+- Contenedores con texto rotado (menú, palabras gigantes) llevan `overflow: hidden` para que no aparezca scroll horizontal.
+- Antes de añadir `gsap` y `@gsap/react`, copiar las versiones exactas del `package.json` existente o fijarlas en `package.json`. Las versiones y la licencia de los plugins (SplitText) se verifican al instalar.
+
+### 11.4 Cómo se prueba
+- Playwright con `reducedMotion: 'reduce'`: todo el contenido visible y sin recorrido.
+- Playwright sin JS: contenido completo visible.
+- axe en los dos temas (Día y Noche).
+- Sin desbordamiento horizontal en 360 px y en 1440 px.
+- CLS 0: ninguna animación mueve el layout.
+- Traza de rendimiento en Chrome con CPU ralentizada, buscando fotogramas largos en el Journey y en el menú.
+
+## 12. Skills que se usarán
+
+### 12.1 Por fase
+
+| Fase | Skills |
+|---|---|
+| 0. Contenido y assets | `copywriting-kit:landing-page-copy`, `copy-edit` y `brand-voice` (textos EN/ES), `design:ux-copy` (microcopy del menú y la pista de teclado), `anthropic-skills:extraer-design-system` (tokens de tus 5 referencias; por comprobar si aplica) |
+| 1. Fundaciones | `stack-tecnologico` (stack y reglas), `hzblj-skills:tailwind`, `ui-typography`, `ui-surfaces`, `frontend-design`, `anti-ui-slop`, `ui-ux-pro-max`, `atomic-design`, `component-architecture` |
+| 2. Contenido publicable | `hzblj-skills:ui-interactions`, `css-animations`, `compound-components` (menú), `hooks`, `type-safety`, `performance`, `seo-audit` y `ai-seo` (metadatos, Open Graph) |
+| 3. Extras (Journey, menú, easter egg) | `hzblj-skills:gsap-timelines`, `gsap-scroll-trigger`, `gsap-text`, `gsap-react`, `gsap-performance`, `ui-motion`, `audit-suite:web-animation-design`, `make-interfaces-feel-better`, `emil-design-engineering`; agente `hzblj-skills:animation-specialist` para el Journey |
+| 4. Calidad | `design:accessibility-review`, `audit-suite:audit-as-a11y-eng`, `audit-as-perf-eng`, `audit-as-design-eng`, `audit-as-frontend-eng`, `full-audit`, `web-design-guidelines`, `superpowers:verification-before-completion`, `agent-browser` para la revisión visual |
+| Todas | Skills de código limpio: `meaningful-names`, `functions`, `comments`, `formatting`, `objects-and-data`, `error-handling`; agente `clean-code-reviewer` antes de cada commit grande |
+
+### 12.2 Procesos
+- `superpowers:brainstorming` y `writing-plans` antes de cada fase.
+- `executing-plans` para ejecutar con puntos de control.
+- `test-driven-development` en lo testeable (Journey: la suma de XP y la regla de rangos).
+- `systematic-debugging` ante errores raros de scroll o de animación.
+
+### 12.3 Se descartan
+- `hzblj-skills:nextjs-routing` (el sitio es Astro, no Next.js).
+- Skills móviles: `reanimated-*`, `skia`, `lists`, `native-feel`, `react-navigation`.
+- `hzblj-skills:project` (estructura de monorepo): este sitio no la necesita.
+- `motion` (el stack lo reserva para apps React; aquí GSAP y CSS cubren todo).
+
+### 12.4 Conflictos y cuidados
+- **Skills pensadas para Next.js/React:** las de GSAP traen ejemplos con `'use client'`. En Astro solo se aplica la parte de `useGSAP` en islas y el módulo `motion` en las secciones estáticas.
+- **Convenciones de código de esas skills** (flechas `const`, exports con nombre, `type` sobre `interface`) frente a las de tu `CLAUDE.md` (BEM, CSS plano). Hay que decidir qué manda cuando se migre a Astro y actualizar `CLAUDE.md`.
+- **Tu forma de trabajar:** tu `CLAUDE.md` pide explicarte cada cambio en español y dejar que corrijas primero los errores simples. Al usar estas skills, cada paso se explica; el código lo escribimos juntos y no de golpe.
+- **Axe como MCP:** el servidor `axe-accessibility` falló al conectarse en esta sesión. Mientras tanto se usa `@axe-core/playwright` desde las pruebas, que ya está en el stack.
