@@ -64,7 +64,7 @@ Debe ser `<nav>` con enlaces reales, accesible por teclado, con botón visible y
 
 - 5 a 8 sprites pequeños y un avatar. Generados con IA y luego limpios.
 - **Consistencia:** una sola hoja de estilo (prompt base, paleta fija y tamaño de rejilla), y cuantizar a la paleta con un script. Es el riesgo principal de usar IA.
-- **Animación:** sprite sheets con CSS `steps()`, sin librería. GSAP solo para revelados de scroll y la barra de XP.
+- **Animación:** sprite sheets con CSS `steps()`, sin librería. GSAP solo para revelados de scroll y la barra de XP. Para que se vea **fluida**, cada personaje combina dos capas (cuadros + movimiento continuo), ver §14.
 - **Rendimiento y accesibilidad:** pausar fuera de pantalla con `IntersectionObserver`, respetar `prefers-reduced-motion`, y marcar los sprites decorativos como `aria-hidden`.
 - Máximo 8 sprites animados a la vez.
 - `three` queda descartado.
@@ -186,7 +186,7 @@ Los valores marcados con (*) fueron supuestos míos y ya están **confirmados** 
 
 ### 10.4 Pixel art y P3R: resuelto
 P3R manda en el marco (menú, tipografía, transiciones, rangos). El pixel art vive dentro: avatar, esferas y sprites decorativos.
-**Avatar (decidido):** un solo personaje pixel en hero, Journey y esferas. La silueta plana P3R aparece solo como recorte grande de fondo, sin rostro, como en las capturas.
+**Avatar (decidido, ampliado en §14):** un personaje principal pixel en hero, Journey y esferas, más dos compañeros pequeños con el mismo estilo y paleta. La silueta plana P3R aparece solo como recorte grande de fondo, sin rostro, como en las capturas.
 Así se evita el collage de dos estilos y se hace un solo juego de assets de personaje.
 
 ### 10.5 Riesgos
@@ -236,7 +236,7 @@ Reglas tomadas de las skills `gsap-*`, `css-animations`, `ui-motion` y `web-anim
 | A11 | Insignia de nivel (JoJo) | Subir de nivel | Escala 0.25→1, opacity 0→1, 300 ms, sin rebote. | Sin animación |
 | A12 | Power level | Cambio de XP | `gsap` interpola `textContent` hasta 800 ms con `tabular-nums`. Nunca con `setState` por fotograma. | Valor final directo |
 | A13 | Navegar el Journey con teclado | ←→ | `timeline.tweenTo(etiqueta)`, 500 ms por paso. | Salto directo |
-| A14 | Sprites pixel | Continua | Hoja de sprites con CSS `steps(n)` a 8-12 fps, moviendo una tira interna con `transform: translateX` dentro de un contenedor con `overflow: hidden` (no `background-position`, que no usa el compositor). Pausa fuera de pantalla con `IntersectionObserver` y con `document.hidden`. | Primer fotograma fijo |
+| A14 | Sprites pixel | Continua | Dos capas (§14): cuadros con `steps(n)` a 10-12 fps y movimiento continuo con `transform` a 60 fps. Hoja de sprites con CSS `steps(n)`, moviendo una tira interna con `transform: translateX` dentro de un contenedor con `overflow: hidden` (no `background-position`, que no usa el compositor). Pausa fuera de pantalla con `IntersectionObserver` y con `document.hidden`. | Primer fotograma fijo |
 | A15 | Interruptor Día/Noche | Clic | Cambio de variables CSS con `document.startViewTransition` y círculo desde el botón; sin soporte, cambio instantáneo. Icono sol/luna con el cruce de la regla global. | Instantáneo |
 | A16 | Esferas de Dragon Ball | Clic | Flotación suave. Al recogerla vuela al contador, 500 ms `power3.in`. Con 7: círculo de 600 ms y abre la ventana retro (escala 0.96→1 y opacity, 200 ms). | Aparece sin vuelo |
 | A17 | Flechas de ritmo (FNF) | Pulsar ↑↓←→ | La flecha correspondiente hace un golpe de escala 1→1.15→1 en 80 ms y cambia de color. | Solo cambio de color |
@@ -337,3 +337,47 @@ Al llegar al tope de 6-8 semanas, un rubro sin aprobación (criterio 7) se muest
 
 ### Riesgo
 Elegiste los 6 al mismo nivel, que es el camino más largo. Si a la mitad del tope hay menos de 3 rubros aprobados, conviene recortar a 3 de vitrina y dejar el resto con la etiqueta.
+
+## 14. Personajes pixel con animación fluida
+
+Boceto en Claude Design: https://claude.ai/artifact/GmSkxVXCPR1wZ5qTJ5U9ac (página completa y hoja de personajes).
+
+### 14.1 Reparto
+
+| Personaje | Rejilla | Escala | Dónde aparece | Papel |
+|---|---|---|---|---|
+| **Iván** (avatar tipo bloque, sudadera verde con cierre neón) | 16×20 | ×6 en hero, ×3 en Journey | Hero, Journey (camina por la barra de XP), RANK UP, menú | Protagonista. Único personaje con rostro |
+| **Pixel** (gato menta) | 13×10 | ×5 | Hero (sentado junto al avatar), Contact | Compañero. Solo decorativo |
+| **Bug** (bicho cian) | 10×8 | ×4 | Stack (corre por la cuadrícula), easter egg retro | Chiste interno: "cazar bugs". Solo decorativo |
+
+Los tres comparten la paleta de 16 colores, el contorno oscuro de 1 px y una escala **entera** (×3, ×4, ×5, ×6), para que ningún píxel se deforme. Son personajes originales: nada de personajes, logos ni siluetas de las sagas de §4.
+
+### 14.2 Qué significa "fluida" en pixel art
+
+El pixel art no se puede interpolar entre cuadros (se vería borroso). La fluidez sale de **dos capas**:
+
+1. **Capa de cuadros (la pose):** sprite sheet con `steps(n)` a 10-12 fps. Más cuadros en lugar de más velocidad: caminar 8 cuadros, reposo 6 cuadros con respiración, parpadeo de 2 cuadros cada 3-5 s con retardo aleatorio.
+2. **Capa de movimiento (el cuerpo):** `transform` continuo a 60 fps con curva suave (`cubic-bezier(0.45, 0, 0.55, 1)`): balanceo vertical de 1 píxel de arte, desplazamiento por la barra de XP, cola del gato que oscila, flotación del bicho.
+
+Reglas que lo hacen creíble:
+- **Anticipación y asentamiento dibujados** en cuadros (agacharse 1 px antes del salto del RANK UP, aplastarse 1 px al caer). La regla global "sin rebote" (§11.1) sigue mandando en la interfaz; aquí el aplastamiento es dibujo, no una curva con overshoot.
+- **Cambio de estado sin saltos:** una máquina de estados pequeña (`idle → walk → rankup → idle`) espera al final del ciclo actual para cambiar de pose.
+- **Ritmos desfasados:** cada personaje usa una duración distinta (1,6 s, 2,2 s, 0,9 s) para que no se muevan como un solo bloque.
+- **Movimiento sub-píxel solo en la capa de cuerpo;** los cuadros siempre nítidos con `image-rendering: pixelated`.
+
+### 14.3 Catálogo de animaciones de personajes
+
+| ID | Personaje | Estado | Cuadros | Movimiento continuo | Movimiento reducido |
+|---|---|---|---|---|---|
+| P1 | Iván | Reposo | 6 (respira) + parpadeo | Balanceo de 1 px, 1,6 s | Cuadro 1 fijo |
+| P2 | Iván | Caminar (Journey) | 8 a 12 fps | `x` ligado al scroll (A9) | Estado final, sin caminata |
+| P3 | Iván | RANK UP | 6: agacharse, salto, aire, caída, aplastarse, pose | Salto de 6 px con `power3.out` / `power2.in` | Pose final fija |
+| P4 | Pixel | Reposo | 4 (orejas) + parpadeo | Cola oscilando ±12°, 2,2 s | Fijo |
+| P5 | Bug | Correr | 2 patas a 10 fps | Recorre la cuadrícula del Stack | Fijo, sin recorrido |
+
+### 14.4 Rendimiento y accesibilidad
+- Solo `transform` y `opacity`. `will-change` solo mientras el personaje está en pantalla.
+- Pausa fuera de pantalla (`IntersectionObserver`) y con la pestaña oculta (`document.hidden`). Cuenta para el presupuesto de 8 sprites animados a la vez.
+- Todos son `aria-hidden="true"`; ninguno transmite información que no esté también en texto.
+- Con `prefers-reduced-motion`: primer cuadro fijo y sin desplazamiento.
+- Los sprites se generan con IA y se limpian a mano a la paleta (riesgo de §5); su origen se declara en los créditos.
