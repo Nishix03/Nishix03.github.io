@@ -1,0 +1,137 @@
+---
+import NishixChat from './NishixChat';
+import { getContent } from '../content';
+import { sprites } from '../sprites/manifest';
+
+const { ui, chat, chatQuestions } = getContent();
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const icon = sprites.iconNishixAI;
+---
+
+<header class="header">
+  <div class="header__bar">
+    <a class="header__brand focus-ring" href="/">
+      IVÁN RODAS <span class="header__handle mono">{ui.handle}</span>
+    </a>
+
+    <nav class="header__nav" aria-label="Main">
+      {ui.nav.map((item) => (
+        <a
+          class="option header__link"
+          href={`/${item.page}`}
+          aria-current={path === `/${item.page}` ? 'page' : undefined}
+        >
+          <span class="option__slash" aria-hidden="true" />
+          <span class="option__plate" aria-hidden="true" />
+          <span class="option__label">{item.label}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="header__tools">
+      <NishixChat
+        client:load
+        transition:persist="nishixai"
+        title={chat.title}
+        subtitle={chat.subtitle}
+        greeting={chat.greeting}
+        fallback={chat.fallback}
+        placeholder={chat.placeholder}
+        inputLabel={chat.inputLabel}
+        questions={chatQuestions}
+        iconSrc={icon.ready ? `/sprites/${icon.file}` : undefined}
+      />
+      <div class="lang" role="group" aria-label="Language">
+        <button class="lang__btn lang__btn--on" type="button" aria-pressed="true">
+          EN
+        </button>
+        <button
+          class="lang__btn"
+          type="button"
+          aria-pressed="false"
+          aria-disabled="true"
+          title={ui.langSoon}
+        >
+          ES
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(7, 17, 12, 0.9);
+    border-bottom: 1px solid rgba(168, 240, 200, 0.12);
+  }
+  .header__bar {
+    position: relative;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 10px var(--gutter);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+  }
+  .header__brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--color-ink);
+    font-weight: 900;
+    font-style: italic;
+    font-size: 18px;
+    text-decoration: none;
+  }
+  .header__handle {
+    margin-left: 6px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--color-mint);
+  }
+  /* 40 px entre opciones: el tajo de una no puede tocar a la siguiente. */
+  .header__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 40px;
+  }
+  .header__link {
+    font-size: 20px;
+    color: var(--color-ink);
+  }
+  .header__tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .lang {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid rgba(168, 240, 200, 0.25);
+    border-radius: 8px;
+  }
+  .lang__btn {
+    min-width: 44px;
+    min-height: 44px;
+    border: 0;
+    background: transparent;
+    color: var(--color-mint);
+    font-weight: 800;
+    font-size: 13px;
+  }
+  .lang__btn--on {
+    background: var(--color-neon);
+    color: var(--color-bg);
+  }
+  .lang__btn[aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import '../styles/global.css';
+import { getContent } from '../content';
+
+interface Props {
+  title?: string;
+  /** En el inicio no se muestra el botón "Esc Return". */
+  home?: boolean;
+}
+
+const { ui } = getContent();
+const { title = ui.siteTitle, home = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={ui.description} />
+    <meta name="theme-color" content="#07110c" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <!-- Transición entre páginas: la hacemos nosotros (barrido + círculo), así que se apaga la de Astro. -->
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <a class="skip sr-only" href="#main">
+      Skip to content
+    </a>
+    <div class="app">
+      <Header />
+      <main id="main" transition:animate="none">
+        <slot />
+      </main>
+      {!home && (
+        <div class="back">
+          <a class="option back__link" href="/">
+            <span class="option__slash" aria-hidden="true" />
+            <span class="option__plate" aria-hidden="true" />
+            <span class="option__label">{ui.back}</span>
+          </a>
+        </div>
+      )}
+    </div>
+    <script>
+      import '../scripts/init';
+    </script>
+  </body>
+</html>
+
+<style>
+  .app {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  .skip:focus {
+    position: fixed;
+    left: 12px;
+    top: 12px;
+    z-index: 100;
+    width: auto;
+    height: auto;
+    padding: 10px 16px;
+    clip-path: none;
+    background: var(--color-paper);
+    color: var(--color-bg);
+  }
+  .back {
+    position: fixed;
+    right: 20px;
+    bottom: 16px;
+    z-index: 35;
+    display: flex;
+    gap: 10px;
+  }
+  .back__link {
+    font-size: 18px;
+    color: var(--color-ink);
+    background: rgba(7, 17, 12, 0.85);
+  }
+</style>
