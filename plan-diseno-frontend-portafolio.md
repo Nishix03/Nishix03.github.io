@@ -534,6 +534,77 @@ El hero (al mover la selección por la lista) muestra estas mismas cuatro versio
 - **Hero:** el recorte P3R baja de 560 × 640 a **420 × 500** para equilibrarse con la lista y el texto.
 - **Móvil y tablet (< 1024 px):** la animación de cada subpágina **también aparece**, acompañando a la información: baja debajo del contenido principal de la página, centrada y más pequeña (hasta 280 px de ancho), con una hoja de sprites a mitad de resolución (`srcset`). El hero muestra solo el póster, más pequeño.
 
+### 15.3a Guion de animación de cada versión
+
+Es lo que hay que animar en Blender cuadro a cuadro. Todas las versiones comparten estas reglas, y cada una tiene su tabla de tiempos.
+
+**Reglas comunes**
+- **12 fps, 30 cuadros = 2,5 s por bucle.** Se bajó de 15 a 12 fps para cumplir el presupuesto de 150 KB por hoja; con poses tranquilas no se nota.
+- **Bucle perfecto:** el cuadro 30 es igual al 0 y no se exporta (el bucle va del 0 al 29). En Blender: modificador *Cycles* en las curvas F.
+- **Ritmo calmado:** cada gesto tiene **entrada lenta y salida lenta** (más cuadros cerca de los extremos, interpolación Bézier) y una **pausa de 4-6 cuadros** en la pose clave, para que se lea sin prisa.
+- **Arrastre (follow-through):** pelo, capucha, mochila y objetos que cuelgan llegan **1-2 cuadros después** que el cuerpo. Es lo que da naturalidad.
+- **Anticipación mínima:** como mucho 1-2 cuadros de contramovimiento antes de un gesto. Nada de estirar ni aplastar el cuerpo.
+- **Respiración:** una por bucle; el pecho sube del cuadro 0 al 15 y baja del 15 al 30 (escala de 1,5 %).
+- **Parpadeo:** 2 cuadros (cerrar, abrir), en un punto distinto en cada versión.
+- **Sin desplazamiento en el render:** el personaje anima en su sitio; cualquier traslado (la caminata por la barra) lo hace CSS.
+- **Encuadre:** cuerpo entero, cámara a tres cuartos y a la altura de los ojos, la misma luz en todas.
+- **Exportación:** 360 × 500 px por cuadro (1,5×), PNG con alfa → script de Codex → **tira horizontal WebP** de 30 cuadros + JSON `{ "frameW": 360, "frameH": 500, "frames": 30, "fps": 12 }`. En la web: técnica A14 (`steps(30)` moviendo la tira con `transform`).
+- **Entrada en la página:** la figura aparece con el escalonado de la página (opacidad y 12 px hacia arriba, 300 ms) y el bucle empieza en el cuadro 0.
+- **Movimiento reducido:** cuadro 0 fijo. Fuera de pantalla o con la pestaña oculta: en pausa.
+
+**Projects — el presentador** (girado a tres cuartos hacia la carta del proyecto)
+
+| Cuadros | Tiempo | Qué pasa |
+|---|---|---|
+| 0-5 | 0-0,5 s | Reposo. Sostiene la tableta con la mano derecha y mira la pantalla. La mano izquierda descansa junto a la cadera |
+| 6-13 | 0,5-1,1 s | La mano izquierda sube despacio hasta la altura del pecho, con la palma hacia arriba, señalando la tableta. El torso gira 4° hacia ella |
+| 14-19 | 1,2-1,6 s | **Pausa** en el gesto. La cabeza pasa de la tableta al espectador en 2 cuadros y se queda mirándolo |
+| 20-27 | 1,7-2,3 s | La mano baja a la cadera y el torso vuelve. La cabeza regresa a la tableta |
+| 28-29 | 2,3-2,5 s | Reposo. Parpadeo en los cuadros 24-25 |
+
+- La pantalla de la tableta es un hueco transparente: CSS pone encima la carta del proyecto seleccionado. Al elegir otro proyecto, la pantalla cambia con un fundido de 150 ms **sin reiniciar el bucle**.
+- Arrastre: la manga y el cordón de la capucha siguen al brazo 1 cuadro tarde.
+
+**Stack — el desarrollador** (de pie frente a un portátil apoyado en un soporte)
+
+| Cuadros | Tiempo | Qué pasa |
+|---|---|---|
+| 0-9 | 0-0,8 s | Teclea. Los dedos alternan entre 3 posiciones, una cada 2 cuadros. Mira la pantalla |
+| 10-15 | 0,8-1,3 s | Deja de teclear. Levanta la mirada al espectador (cabeza 4° arriba, 2 cuadros de subida) y la sostiene |
+| 16-25 | 1,3-2,1 s | Vuelve a la pantalla y teclea de nuevo |
+| 26-29 | 2,2-2,5 s | Pausa corta; los hombros bajan al exhalar. Parpadeo en los cuadros 12-13 (mientras mira) |
+
+- Las baldosas pixel (JS, TS, CC) **no van en el render**: flotan con CSS a su lado (±4 px, 2,5 s, desfasadas 0,4 s entre sí).
+- La pantalla del portátil emite un brillo cian suave que no parpadea.
+
+**Journey — el explorador** (mochila a la espalda, libreta en la mano izquierda)
+
+| Cuadros | Tiempo | Qué pasa |
+|---|---|---|
+| 0-11 | 0-1 s | Dos pasos de un ciclo de caminata: cada paso tiene 6 cuadros (contacto, bajada, paso, subida y dos intermedios). Mira al frente |
+| 12-17 | 1-1,5 s | Tercer paso. Baja la mirada a la libreta durante 4 cuadros, como repasando lo aprendido |
+| 18-29 | 1,5-2,5 s | Cuarto y quinto paso, mirando otra vez al frente. Parpadeo en los cuadros 20-21 |
+
+- Ritmo tranquilo: unos 2 pasos por segundo. Los brazos se balancean poco (brazo libre 10°).
+- La mochila rebota 1 cuadro después de cada contacto del pie (arrastre) y la libreta se balancea con el brazo.
+- Camina **en su sitio**. En la columna de la página se queda así; en la barra de la línea de tiempo, CSS lo traslada (A9) con la misma tira, a menor escala.
+
+**Contact — el anfitrión** (de frente, teléfono en la mano izquierda)
+
+| Cuadros | Tiempo | Qué pasa |
+|---|---|---|
+| 0-5 | 0-0,5 s | Reposo de frente, mirando al espectador. El teléfono, a la altura de la cintura |
+| 6-11 | 0,5-1 s | Asiente levemente: la cabeza baja 3° y vuelve (3 cuadros de bajada, 3 de subida) |
+| 8-15 | 0,7-1,3 s | Se superpone al asentimiento: la mano derecha se abre hacia el espectador, de la cadera a la altura del pecho, palma hacia arriba (invitación) |
+| 16-21 | 1,3-1,8 s | **Pausa** en el gesto, con una sonrisa leve (cambio de boca en 1 cuadro) |
+| 22-29 | 1,8-2,5 s | La mano vuelve a la cadera. Parpadeo en los cuadros 26-27 |
+
+- El icono de correo **no va en el render**: es SVG con CSS y aparece con un fundido a los 0,7 s del bucle (sincronizado con el gesto), y se va a los 1,9 s.
+
+**Hero** (sin opción seleccionada): la caída en diagonal es CSS sobre el póster (§10.6) y el bucle de reposo es el vídeo de §15.4. Al seleccionar una opción, el recorte muestra la tira de esa versión con un fundido de 150 ms.
+
+**Cómo comprobar que están "bien explicadas" antes de animar:** para cada versión, Iván dibuja (o captura en Blender) las **3 poses clave** de su tabla (inicio, gesto, pausa) y las aprueba. Solo entonces se animan los intermedios.
+
 ### 15.3b Formato: por qué no GIF
 - **GIF no:** solo 256 colores (el sombreado cel y los degradados del contorno se ven con bandas), transparencia de todo o nada (bordes dentados sobre el fondo verde) y archivos 5-10 veces más pesados que WebP o AVIF.
 - **Para bucles cortos (las cuatro opciones):** **hoja de sprites WebP con alfa** animada con `steps()` (técnica A14, ya usada en el pixel art). Una sola imagen por animación, se controla con CSS (pausa, movimiento reducido) y no hay que decodificar un vídeo.
