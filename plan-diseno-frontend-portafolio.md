@@ -685,6 +685,8 @@ Por verificar: si LeeContigo usó HTML, CSS y JavaScript o TypeScript en las par
 
 ## 17. Ajustes tras revisar el prototipo (2 nov 2026)
 
+**Pull Request de `plan-portafolio-p3r`:** decidido por Iván, se abre cuando la interfaz esté terminada, con las animaciones 3D implementadas y los sprites pixel definitivos (los originales de §14.6). Hasta entonces, los commits se suben a esa rama.
+
 ### 17.1 Sin menú de pantalla completa
 Con una página por apartado, el menú de pantalla completa repetía lo que ya hacen el hero y la cabecera. Se elimina (también el botón MENU y el atajo Ctrl+K):
 - **El hero hace de menú P3R:** su lista (Projects, Stack, Journey, Contact) usa la selección P3R y abre cada página.
@@ -708,6 +710,8 @@ Iván los quitó porque hacían ver el portafolio un poco infantil. Desaparecen 
 
 ### 17.4 Contacto
 - **LinkedIn:** opción propia en Contact, entre GitHub y Platzi, con la selección P3R. **Falta la URL** del perfil (formato `linkedin.com/in/<usuario>`); en el boceto va un marcador. Se abre en una pestaña nueva con `rel="noopener"`.
+- **WhatsApp:** opción en Contact, justo debajo del email, con un enlace directo `https://wa.me/<número>?text=<mensaje>`. El número va con código de país y sin `+`, espacios ni guiones (Perú: `51` + 9 dígitos). El mensaje viene ya escrito y codificado para URL: «Hi Iván, I saw your portfolio» (en `/es`: «Hola Iván, vi tu portafolio»). **Falta el número**; en el boceto va `51XXXXXXXXX`.
+  - **Privacidad:** el número queda visible para cualquiera (y para bots que lo recogen). Opciones: usar un número solo para trabajo o WhatsApp Business, y no escribir el número como texto en la página: solo dentro del enlace.
 - Email: **ivannishix@gmail.com** (enlace `mailto:`). Es el correo correcto; la errata `ivannihix@gmail.com` de §2 solo afecta a commits antiguos.
 
 ### 17.5 Chat «NishixAI» (prototipo)
