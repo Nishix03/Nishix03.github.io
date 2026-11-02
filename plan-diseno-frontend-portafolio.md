@@ -20,7 +20,7 @@ Estado: decisiones cerradas tras la entrevista; los puntos abiertos están al fi
 | Caso con premio | **LeeContigo IA**: 1.er lugar, hackathon futurX 2026 (14-24 oct, +500 participantes, 9 países). Tu parte: plan de reparto de commits y la barra de experiencia / sistema de niveles (visual + lógica). | Marcar como trabajo de equipo (IngeFuturX), con tu parte explícita. **IA real:** el tutor genera pistas estructuradas y «Crea tu cuento» genera relatos con un modelo (AI Gateway con respaldo gratuito de OpenRouter). **Tu repo `Nishix03/Lee-Contigo-IA` es un fork:** el original es `Alvaro-mendoza-12/Lee-Contigo-IA`; enlazar el original. **Tu aporte verificado en el original:** 6 PRs fusionados (#4, #7, #13, #14, #15, #16) y 23 commits. Incluye el sistema de XP completo (lógica, barra, selector de nivel, candados y desbloqueos, tope de cuentos creados, borrar progreso), la experiencia en las preguntas, la celebración y la fiesta con personajes, los sonidos, el botón «Ver guía», la fila «Ya los leíste», el arreglo del scroll del tutorial, y las pruebas e2e con **garantías verificables G1 a G5** (por ejemplo: ninguna pista contiene la respuesta, el XP solo se gana leyendo, sin scroll horizontal a 320 px). También cambiaste el comportamiento del tutor al agotar las pistas. **No** integraste el modelo de IA: eso lo hizo sobre todo Alvaro. **Atribución:** 21 de tus 23 commits salen con autor `nishix_03` y el correo `ivannihix@gmail.com`, una errata de `ivannishix@gmail.com` (falta la «s»). GitHub no lo vincula a tu cuenta, así que el repo solo te cuenta 2 commits. La errata afecta también a 65 commits de `prototipos-web-chiclayo` y 8 de este portafolio. Arreglo hacia delante: corregir el correo en la configuración de git (también en WSL). El historial no se reescribe. Como evidencia se usan los PRs, que sí figuran a tu nombre, y el recuento por autor `nishix_03`. Demo en vivo: `lee-contigo-ia.vercel.app`. Su propio README declara que no se afirma que mejore el aprendizaje y que el contenido espera revisión docente; el portafolio no debe afirmar más que eso. Antes de publicar, revisar los defectos visibles de la demo (restos de "=====", logo y "Cuentos" apuntando al mismo sitio, tarjetas solo con emoji). |
 | Caso "sistema" | **Prototipos web por rubro · Chiclayo** (`prototipos-web-chiclayo`, público, en GitHub Pages): 6 rubros (restaurante, barbería, dental, spa, veterinaria, gimnasio) sobre un núcleo común. Cada negocio cambia un archivo `negocio.json` validado con esquema. | **Un solo caso con los 6 rubros dentro**, no seis tarjetas. Evidencia a mostrar: núcleo + `negocio.json`, ADRs, pruebas de teclado (Playwright), axe, Lighthouse con mediana de 5, fotos con licencia verificada. Todos son demos con aviso "(demo)"; nunca presentar contenido ficticio como real. |
 | Otros trabajos | Task manager (HTML/CSS/JS) y gestor de citas Java Swing. Sin caso de estudio. | Arreglar antes el saludo "User" y la bio cortada del task manager. |
-| Certificados | Franja discreta: Platzi Expert+, 17 cursos de Web, ruta Fundamentos completada. | No es sección protagonista. |
+| Certificados | Perfil público verificado el 2 nov 2026 (`platzi.com/p/ivannishix`): Expert+, estudiante desde 2024, 17 cursos aprobados (escuela de Desarrollo Web), 1 ruta completada (Fundamentos del Desarrollo Web Profesional, feb 2026). Últimos: Java SE: SQL y Bases de Datos, Java, y Fundamentos de Bases de Datos y SQL (oct 2026). | Va dentro de Journey con el botón al perfil. No se publican los puntos de Platzi Rank: no aportan a un reclutador. |
 | Tech stack | Solo lo que de verdad usas (unas 12 tecnologías). | La referencia con 50 logos infla el perfil; evitarla. |
 
 Reglas de honestidad: nada de métricas inventadas, y el origen de los sprites y del render 3D (IA) se declara en los créditos. **Cambio decidido por Iván:** el Stack sí muestra un porcentaje de dominio con una barrita pequeña (§16.3). Para que siga siendo honesto, se rotula como **«self-assessed» (autoevaluado)** y convive con el RANK, que sí sale de evidencia.
@@ -397,25 +397,41 @@ Todos comparten la paleta de 16 colores, el contorno oscuro de 1 px y una escala
 | Yu-Gi-Oh | **Reverso de carta coleccionable propio** (§14.5), carta holo con estrellas de nivel y el dragón Argenta | Projects | Remolino del reverso que gira despacio; alas de Argenta |
 | FNAF | Tuerca, el robot oxidado | Stack | Tirón glitch cada ~5 s (sin destellos) |
 | Undertale | Lumi, el explorador con farol | Contact | Farol que respira; luciérnaga |
-| FNF | Eco, el cantante, y flechas de ritmo ←↓↑→ que laten al compás | Pista del menú | Golpe de escala 1→1.15→1 a 100 bpm, escalonado |
+| FNF | Eco, el cantante, y flechas de ritmo pixel ←↓↑→ (cabeza triangular y tallo, 9×9) que laten al compás | Pista del menú | Golpe de escala 1→1.15→1 a 100 bpm, escalonado |
 | Dragon Ball | Visor tipo scouter en el avatar del Journey, esfera naranja con estrella en el hito ganado, contador 0/7 de esferas | Journey y footer | Flotación; brillo del visor |
 | JoJo | Letras pixel «ゴゴゴ» flotando junto al RANK UP; estrellas como insignias de nivel | Journey | Vaivén y opacidad lenta (nunca destellos) |
 | Uncharted | Brújula pixel en el «diario de expedición» | Journey | Aguja que oscila ±8° |
 
 La regla de §4 se precisa así: **un guiño protagonista por sección**; el Journey es la excepción ya aceptada en el punto abierto 8 y se construye en capas (si baja Lighthouse, se recortan JoJo y Uncharted primero).
 
-### 14.5 Reverso de carta coleccionable (propio)
+### 14.5 Reversos de carta: un arcano por proyecto
 
-Iván quiere que la carta de Projects se vea como el **reverso de una carta coleccionable**. Se toma la idea (remolino que atrae la mirada, marco, óvalo oscuro en el centro), no el reverso oficial de Yu-Gi-Oh: sin el logo de Konami, sin el logotipo del juego y sin el marco naranja con el remolino marrón, que son su imagen de marca.
+Cada proyecto tiene su carta de tarot, como los arcanos de P3R que ya usa la lista de Projects. Se toma la **presentación** de las cartas de tarot del juego (numeral romano arriba, emblema en el centro, nombre del arcano abajo, línea fina dorada sobre fondo oscuro), no su arte: los emblemas son propios y cuentan algo del proyecto.
 
-- **Proporción** 59 × 86 (la de una carta real).
-- **Marco** verde oscuro con filete neón de 2 px.
-- **Remolino** con `repeating-radial-gradient` (anillos) y una capa `conic-gradient` que gira despacio (40 s por vuelta) con `transform: rotate`.
-- **Centro:** óvalo oscuro con el monograma «IR» en fuente pixel.
-- **Uso:** detrás de la carta de GastroClinic, como un mazo, y en la vista de detalle al «voltear» un proyecto (`rotateY` de 180°, 600 ms, con `backface-visibility: hidden`).
-- Con movimiento reducido el remolino queda quieto.
+| Proyecto | Arcano | Emblema propio | Por qué |
+|---|---|---|---|
+| GastroClinic | I · The Magician | Lazo infinito sobre una varita con una cruz | Crear una herramienta propia en lugar de pagar una |
+| LeeContigo IA | II · The Priestess | Luna creciente sobre un libro abierto | Lectura y conocimiento |
+| Prototipos Chiclayo | III · The Empress | Flor de seis pétalos | Seis rubros que nacen de un mismo núcleo |
+| Task manager | IV · The Emperor | Cubo con una marca de verificación | Orden y tareas cumplidas |
+| Gestor de citas (Java Swing) | V · The Hierophant | Llave | Acceso y agenda |
+
+- **Proporción** 59 × 86. Marco dorado `#e8c66a` de 2 px y filete interior; fondo verde Dark Hour con remolino que gira despacio (40 s por vuelta).
+- **Animación:** al seleccionar otro proyecto, el reverso gira (`rotateY` -90°→0) 80 ms después que la carta de detalle, para que se vean como un mazo.
+- Sin logos ni el marco oficial de ningún juego. Con movimiento reducido, sin giro ni remolino.
 
 ### 14.6 Encargo a Codex: versiones definitivas
+
+**Obra de referencia de cada personaje (solo tono).** Iván pidió dejar escrito en qué se inspira cada uno. Queda anotado, pero como referencia de **tono y energía**, no como diseño a copiar:
+
+| Personaje | Obra que lo inspira | Qué se toma (tono) | Qué no se toma |
+|---|---|---|---|
+| Argenta | Blue-Eyes White Dragon (Yu-Gi-Oh) | Dragón legendario de cartas, plateado, majestuoso | Cresta afilada, ojos azules, pose y silueta del dragón original |
+| Tuerca | Springtrap (Five Nights at Freddy's) | Mascota mecánica abandonada, inquietante pero no gore | Forma de conejo, orejas rotas, traje con cables a la vista |
+| Lumi | Frisk (Undertale) | Protagonista pequeño, amable y valiente, ambiente de RPG | Jersey de rayas, corazones de colores, peinado y la chispa de guardado |
+| Eco | Boyfriend (Friday Night Funkin') | Cantante chiquito, actitud de duelo de ritmo, micrófono | Pelo azul en punta, gorra roja hacia atrás, camiseta con símbolo, zapatillas rojas |
+| Reverso de carta | Arcanos del tarot en P3R | Numeral, emblema central, nombre, línea dorada | Arte de las cartas del juego |
+
 
 Los sprites del boceto son **bocetos de dirección**. Codex hace las versiones definitivas con estas reglas:
 1. **Se mantienen como personajes originales.** Argenta, Tuerca, Lumi y Eco evocan el género de tus favoritos (dragón de cartas, terror de animatrónicos, RPG amable, duelo de ritmo), pero no se acercan al diseño de Blue-Eyes White Dragon, Springtrap, Frisk ni Boyfriend: ni su silueta, ni sus colores distintivos, ni sus rasgos (cresta, orejas de conejo rotas, jersey de rayas, corazones de colores, pelo azul en punta, gorra roja hacia atrás). Las imágenes de referencia de Iván sirven solo para el tono y la energía, no se calcan.
@@ -504,6 +520,7 @@ Aprender modelado, rig y sombreado cel es el trabajo más largo de todo el plan,
 Decidido por Iván después del boceto. Prototipo navegable en la mesa de trabajo «Portafolio — prototipo por páginas» (botón Play).
 
 ### 16.1 Una página por apartado
+- La lista del hero dice **«Projects»** (no «View projects»), igual que la cabecera.
 - Rutas: `/` (hero), `/projects`, `/stack`, `/journey` (incluye certificados) y `/contact`; en español, las mismas bajo `/es/`. Sustituye al scroll de una sola página de la versión anterior de §3.
 - Cada página tiene su palabra gigante de fondo, su número grande y el botón «Esc Return» para volver al hero.
 - Ventaja: cada página carga solo lo suyo (el Journey y sus sprites no pesan en el hero). Riesgo: más navegación; por eso la cabecera siempre muestra las cuatro opciones.
@@ -518,11 +535,29 @@ Decidido por Iván después del boceto. Prototipo navegable en la mesa de trabaj
 - **Color de selección:** rojo coral `#ff3e5f` en el boceto, el equivalente al tajo rojo de P3R. Es el único color fuera de la paleta verde y solo aparece en la selección y en los barridos, por eso destaca. Alternativas probadas en el boceto (Tweaks): neón, cian y ámbar. Pendiente: confirmación de Iván. Contraste: el texto queda negro sobre blanco, así que el coral no afecta a la legibilidad.
 - Como en el juego, siempre hay una opción seleccionada: el cursor se mueve con el ratón, el foco o las flechas.
 
-### 16.4 Stack con iconos pixel y barras
-- **Icono pixel por tecnología:** baldosa de 9×7 píxeles con las dos letras de la tecnología (H5, C3, JS, TS, AS, RE, TW, GS, PW, JV, SQ, GT) en una fuente pixel de 3×5 y el color de marca de cada una. Se generan con un script, no a mano. No se copian los logotipos oficiales: solo se usan sus colores y siglas para identificarlas.
-- **Porcentaje + barrita:** 10 segmentos, 100 × 6 px (pequeña, como pidió Iván). Rotulado «self-assessed».
-- **Valores:** los del boceto son provisionales; los fija Iván. Regla para que sean creíbles: ningún porcentaje por encima de lo que respalda su RANK (por ejemplo, nada de 90 % con RANK 1).
+### 16.4 Stack con iconos pixel y barras honestas
+- **Icono pixel por tecnología:** baldosa de 9×7 píxeles con dos siglas en fuente pixel 3×5 y el color de cada tecnología, generada por script. No se copian logotipos oficiales.
+- **Porcentaje + barrita** de 10 segmentos, 100 × 6 px, rotulado «self-assessed».
+- **Regla de honestidad (tope por evidencia):** el porcentaje lo pone Iván, pero nunca supera el tope de su RANK: R1 (curso) ≤ 30 %, R2 (proyecto personal) ≤ 45 %, R3 (entregado) ≤ 60 %, R4 (producción) ≤ 75 %, R5 (equipo o premio) ≤ 85 %. Nada al 100 %: es un estudiante. Cada tarjeta muestra su evidencia en una línea.
+
+| Tecnología | RANK | % | Evidencia |
+|---|---|---|---|
+| HTML | 3 | 55 | Cursos de HTML y Práctico de HTML y CSS · Chiclayo, task manager |
+| CSS | 3 | 55 | Curso de CSS y Práctico de HTML y CSS · Chiclayo, task manager |
+| JavaScript | 3 | 45 | Fundamentos de JS, Manipulación del DOM, ECMAScript · Chiclayo, task manager |
+| Git y GitHub | 5 | 50 | Curso de Git y GitHub · 6 PRs fusionados en el equipo ganador |
+| Playwright | 5 | 35 | Pruebas e2e de LeeContigo (equipo) · pruebas de teclado de Chiclayo |
+| Java | 2 | 35 | Curso de Java y de Java SE: SQL · app Swing |
+| SQL | 1 | 25 | Fundamentos de Bases de Datos y SQL · Java SE: SQL |
+| TypeScript, Astro, React | 2 | 25 | GastroClinic (en desarrollo); sin curso |
+| Tailwind CSS | 2 | 30 | GastroClinic (en desarrollo) |
+| GSAP | 2 | 20 | GastroClinic (en desarrollo) |
+| Claude Code | 3 | 50 | Prototipos Chiclayo (ADRs, modo autónomo) y este portafolio |
+| Codex | 1 | 20 | **Falta evidencia**: Iván dice que trabaja con Codex; se sube el RANK cuando haya un proyecto que lo muestre (por ejemplo, los scripts del 3D, §15) |
+
+Por verificar: si LeeContigo usó HTML, CSS y JavaScript o TypeScript en las partes de Iván, esas tecnologías suben a RANK 5 (el tope, no el porcentaje).
+- **IA en el stack:** Claude Code y Codex van en un grupo «AI-assisted engineering», con baldosas pixel propias (CC en terracota, CX en negro). Encaja con §9, punto 3b: se cuenta de forma transparente y cada decisión se puede explicar.
 
 ### 16.5 Perfil de Platzi
 - Botón «View my Platzi profile» en Journey (junto a los certificados) y opción «Platzi» en Contact.
-- **Falta la URL real** del perfil público (formato `platzi.com/p/<usuario>`); en el boceto va un marcador.
+- URL: https://platzi.com/p/ivannishix/ (verificada el 2 nov 2026). En Contact aparece como «@ivannishix».
