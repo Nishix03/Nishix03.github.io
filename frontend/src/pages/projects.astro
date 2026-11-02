@@ -21,7 +21,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     wordRotate={-12}
   >
     <div class="projects__head fx-cascade">
-      <h2 class="projects__title display">{page.title}</h2>
+      <h1 class="projects__title display">{page.title}</h1>
     </div>
     <p class="projects__hint mono fx-cascade" style="animation-delay: .06s">
       {page.hint}
@@ -85,7 +85,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
             <article class="detail fx-flip" data-panel hidden={i !== 0}>
               <div class="detail__inner">
                 <div class="detail__row fx-cascade" style="animation-delay: .15s">
-                  <h3 class="detail__name">{project.name}</h3>
+                  <h2 class="detail__name">{project.name}</h2>
                   <span class="detail__status mono">{project.status}</span>
                 </div>
                 <div

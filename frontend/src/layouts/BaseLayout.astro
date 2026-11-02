@@ -36,13 +36,13 @@ const { title = ui.siteTitle, home = false } = Astro.props;
         <slot />
       </main>
       {!home && (
-        <div class="back">
+        <nav class="back" aria-label="Return">
           <a class="option back__link" href="/">
             <span class="option__slash" aria-hidden="true" />
             <span class="option__plate" aria-hidden="true" />
             <span class="option__label">{ui.back}</span>
           </a>
-        </div>
+        </nav>
       )}
     </div>
     <script>

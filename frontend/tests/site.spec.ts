@@ -1,12 +1,49 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const pages = ['/', '/projects', '/stack', '/journey', '/contact'];
+
+test('sprites reales: cargan todas las hojas y conservan el tamaño de cuadro', async ({ page }) => {
+  for (const path of pages) {
+    await page.goto(path);
+    await expect(page.locator('.sprite--placeholder')).toHaveCount(0);
+    for (const strip of await page.locator('.sprite__strip').all()) {
+      await expect(strip).toHaveJSProperty('complete', true);
+      const dimensions = await strip.evaluate((img: HTMLImageElement) => ({
+        natural: img.naturalWidth,
+        rendered: img.width,
+        height: img.naturalHeight,
+      }));
+      expect(dimensions.natural).toBeGreaterThan(0);
+      expect(dimensions.natural).toBe(dimensions.rendered);
+      expect(dimensions.height).toBeGreaterThan(0);
+    }
+  }
+});
+
+test('los ciclos pixel se pausan fuera de pantalla', async ({ page }) => {
+  await page.goto('/projects');
+  const sprite = page.locator('[data-sprite="argenta"]');
+  await sprite.scrollIntoViewIfNeeded();
+  await expect(sprite).toHaveAttribute('data-paused', 'false');
+  await sprite.evaluate((el) => {
+    (el as HTMLElement).style.position = 'fixed';
+    (el as HTMLElement).style.top = '-1000px';
+  });
+  await expect(sprite).toHaveAttribute('data-paused', 'true');
+  await expect(sprite.locator('img')).toHaveCSS('animation-play-state', 'paused');
+});
+
+// axe mide colores reales: se espera a que acaben las entradas (la más larga dura ~1,5 s).
+const settle = (page: Page) => page.waitForTimeout(2000);
 
 for (const path of pages) {
   test.describe(path, () => {
     test('sin violaciones de accesibilidad (axe)', async ({ page }) => {
+      // El inicio tiene muchas animaciones infinitas a la vez y axe tarda más en calcular contrastes.
+      test.setTimeout(90_000);
       await page.goto(path);
+      await settle(page);
       const results = await new AxeBuilder({ page }).analyze();
       expect(results.violations).toEqual([]);
     });
@@ -60,7 +97,7 @@ test('elegir un proyecto cambia la carta, el detalle y el numeral de la tableta'
 }) => {
   await page.goto('/projects');
   await page.locator('.project-row').nth(1).hover();
-  await expect(page.locator('#project-details > [data-panel]:not([hidden]) h3')).toHaveText(
+  await expect(page.locator('#project-details > [data-panel]:not([hidden]) h2')).toHaveText(
     'LeeContigo IA',
   );
   await expect(page.locator('#project-numerals > :not([hidden])')).toHaveText('II');

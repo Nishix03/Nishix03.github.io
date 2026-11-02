@@ -68,7 +68,11 @@ const duration = slot.frames > 1 ? slot.frames / slot.fps : 0;
     font-weight: 600;
     line-height: 1;
   }
+  /* Chip oscuro: el texto del marcador cumple contraste sea cual sea el color de marca de fondo. */
   .sprite__marker {
+    padding: 1px 3px;
+    background: var(--color-surface);
+    color: var(--color-ink);
     text-transform: uppercase;
   }
 </style>
