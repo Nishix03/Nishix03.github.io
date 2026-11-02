@@ -47,7 +47,7 @@ Debe ser `<nav>` con enlaces reales, accesible por teclado, con botón visible y
 - **Superficies:** tarjetas de cristal sutil con borde fino, como las de tus referencias.
 - **Pixel art:** `image-rendering: pixelated`, una rejilla común (por ejemplo 32×32), una paleta de unos 16 colores.
 - **Referencias sutiles (tus gustos):** inspiración en motivos y mecánicas, nunca personajes, logos ni marcos oficiales (copyright y aspecto de fan page).
-  Regla: máximo un guiño por sección.
+  Regla: un guiño protagonista por sección (precisada en §14.1b).
 
 | Gusto | Guiño propuesto | Dónde |
 |---|---|---|
@@ -196,6 +196,34 @@ Así se evita el collage de dos estilos y se hace un solo juego de assets de per
 - **Rendimiento:** degradados con CSS o SVG, sin imágenes pesadas ni desenfoques grandes.
 - **Alcance:** esta interfaz pasa a ser la parte más costosa del proyecto. El Journey y el menú completo van en la fase 3, no en la v1.
 
+### 10.6 Hero con el movimiento del menú de pausa de P3R
+
+Referencia: vídeo «Pause Menu - Persona 3 Reload» (YouTube, `4d6x1CIgLSc`). Fotogramas observados y su traducción al hero:
+
+| En el vídeo | En el hero |
+|---|---|
+| Al pausar, el mundo se tiñe de un solo color y aparecen burbujas y rayos de luz (sensación de estar bajo el agua) | Fondo Dark Hour que entra con un círculo `clip-path` desde arriba a la derecha; burbujas **cuadradas** (pixel) que suben en bucle; tres rayos diagonales que se desplazan despacio |
+| El personaje entra cayendo en diagonal, girado, casi cabeza abajo, y queda cortado por el borde | Silueta plana gigante del avatar (sin rostro, un solo color) que cae girando hasta -24° y queda cortada por el borde derecho |
+| Palabra gigante «MENU» / «SYSTEM» vertical, pegada al borde y cortada | Franja menta a la izquierda con «IVÁN» gigante en negro, vertical y cortada |
+| Ítems en cascada: cada uno con tamaño distinto, cursiva gruesa, inclinados, entrando desde abajo a la derecha con poco retraso entre sí | Lista rotada -8°: el nombre como ítem seleccionado y debajo los CTA (View projects, Stack, Journey, Contact) en tamaños decrecientes; entrada escalonada de 60 ms con `skewX` |
+| Ítem seleccionado: fragmento blanco con texto negro y un tajo de color detrás | Fragmento blanco con texto negro y tajo neón detrás que entra con `clip-path: inset()` |
+| Caja «current wallet» arriba a la izquierda y pista de mandos abajo a la derecha | Caja de estado «LV 2 · 10 XP» y pista «↓ Scroll · Enter Confirm · M Menu» |
+| Lista de Social Links con numeral en un cuadro inclinado y RANK grande | Igual en Projects (ya en §10.2) |
+
+**Línea de tiempo de la entrada (A1 sustituida), una sola vez al cargar, unos 1,5 s en total:**
+
+| Tiempo | Qué pasa | Técnica |
+|---|---|---|
+| 0-500 ms | El fondo se abre en círculo | `clip-path: circle()`, `--ease` |
+| 150-850 ms | La silueta cae girando | `transform: translate + rotate`, `power3.out` |
+| 300-800 ms | La palabra lateral sube | `translateY(100%) → 0` |
+| 450-1100 ms | Cascada de la lista, 60 ms entre ítems | `opacity`, `translate`, `skewX(-12deg) → 0` |
+| 900-1150 ms | Tajo neón del ítem seleccionado | `clip-path: inset(0 100% 0 0) → inset(0)` |
+| 1100-1450 ms | El avatar cae a la plataforma con aplastamiento de 1 px y pasa a reposo | P3 de §14 |
+| Después | Burbujas, rayos y vaivén de ±1,5° de la silueta | Bucles lentos; se pausan fuera de pantalla |
+
+Con `prefers-reduced-motion`: todo en su estado final, sin burbujas ni vaivén. Sin JS: estado final visible (regla de §11.1). Las burbujas cuentan como decoración CSS, no como sprites, pero se limitan a 10.
+
 ## 11. Animaciones
 
 Reglas tomadas de las skills `gsap-*`, `css-animations`, `ui-motion` y `web-animation-design` (ver §12). Lo que la regla no cubre se marca como decisión propia.
@@ -223,7 +251,7 @@ Reglas tomadas de las skills `gsap-*`, `css-animations`, `ui-motion` y `web-anim
 
 | ID | Animación | Disparador | Técnica y valores | Movimiento reducido |
 |---|---|---|---|---|
-| A1 | Entrada del hero | Primera carga | Timeline GSAP: etiqueta, título (SplitText por palabras, 80 ms), subtítulo y CTA (100 ms). El avatar entra al final y queda en reposo. | Todo visible de inmediato |
+| A1 | Entrada del hero (detalle en §10.6) | Primera carga | Timeline GSAP: etiqueta, título (SplitText por palabras, 80 ms), subtítulo y CTA (100 ms). El avatar entra al final y queda en reposo. | Todo visible de inmediato |
 | A2 | Abrir y cerrar el menú | Botón MENU o Ctrl+K | Círculo `clip-path: circle()` desde el botón, 600 ms. Después, ítems rotados -8° con stagger de 100 ms (máximo 6). Se controla con un timeline que se invierte (`reverse`), así se interrumpe sin saltos. Cierre: 150 ms con `y` -12. | Aparición instantánea, sin círculo |
 | A3 | Ítem activo del menú | Foco, hover o flechas ↑↓ | Fragmento diagonal con CSS `transition` de `clip-path` y `transform`, 150 ms. | Cambio sin transición |
 | A4 | Revelado de secciones | Scroll | `ScrollTrigger.batch()`, `start: 'top 85%'`, una sola vez. Nunca un trigger por elemento. | Sin recorrido |
@@ -346,11 +374,28 @@ Boceto en Claude Design: https://claude.ai/artifact/GmSkxVXCPR1wZ5qTJ5U9ac (pág
 
 | Personaje | Rejilla | Escala | Dónde aparece | Papel |
 |---|---|---|---|---|
-| **Iván** (avatar tipo bloque, sudadera verde con cierre neón) | 16×20 | ×6 en hero, ×3 en Journey | Hero, Journey (camina por la barra de XP), RANK UP, menú | Protagonista. Único personaje con rostro |
-| **Pixel** (gato menta) | 13×10 | ×5 | Hero (sentado junto al avatar), Contact | Compañero. Solo decorativo |
+| **Iván** (avatar tipo bloque, sudadera verde con cierre neón; guiño Roblox) | 16×20 | ×10 en hero, ×3 en Journey | Hero, Journey (camina por la barra de XP con visor tipo scouter), RANK UP, menú | Protagonista. Único personaje con rostro |
+| **Pixel** (gato menta con sombrero de paja; guiño One Piece) | 13×10 | ×7 | Contact | Compañero. Solo decorativo |
 | **Bug** (bicho cian) | 10×8 | ×4 | Stack (corre por la cuadrícula), easter egg retro | Chiste interno: "cazar bugs". Solo decorativo |
+| **Mariposa** (azul cian; guiño Persona) | 9×7 | ×5 | Hero (revolotea sobre la silueta), menú | Adorno vivo del lenguaje P3R |
+| **Carta** (carta coleccionable con ojos y patitas; guiño Yu-Gi-Oh) | 10×13 | ×5 | Projects, junto a la carta holo | Compañero. Brillo holo con `filter: hue-rotate` |
 
-Los tres comparten la paleta de 16 colores, el contorno oscuro de 1 px y una escala **entera** (×3, ×4, ×5, ×6), para que ningún píxel se deforme. Son personajes originales: nada de personajes, logos ni siluetas de las sagas de §4.
+Todos comparten la paleta de 16 colores, el contorno oscuro de 1 px y una escala **entera**, para que ningún píxel se deforme. **Son personajes originales que "se disfrazan" con un motivo de cada saga** (un sombrero de paja, un visor, una mariposa, una carta): nunca los personajes, logos ni siluetas oficiales de §4. Así el guiño se reconoce sin convertir el portafolio en una fan page ni arriesgar derechos de autor.
+
+### 14.1b Adornos por gusto (un guiño protagonista por sección)
+
+| Gusto | Adorno pixel | Sección | Animación |
+|---|---|---|---|
+| Persona 3 Reload | Silueta plana gigante del avatar (sin rostro), burbujas cuadradas que suben, rayos de luz, mariposa | Hero y menú | Ver §10.6 |
+| Roblox | El propio avatar de bloques | Hero | P1 |
+| Yu-Gi-Oh | Carta viva, carta holo con estrellas de nivel | Projects | Flotación + inclinación ±6° + holo |
+| FNF | Flechas de ritmo ←↓↑→ que laten al compás | Stack (cabecera) y pista del menú | Golpe de escala 1→1.15→1 a 100 bpm, escalonado |
+| Dragon Ball | Visor tipo scouter en el avatar del Journey, esfera naranja con estrella en el hito ganado, contador 0/7 de esferas | Journey y footer | Flotación; brillo del visor |
+| JoJo | Letras pixel «ゴゴゴ» flotando junto al RANK UP; estrellas como insignias de nivel | Journey | Vaivén y opacidad lenta (nunca destellos) |
+| Uncharted | Brújula pixel en el «diario de expedición» | Journey | Aguja que oscila ±8° |
+| One Piece | Sombrero de paja del gato | Contact | Cola P4 |
+
+La regla de §4 se precisa así: **un guiño protagonista por sección**; el Journey es la excepción ya aceptada en el punto abierto 8 y se construye en capas (si baja Lighthouse, se recortan JoJo y Uncharted primero).
 
 ### 14.2 Qué significa "fluida" en pixel art
 
