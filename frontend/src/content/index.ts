@@ -3,11 +3,13 @@ import { hero, heroOptions } from './en/hero';
 import { projects } from './en/projects';
 import { stack, stackIntro } from './en/stack';
 import { journeyIntro, education, facts, milestones, diary, platzi } from './en/journey';
-import { contactIntro, contacts, footer } from './en/contact';
+import { contactIntro, contactGlyphs, contacts, footer } from './en/contact';
+import { about } from './en/about';
 import { chat, chatQuestions } from './en/chat';
 import { ui } from './en/ui';
 
 const en = {
+  about,
   hero,
   heroOptions,
   projects,
@@ -20,6 +22,7 @@ const en = {
   diary,
   platzi,
   contactIntro,
+  contactGlyphs,
   contacts,
   footer,
   chat,

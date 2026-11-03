@@ -1,6 +1,6 @@
 export type Locale = 'en';
 
-export type PageKey = 'projects' | 'stack' | 'journey' | 'contact';
+export type PageKey = 'projects' | 'stack' | 'journey' | 'about' | 'contact';
 
 export type HeroOption = {
   page: PageKey;
@@ -48,6 +48,7 @@ export type Milestone = {
 };
 
 export type Contact = {
+  id: 'email' | 'whatsapp' | 'github' | 'linkedin' | 'platzi' | 'cv';
   label: string;
   sub: string;
   href: string;

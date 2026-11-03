@@ -4,10 +4,9 @@ export const hero = {
   label: 'SYSTEMS ENGINEERING STUDENT · USAT · PERÚ',
   name: 'Iván Rodas',
   sideWord: 'IVÁN RODAS',
-  headline:
-    'Systems Engineering student (4th semester, USAT) who ships full-stack work — with AI-powered features.',
+  headline: 'I build websites and AI agents that automate the processes of your business.',
   support:
-    'Part of the team that won futurX 2026 with an AI reading tutor. I built its progress system and its end-to-end guarantees.',
+    "What sets me apart: I never stop learning, and I make ultra-personalized work for my clients and for myself. Proof: I'm part of the team that won futurX 2026 with an AI reading tutor.",
   poseNote:
     'Subtle loop: breathing, one slow gesture, a blink. WebP sprite sheet, 15 fps, 2.5 s, alpha. 150 ms cross-fade on selection.',
   hints: [
@@ -17,6 +16,14 @@ export const hero = {
 };
 
 export const heroOptions: HeroOption[] = [
+  {
+    page: 'about',
+    label: 'About',
+    sub: 'Persona',
+    size: 64,
+    color: '#e8c66a',
+    pose: 'Iván crosses his arms with a half smile and looks straight at the camera',
+  },
   {
     page: 'projects',
     label: 'Projects',

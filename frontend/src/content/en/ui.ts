@@ -6,6 +6,7 @@ export const ui = {
     'Iván Rodas, Systems Engineering student (USAT). Full-stack projects, honest stack, and the road so far.',
   handle: '@Nishix_03',
   nav: [
+    { page: 'about', label: 'About' },
     { page: 'projects', label: 'Projects' },
     { page: 'stack', label: 'Stack' },
     { page: 'journey', label: 'Journey' },
@@ -14,6 +15,7 @@ export const ui = {
   back: 'Esc Return',
   langSoon: 'Spanish version coming soon',
   pages: {
+    about: { title: 'About me', word: 'PERSONA', num: '01' },
     projects: {
       title: 'Projects',
       hint: 'Whose link do you want to view? · rank comes from evidence',
