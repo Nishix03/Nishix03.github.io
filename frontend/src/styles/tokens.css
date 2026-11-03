@@ -36,6 +36,11 @@
   --gutter: 16px;
   --header-h: 64px;
 }
+@media (max-width: 767px) {
+  :root {
+    --header-h: 57px;
+  }
+}
 
 /* Mobile first: la separación lateral crece en pantallas grandes. */
 @media (min-width: 768px) {

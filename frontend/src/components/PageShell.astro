@@ -29,7 +29,7 @@ const {
 } = Astro.props;
 ---
 
-<section class:list={['page', 'page-enter', Astro.props.class]} style={`min-height:${minHeight}px`}>
+<section class:list={['page', 'page-enter', Astro.props.class]} style={`--page-min:${minHeight}px`}>
   {word && (
     <div
       class="page__word"
@@ -60,6 +60,13 @@ const {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    min-height: var(--page-min, 800px);
+  }
+  /* Móvil: la sección mide lo que su contenido (como mínimo la pantalla); sin relleno vacío al final. */
+  @media (max-width: 767px) {
+    .page {
+      min-height: calc(100svh - var(--header-h));
+    }
   }
   .page__word {
     position: absolute;

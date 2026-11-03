@@ -201,8 +201,36 @@ const arrows = [
   }
   /* «↑↓ Move / Enter Confirm» solo sirve con teclado. */
   @media (pointer: coarse) {
-    .hero__hint {
+    /* Con el dedo no hay teclado: se ocultan las pistas de teclas, pero Boyfriend y las flechas siguen
+       (tocarlas lo hace cantar). */
+    .hero__hint > span:not(.hero__eco, .hero__keys) {
       display: none;
+    }
+    .hero__arrow {
+      width: 44px;
+      height: 44px;
+    }
+  }
+  @media (max-width: 767px) {
+    section.hero {
+      min-height: 0;
+    }
+    .hero .hero__inner {
+      padding-bottom: 24px;
+    }
+    /* El escenario de 520 px (de cuando el avatar iba en la columna) no tiene contenido en móvil:
+       sin altura, la mariposa sigue volando sobre el texto y no queda un hueco. */
+    .hero .hero__stage {
+      height: 0;
+      min-height: 0;
+      flex-basis: 0;
+    }
+    .hero .hero__hint {
+      position: relative;
+      left: auto;
+      bottom: auto;
+      margin: 0 0 40px clamp(28px, 10vw, 96px);
+      flex-wrap: wrap;
     }
   }
   .hero {

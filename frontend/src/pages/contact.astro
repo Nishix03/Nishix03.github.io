@@ -182,6 +182,24 @@ const glyph = (id: string) => {
     height: 140px;
     position: relative;
   }
+  /* Móvil: Frisk saluda arriba a la derecha, junto al título, en vez de quedar solo al final. */
+  @media (max-width: 767px) {
+    .contact__layout {
+      position: relative;
+    }
+    .contact__frisk {
+      position: absolute;
+      right: 0;
+      top: -70px;
+      flex: none;
+      width: 72px;
+      height: 90px;
+    }
+    .contact__frisk-stage {
+      left: auto;
+      right: 0;
+    }
+  }
   .contact__frisk-stage {
     position: absolute;
     left: 10px;

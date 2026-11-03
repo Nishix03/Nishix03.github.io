@@ -81,7 +81,6 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
           ))}
         </div>
 
-        <a class="projects__back" href="#project-list">{ui.backToList}</a>
         <div class="projects__details" id="project-details" aria-live="polite">
           {projects.map((project, i) => (
             <article class="detail fx-flip" data-panel hidden={i !== 0}>
@@ -136,37 +135,63 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
 </BaseLayout>
 
 <script>
-  // En móvil el detalle queda debajo de la lista: al tocar una fila se baja hasta él.
+  // Móvil: acordeón. El detalle se mueve justo debajo de la fila elegida (dentro de un <li> propio, porque
+  // en un <ol> solo puede haber <li>) y la fila sube a la vista. En escritorio vuelve a su columna.
   document.addEventListener('astro:page-load', () => {
-    const list = document.querySelector('#project-list');
+    const list = document.querySelector<HTMLElement>('#project-list');
     const details = document.querySelector<HTMLElement>('.projects__display');
     if (!list || !details) return;
-    list.addEventListener('click', (event) => {
-      if (!(event.target as HTMLElement).closest('.project-row')) return;
-      if (!window.matchMedia('(max-width: 767px)').matches) return;
-      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      // Mientras dura el desplazamiento automático no se cambia la selección por el cursor (select-group.ts).
+    const home = details.parentElement;
+    const slot = document.createElement('li');
+    slot.className = 'projects__slot';
+    const narrow = window.matchMedia('(max-width: 767px)');
+    const place = () => {
+      const row = list.querySelector('.project-row[aria-pressed="true"]')?.closest('li');
+      if (narrow.matches && row) {
+        row.after(slot);
+        slot.append(details);
+      } else if (home && details.parentElement !== home) {
+        home.append(details);
+        slot.remove();
+      }
+    };
+    // Al elegir otra fila en móvil: el detalle se mueve bajo ella y la página sube hasta la fila.
+    // Se hace al cambiar la selección (llega con el foco del toque), no en el clic: al moverse el detalle
+    // la fila cambia de sitio y el clic caería en el hueco.
+    list.addEventListener('select:change', () => {
+      place();
+      const row = list.querySelector<HTMLElement>('.project-row[aria-pressed="true"]');
+      if (!narrow.matches || !row) return;
+      // Mientras dura el desplazamiento automático el cursor no cambia la selección (select-group.ts);
+      // se limpia con scrollend y, por si el navegador no lo emite, a los 1,5 s.
       const root = document.documentElement;
       root.dataset.autoScroll = 'true';
-      // Se limpia al terminar el desplazamiento (scrollend) y, por si el navegador no lo emite, a los 1,5 s.
       const done = () => delete root.dataset.autoScroll;
       window.addEventListener('scrollend', done, { once: true });
       window.setTimeout(done, 1500);
-      details.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      requestAnimationFrame(() => {
+        const top = row.getBoundingClientRect().top + window.scrollY - 72; // 72 px: cabecera fija y aire
+        window.scrollTo({ top, behavior: calm ? 'auto' : 'smooth' });
+      });
     });
+    narrow.addEventListener('change', place);
+    place();
   });
 </script>
 
 <style>
-  .projects__back {
-    display: none;
+  .projects__list :global(.projects__slot) {
+    list-style: none;
+    margin: 4px 0 8px;
   }
   .detail__cta--soon {
     margin: 0;
     color: var(--color-mint);
     font-size: 14px;
   }
-  #project-list {
+  #project-list,
+  .projects__list :global(.project-row) {
     scroll-margin-top: 72px; /* al volver, la cabecera fija no tapa «PROJECTS» ni la primera fila */
   }
   .projects__display {
@@ -174,19 +199,11 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
   }
   @media (max-width: 767px) {
     /* Sin el mazo de fondo ni el hueco reservado: debajo del detalle no queda un espacio vacío. */
-    .projects__display {
-      min-height: 0;
+    .projects__layout .projects__display {
+      min-height: 0; /* más específica que la regla base (560 px), que va después */
     }
     .projects__card-back {
       display: none;
-    }
-    .projects__back {
-      display: inline-flex;
-      align-items: center;
-      min-height: 48px;
-      margin-bottom: 8px;
-      color: var(--color-neon);
-      font-weight: 800;
     }
     /* Las filas son opacas para que el avatar de fondo no se mezcle con las líneas pequeñas. */
     .projects__list :global(.project-row) {
