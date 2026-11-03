@@ -12,6 +12,8 @@ interface Props {
   wordRight?: number;
   wordRotate?: number;
   padTop?: number;
+  /** Alto mínimo de la sección en px (Stack y Contact necesitan 900 para que quepan avatar y footer). */
+  minHeight?: number;
   class?: string;
 }
 
@@ -23,10 +25,11 @@ const {
   wordRight = -60,
   wordRotate = 0,
   padTop = 56,
+  minHeight = 800,
 } = Astro.props;
 ---
 
-<section class:list={['page', 'page-enter', Astro.props.class]}>
+<section class:list={['page', 'page-enter', Astro.props.class]} style={`min-height:${minHeight}px`}>
   {word && (
     <div
       class="page__word"
@@ -41,6 +44,7 @@ const {
       {num}
     </div>
   )}
+  <slot name="bg" />
   <div class="page__inner" style={`--pad-top:${padTop}px`}>
     <slot />
   </div>
@@ -50,9 +54,11 @@ const {
 </section>
 
 <style>
+  /* En columna para que el footer (slot "after") quede siempre pegado al fondo de la sección. */
   .page {
     position: relative;
-    min-height: 800px;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
   }
   .page__word {
@@ -74,6 +80,9 @@ const {
   }
   .page__inner {
     position: relative;
+    z-index: 1;
+    width: 100%;
+    box-sizing: border-box;
     max-width: var(--page-max);
     margin: 0 auto;
     padding: var(--pad-top) var(--gutter) 72px;

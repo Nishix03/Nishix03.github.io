@@ -1,0 +1,243 @@
+/*
+ * Avatar de Iván (recortes de página). Cada página usa dos tiras WebP de cuadros de 600×780:
+ * una entrada de 12 cuadros (24 en el hero) que se reproduce una vez y un reposo de 24 cuadros.
+ * Capas de atrás hacia delante: .cutin > .cutin__body (inclinada) > .cutin__fall > banda, estela,
+ * .cutin__drift > .cutin__art > clips, y las líneas diagonales. Con steps(n, jump-none) la tira
+ * salta de cuadro en cuadro sin interpolar, y con image-rendering: pixelated no se suaviza.
+ */
+.cutin {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  top: var(--cx-top, auto);
+  right: var(--cx-right, auto);
+  bottom: var(--cx-bottom, auto);
+  left: var(--cx-left, auto);
+  width: var(--cx-width);
+  height: var(--cx-height);
+}
+/* El difuminado va en la capa que gira, así el borde que se funde es el del cuadro. */
+.cutin__body {
+  position: absolute;
+  inset: 0;
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 var(--feather, 16%),
+    #000 calc(100% - var(--feather-r, 0%)),
+    transparent 100%
+  );
+}
+.cutin__fall {
+  position: absolute;
+  inset: 0;
+  animation: cut-fall 0.6s var(--ease-drop) 0.1s both;
+}
+.cutin__wash {
+  position: absolute;
+  left: 4%;
+  right: -20%;
+  top: 12%;
+  bottom: 8%;
+  background: linear-gradient(
+    120deg,
+    rgba(168, 240, 200, 0.16),
+    rgba(73, 224, 240, 0.1) 60%,
+    rgba(7, 17, 12, 0)
+  );
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+}
+.cutin__band {
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  top: 46%;
+  height: 16%;
+  background: var(--sel);
+  clip-path: polygon(0 34%, 100% 0, 100% 64%, 0 100%);
+}
+.cutin__drift {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 30%;
+  animation: cut-drift 4s var(--ease-breathe) 1s infinite;
+}
+.cutin__art {
+  position: absolute;
+  inset: 0;
+  transform-origin: 60% 40%;
+  animation: cut-in 0.22s var(--ease-p3r) both;
+}
+.cutin__lines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -24deg,
+    rgba(201, 247, 222, 0.08) 0 2px,
+    transparent 2px 10px
+  );
+}
+.cutin__clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.cutin__strip {
+  display: block;
+  max-width: none;
+  height: 100%;
+  image-rendering: pixelated;
+  animation: avatar-play var(--d) steps(var(--n), jump-none) var(--i, infinite) var(--w, 0s) forwards;
+}
+/* Entrada: se reproduce una vez y se oculta al llegar el reposo (--t = lo que dura la entrada). */
+.cutin__clip--entry {
+  animation: avatar-gone 1ms linear var(--t, 1s) forwards;
+}
+.cutin__clip--rest {
+  opacity: 0;
+  animation: avatar-show 1ms linear var(--t, 1s) forwards;
+}
+.cutin__clip--rest .cutin__strip {
+  animation-direction: alternate;
+}
+/* Journey: el reposo es un solo cuadro con balanceo; la cara no cambia. */
+.cutin__clip--walk .cutin__strip {
+  animation: avatar-walk 2400ms step-end var(--t, 1s) infinite;
+  animation-direction: normal;
+}
+/* Hero: dos reposos de 4 s que se turnan en un bucle de 8 s (el segundo va invertido). */
+.cutin__clip--hero-entry {
+  animation: avatar-gone 1ms linear 0.8s forwards;
+}
+.cutin__clip--hero-a,
+.cutin__clip--hero-b {
+  opacity: 0;
+}
+.cutin__clip--hero-a {
+  animation: avatar-rest-a 8s linear 0.8s infinite;
+}
+.cutin__clip--hero-b {
+  animation: avatar-rest-b 8s linear 0.8s infinite;
+}
+.cutin__clip--hero-a .cutin__strip,
+.cutin__clip--hero-b .cutin__strip {
+  animation-direction: normal;
+}
+/* Difuminado inferior para páginas cuyo recorte llega al borde de la sección. */
+.cutin-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 140px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(rgba(7, 17, 12, 0), var(--color-bg));
+}
+
+@keyframes cut-fall {
+  from { transform: translate(-120px, -260px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes cut-drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-4px, 3px) rotate(0.6deg); }
+}
+@keyframes cut-in {
+  0% {
+    transform: scale(1.3) translate(6%, 4%);
+    filter: grayscale(1) sepia(1) hue-rotate(170deg) saturate(4) brightness(1.3) blur(2px);
+  }
+  100% { transform: none; filter: none; }
+}
+@keyframes avatar-play {
+  from { transform: translateX(0); }
+  to { transform: translateX(var(--e)); }
+}
+@keyframes avatar-gone { to { opacity: 0; } }
+@keyframes avatar-show { to { opacity: 1; } }
+@keyframes avatar-rest-a {
+  0%, 49.9% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes avatar-rest-b {
+  0%, 49.9% { opacity: 0; }
+  50%, 100% { opacity: 1; }
+}
+@keyframes avatar-walk {
+    0.000% { transform: translate(0.0000%, 0.0000%); }
+    6.250% { transform: translate(0.0139%, 0.1282%); }
+    12.500% { transform: translate(0.0278%, 0.5128%); }
+    18.750% { transform: translate(0.0347%, 1.0256%); }
+    25.000% { transform: translate(0.0347%, 1.1538%); }
+    31.250% { transform: translate(0.0347%, 1.0256%); }
+    37.500% { transform: translate(0.0278%, 0.6410%); }
+    43.750% { transform: translate(0.0139%, 0.1282%); }
+    50.000% { transform: translate(0.0000%, 0.0000%); }
+    56.250% { transform: translate(-0.0139%, 0.1282%); }
+    62.500% { transform: translate(-0.0278%, 0.5128%); }
+    68.750% { transform: translate(-0.0347%, 1.0256%); }
+    75.000% { transform: translate(-0.0347%, 1.1538%); }
+    81.250% { transform: translate(-0.0347%, 1.0256%); }
+    87.500% { transform: translate(-0.0278%, 0.6410%); }
+    93.750% { transform: translate(-0.0139%, 0.1282%); }
+}
+
+/* Menos de 1024 px el recorte pasa a ser un fondo suave, no compite con el texto. */
+@media (max-width: 1023px) {
+  .cutin {
+    opacity: 0.22;
+  }
+  /* Más pequeño y hacia el borde: la cara no se queda detrás del titular ni de los textos. */
+  .cutin[data-page='hero'] {
+    --cx-width: 330px;
+    --cx-height: 429px;
+    --cx-right: -50px;
+    --cx-top: 40px;
+  }
+  .cutin[data-page='projects'] {
+    --cx-width: 340px;
+    --cx-height: 442px;
+    --cx-right: -70px;
+    --cx-top: 110px;
+  }
+  .cutin[data-page='stack'] {
+    --cx-width: 340px;
+    --cx-height: 442px;
+    --cx-right: -60px;
+  }
+  .cutin[data-page='journey'] {
+    --cx-width: 320px;
+    --cx-height: 416px;
+    --cx-right: -50px;
+    --cx-top: 80px;
+  }
+  .cutin[data-page='contact'] {
+    --cx-width: 340px;
+    --cx-height: 442px;
+    --cx-right: -50px;
+  }
+  /* En About el retrato no está detrás de nada: se ve entero. */
+  .cutin[data-page='about'] {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cutin__fall,
+  .cutin__drift,
+  .cutin__art,
+  .cutin__strip,
+  .cutin__clip--entry,
+  .cutin__clip--hero-entry {
+    animation: none;
+  }
+  .cutin__clip--entry .cutin__strip,
+  .cutin__clip--hero-entry .cutin__strip {
+    transform: translateX(var(--e));
+  }
+  .cutin__clip--rest,
+  .cutin__clip--hero-a,
+  .cutin__clip--hero-b {
+    display: none;
+  }
+}
