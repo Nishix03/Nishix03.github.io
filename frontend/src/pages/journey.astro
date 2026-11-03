@@ -3,9 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
 import Sprite from '../components/Sprite.astro';
-import { getContent } from '../content';
+import { getContent, localeFromUrl, localePath } from '../content';
 
-const { ui, journeyIntro, education, facts, milestones, diary, platzi } = getContent();
+const locale = localeFromUrl(Astro.url);
+const { ui, journeyIntro, education, facts, milestones, diary, platzi } = getContent(locale);
 const page = ui.pages.journey;
 ---
 
@@ -37,12 +38,22 @@ const page = ui.pages.journey;
     <div class="timeline">
       <!-- El personaje camina sobre la barra; LATEST marca el último hito alcanzado -->
       <div class="timeline__walker" aria-hidden="true" data-loop>
+        <!-- Mini Iván camina por el carril de hitos: la tira dibuja los pasos (8 cuadros, 800 ms) y
+             fx-trek lo desplaza de izquierda a derecha. -->
         <div class="fx-trek timeline__walker-track">
-          <div class="fx-walk timeline__walker-box">
-            3D
-            <br />
-            walk
-          </div>
+          <!-- Pisada neón, como la de Springtrap: un destello bajo los pies en cada paso (2 por ciclo de 800 ms). -->
+          <span class="timeline__step"></span>
+          <span class="timeline__walker-box">
+            <img
+              class="cutin__strip timeline__walker-strip"
+              src="/avatar/journey-walk.webp"
+              alt=""
+              width="768"
+              height="128"
+              decoding="async"
+              style="--d:800ms;--n:8;--e:-87.5%"
+            />
+          </span>
         </div>
       </div>
       <div class="latest" aria-hidden="true">
@@ -59,7 +70,7 @@ const page = ui.pages.journey;
         ))}
       </div>
 
-      <p class="timeline__legend mono" aria-hidden="true">{milestones.filter((m) => !m.locked).length} / {milestones.length} milestones</p>
+      <p class="timeline__legend mono" aria-hidden="true">{milestones.filter((m) => !m.locked).length} / {milestones.length} {ui.milestones}</p>
       <div class="timeline__bar">
         {milestones.map((milestone, i) => (
           <div
@@ -70,7 +81,10 @@ const page = ui.pages.journey;
       </div>
       <ol class="timeline__cards">
         {milestones.map((milestone, i) => (
-          <li class:list={{ 'timeline__first-locked': milestone.locked && !milestones[i - 1]?.locked }}>
+          <li
+            class:list={{ 'timeline__first-locked': milestone.locked && !milestones[i - 1]?.locked }}
+            data-label={ui.nextLocked}
+          >
             <div
               class:list={['milestone', { 'milestone--locked': milestone.locked }]}
               aria-disabled={milestone.locked ? 'true' : 'false'}
@@ -116,6 +130,13 @@ const page = ui.pages.journey;
 </BaseLayout>
 
 <style>
+  /* Escritorio: arriba el contenido va a la izquierda; el avatar ocupa la derecha y no queda tapado. */
+  @media (min-width: 1024px) {
+    .journey__top,
+    .timeline {
+      max-width: 860px;
+    }
+  }
   .journey__top {
     display: flex;
     flex-wrap: wrap;
@@ -138,9 +159,6 @@ const page = ui.pages.journey;
   }
   @media (max-width: 767px) {
     /* El marcador «3D walk» (aún sin sprite) se oculta en móvil: suelto parece un resto. */
-    .timeline__walker {
-      display: none;
-    }
     .journey__intro .journey__facts {
       display: grid;
       align-items: stretch;
@@ -200,37 +218,65 @@ const page = ui.pages.journey;
 
   .timeline {
     position: relative;
-    padding-top: 90px;
+    padding-top: 150px;
   }
   .timeline__walker {
     position: absolute;
     left: 0;
     top: 0;
     width: 66%;
-    height: 64px;
+    height: 152px; /* los pies (ancla de suelo) quedan sobre la barra */
   }
   .timeline__walker-track {
     position: absolute;
     left: 0;
     bottom: 0;
-    width: calc(100% - 48px);
-    height: 60px;
+    width: calc(100% - 96px);
+    height: 128px;
   }
+  /* Cuadro de 96×128 (la rejilla lógica 192×256 a la mitad) con la tira de 8 poses dentro. */
   .timeline__walker-box {
     position: absolute;
     left: 0;
     bottom: 0;
-    width: 48px;
-    height: 60px;
-    display: grid;
-    place-items: center;
-    border: 2px dashed rgba(168, 240, 200, 0.6);
-    background: rgba(73, 224, 240, 0.12);
-    font-family: var(--font-pixel);
-    font-size: 10px;
-    color: var(--color-mint);
-    text-align: center;
-    line-height: 1.1;
+    width: 96px;
+    height: 128px;
+    overflow: hidden;
+  }
+  .timeline__walker-strip {
+    width: 800%;
+    height: 100%;
+  }
+  /* Solo transform y opacity: la sombra es fija y el compositor anima el destello sin repintar. */
+  .timeline__step {
+    position: absolute;
+    left: 48px;
+    bottom: 2px;
+    width: 60px;
+    height: 10px;
+    margin-left: -30px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, #b8ffd6, var(--color-neon) 45%, rgba(57, 255, 136, 0));
+    box-shadow:
+      0 0 12px var(--color-neon),
+      0 0 24px rgba(57, 255, 136, 0.55);
+    opacity: 0;
+    animation: walker-step 400ms var(--ease-p3r) infinite;
+  }
+  @keyframes walker-step {
+    0% {
+      opacity: 1;
+      transform: scale(0.5);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.6);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .timeline__step {
+      display: none;
+    }
   }
   .latest {
     position: absolute;
@@ -263,8 +309,8 @@ const page = ui.pages.journey;
   }
   .timeline__legend {
     position: absolute;
-    left: 0;
-    top: 62px;
+    right: 0;
+    top: 126px;
     margin: 0;
     font-size: 12px;
     color: var(--color-mint);
@@ -306,7 +352,7 @@ const page = ui.pages.journey;
       margin-top: 24px;
     }
     .timeline .timeline__cards .timeline__first-locked::after {
-      content: 'NEXT · LOCKED';
+      content: attr(data-label);
       position: absolute;
       left: 18px;
       top: -22px;
