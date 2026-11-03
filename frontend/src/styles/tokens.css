@@ -1,0 +1,50 @@
+/* Tokens del diseño (plan §4, §10.3, §11.1). Todo color, fuente y tiempo sale de aquí. */
+@theme {
+  --color-bg: #07110c;
+  --color-surface: #0b1a12;
+  --color-ink: #e9fff2;
+  --color-paper: #f4fff8;
+  --color-mint: #a8f0c8;
+  --color-neon: #39ff88;
+  --color-cyan: #49e0f0;
+  --color-amber: #ffb340;
+  --color-gold: #e8c66a;
+  --color-coral: #ff3e5f;
+
+  --font-sans: 'Figtree Variable', system-ui, sans-serif;
+  --font-pixel: 'Pixelify Sans Variable', monospace;
+
+  /* Curvas del plan: la de P3R (entrada rápida, frenada suave) y la de "respirar". */
+  --ease-p3r: cubic-bezier(0.2, 0, 0, 1);
+  --ease-breathe: cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-drop: cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+:root {
+  /* Color de selección P3R. Cambia aquí para probar otro (coral por defecto). */
+  --sel: var(--color-coral);
+
+  --line: rgba(168, 240, 200, 0.16);
+  --line-strong: rgba(168, 240, 200, 0.55);
+  --tint: rgba(168, 240, 200, 0.05);
+
+  --dur-fast: 150ms;
+  --dur: 300ms;
+  --dur-wipe: 600ms;
+
+  --page-max: 1240px;
+  --gutter: 16px;
+  --header-h: 64px;
+}
+@media (max-width: 767px) {
+  :root {
+    --header-h: 57px;
+  }
+}
+
+/* Mobile first: la separación lateral crece en pantallas grandes. */
+@media (min-width: 768px) {
+  :root {
+    --gutter: 24px;
+  }
+}

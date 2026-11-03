@@ -1,0 +1,238 @@
+---
+/**
+ * Boceto animado de la pose de cada apartado (plan §15.3a). Mismo marco y mismos tiempos que el
+ * prototipo; cuando Codex/Blender entreguen la tira WebP del personaje 3D, solo cambia el <svg>.
+ * La figura es decorativa (aria-hidden): el texto de la pantalla ya lo dice todo.
+ */
+interface Props {
+  variant: 'projects' | 'stack' | 'journey' | 'contact';
+  /** Cartas de arcano: la tableta de Projects muestra el numeral del proyecto elegido. */
+  arcanaNumerals?: string[];
+  class?: string;
+  style?: string;
+}
+
+const { variant, arcanaNumerals = [], class: className, style } = Astro.props;
+
+const copy = {
+  projects: {
+    tag: 'VERSION · PROJECTS',
+    text: 'Holds a tablet that shows the selected project and presents it with an open hand.',
+    timeline:
+      '0–0.5 s rest · 0.5–1.1 s hand rises · 1.2–1.6 s hold, looks at you · 1.7–2.5 s back to rest',
+  },
+  stack: {
+    tag: 'VERSION · STACK',
+    text: 'Works at a laptop; a few pixel tiles from the grid float beside him. Glances up once.',
+    timeline: '0–0.8 s types · 0.8–1.3 s looks up at you · 1.3–2.1 s types · 2.2–2.5 s exhales',
+  },
+  journey: {
+    tag: 'VERSION · JOURNEY',
+    text: 'Backpack and a notebook of what he learned; walks along the timeline.',
+    timeline:
+      'Walks in place, ~2 steps/s · 1–1.5 s glances at the notebook · backpack lags one frame',
+  },
+  contact: {
+    tag: 'VERSION · CONTACT',
+    text: 'Phone in hand and an open-hand invitation; a small mail icon appears beside him.',
+    timeline:
+      '0–0.5 s rest · 0.5–1 s slight nod · 0.7–1.3 s hand opens · 1.3–1.8 s hold · 1.8–2.5 s back to rest',
+  },
+}[variant];
+
+const size = variant === 'journey' ? { w: 180, h: 236 } : { w: 190, h: 250 };
+---
+
+<figure
+  class:list={['pose-fig', 'fx-cascade', className]}
+  style={style}
+  aria-hidden="true"
+  data-loop
+>
+  <div>
+    <svg
+      width={size.w}
+      height={size.h}
+      viewBox="0 0 240 320"
+      fill="none"
+      stroke="#a8f0c8"
+      stroke-width="3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      {variant === 'projects' && (
+        <>
+          <g class="sk-glance" style="transform-origin: 120px 86px">
+            <circle cx="120" cy="62" r="24" />
+            <path d="M96 58 Q100 34 120 36 Q142 34 146 56" />
+          </g>
+          <g class="sk-breathe" style="transform-origin: 120px 200px">
+            <path d="M92 96 L148 96 L156 200 L84 200 Z" fill="rgba(57,255,136,.12)" />
+            <path d="M108 96 L120 110 L132 96" stroke="#39ff88" />
+          </g>
+          <path d="M98 200 L94 300 M142 200 L146 300 M86 300 L104 300 M138 300 L156 300" />
+          <g class="sk-present" style="transform-origin: 92px 106px">
+            <path d="M92 106 L76 160 L74 182" />
+            <circle cx="74" cy="188" r="7" />
+          </g>
+          <path d="M148 106 L168 158 L146 172" />
+          <g transform="rotate(-10 150 170)">
+            <rect
+              x="124"
+              y="148"
+              width="50"
+              height="38"
+              rx="4"
+              fill="rgba(232,198,106,.18)"
+              stroke="#e8c66a"
+            />
+            <g id="project-numerals">
+              {arcanaNumerals.map((numeral, i) => (
+                <text
+                  data-panel
+                  {...(i !== 0 ? { hidden: true } : {})}
+                  x="149"
+                  y="174"
+                  text-anchor="middle"
+                  font-family="Georgia, serif"
+                  font-size="16"
+                  fill="#e8c66a"
+                  stroke="none"
+                >
+                  {numeral}
+                </text>
+              ))}
+            </g>
+          </g>
+        </>
+      )}
+      {variant === 'stack' && (
+        <>
+          <g class="sk-lookup" style="transform-origin: 120px 86px">
+            <circle cx="120" cy="62" r="24" />
+            <path d="M96 58 Q100 34 120 36 Q142 34 146 56" />
+          </g>
+          <g class="sk-breathe" style="transform-origin: 120px 200px">
+            <path d="M92 96 L148 96 L156 200 L84 200 Z" fill="rgba(57,255,136,.12)" />
+            <path d="M108 96 L120 110 L132 96" stroke="#39ff88" />
+          </g>
+          <path d="M98 200 L94 300 M142 200 L146 300 M86 300 L104 300 M138 300 L156 300" />
+          <path d="M92 106 L84 160 M148 106 L156 160" />
+          <g class="sk-type">
+            <path d="M84 160 L108 170 M156 160 L132 170" />
+          </g>
+          <path
+            d="M92 172 L100 130 L152 130 L148 172"
+            fill="rgba(73,224,240,.14)"
+            stroke="#49e0f0"
+          />
+          <path d="M80 172 L160 172 L168 184 L72 184 Z" stroke="#49e0f0" />
+          <path
+            d="M110 144 L132 144 M110 152 L142 152 M110 160 L124 160"
+            stroke="#39ff88"
+            stroke-width="2"
+          />
+          <rect
+            class="sk-tile"
+            x="180"
+            y="40"
+            width="26"
+            height="20"
+            fill="#f7df1e"
+            stroke="#0b1a12"
+            stroke-width="2"
+          />
+          <rect
+            class="sk-tile"
+            x="196"
+            y="74"
+            width="26"
+            height="20"
+            fill="#3178c6"
+            stroke="#0b1a12"
+            stroke-width="2"
+            style="animation-delay: .4s"
+          />
+          <rect
+            class="sk-tile"
+            x="18"
+            y="58"
+            width="26"
+            height="20"
+            fill="#d97757"
+            stroke="#0b1a12"
+            stroke-width="2"
+            style="animation-delay: .8s"
+          />
+        </>
+      )}
+      {variant === 'journey' && (
+        <>
+          <g class="sk-walk">
+            <g class="sk-read" style="transform-origin: 124px 86px">
+              <circle cx="124" cy="62" r="24" />
+              <path d="M100 58 Q104 34 124 36 Q146 34 150 56" />
+            </g>
+            <rect
+              class="sk-pack"
+              x="150"
+              y="104"
+              width="24"
+              height="62"
+              rx="7"
+              fill="rgba(255,179,64,.16)"
+              stroke="#ffb340"
+            />
+            <path d="M96 96 L152 96 L158 200 L88 200 Z" fill="rgba(57,255,136,.12)" />
+            <path d="M112 96 L124 110 L136 96" stroke="#39ff88" />
+            <path d="M96 106 L76 164" />
+            <rect x="62" y="162" width="22" height="28" rx="2" fill="rgba(168,240,200,.12)" />
+            <path d="M152 106 L156 170" />
+          </g>
+          <g class="sk-leg-a">
+            <path d="M104 200 L78 300 M144 200 L164 296 M66 300 L86 300 M156 296 L176 296" />
+          </g>
+          <g class="sk-leg-b">
+            <path d="M104 200 L124 298 M144 200 L118 300 M116 298 L136 298 M108 300 L128 300" />
+          </g>
+          <path d="M14 314 L226 314" stroke="#39ff88" stroke-dasharray="10 8" />
+        </>
+      )}
+      {variant === 'contact' && (
+        <>
+          <g class="sk-nod" style="transform-origin: 120px 86px">
+            <circle cx="120" cy="62" r="24" />
+            <path d="M96 58 Q100 34 120 36 Q142 34 146 56" />
+          </g>
+          <g class="sk-breathe" style="transform-origin: 120px 200px">
+            <path d="M92 96 L148 96 L156 200 L84 200 Z" fill="rgba(57,255,136,.12)" />
+            <path d="M108 96 L120 110 L132 96" stroke="#39ff88" />
+          </g>
+          <path d="M98 200 L94 300 M142 200 L146 300 M86 300 L104 300 M138 300 L156 300" />
+          <g class="sk-invite" style="transform-origin: 148px 106px">
+            <path d="M148 106 L160 160 L162 178" />
+            <circle cx="162" cy="185" r="8" />
+          </g>
+          <path d="M92 106 L84 160 L100 168" />
+          <rect
+            x="96"
+            y="146"
+            width="16"
+            height="28"
+            rx="3"
+            fill="rgba(73,224,240,.16)"
+            stroke="#49e0f0"
+          />
+          <path
+            class="sk-mail"
+            d="M188 40 L224 40 L224 64 L188 64 Z M188 40 L206 54 L224 40"
+            stroke="#39ff88"
+          />
+        </>
+      )}
+    </svg>
+    <div class="pose-fig__tag">{copy.tag}</div>
+    <div>{copy.text}</div>
+    <div class="pose-fig__timeline">{copy.timeline}</div>
+  </div>
+</figure>

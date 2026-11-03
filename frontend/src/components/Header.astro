@@ -1,0 +1,289 @@
+---
+import NishixChat from './NishixChat';
+import LangSwitch from './LangSwitch.astro';
+import { getContent, localeFromUrl, localePath } from '../content';
+import { sprites } from '../sprites/manifest';
+
+const locale = localeFromUrl(Astro.url);
+const { ui, chat, chatQuestions } = getContent(locale);
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const icon = sprites.iconNishixAI;
+---
+
+<header class="header">
+  <div class="header__bar">
+    <a class="header__brand focus-ring" href={localePath(locale)}>
+      IVÁN RODAS <span class="header__handle mono">{ui.handle}</span>
+    </a>
+
+    <button
+      class="header__toggle focus-ring"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-menu"
+    >
+      <span class="header__toggle-bars" aria-hidden="true"></span>
+      <span class="header__toggle-text" data-closed={ui.menu} data-open={ui.close}>{ui.menu}</span>
+    </button>
+
+    <nav class="header__nav" id="site-menu" aria-label={ui.mainNav}>
+      {ui.nav.map((item) => (
+        <a
+          class="option header__link"
+          href={localePath(locale, `/${item.page}`)}
+          aria-current={path === localePath(locale, `/${item.page}`) ? 'page' : undefined}
+        >
+          <span class="option__slash" aria-hidden="true" />
+          <span class="option__plate" aria-hidden="true" />
+          <span class="option__label">{item.label}</span>
+        </a>
+      ))}
+      <!-- En móvil el idioma va dentro del menú -->
+      <LangSwitch extra="lang--menu" />
+    </nav>
+
+    <div class="header__tools">
+      <NishixChat
+        client:idle
+        transition:persist={`nishixai-${locale}`}
+        title={chat.title}
+        subtitle={chat.subtitle}
+        greeting={chat.greeting}
+        fallback={chat.fallback}
+        placeholder={chat.placeholder}
+        inputLabel={chat.inputLabel}
+        questions={chatQuestions}
+        iconSrc={icon.ready ? `/sprites/${icon.file}` : undefined}
+      />
+      <LangSwitch extra="lang--bar" />
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(7, 17, 12, 0.9);
+    border-bottom: 1px solid rgba(168, 240, 200, 0.12);
+  }
+  .header__bar {
+    position: relative;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 10px var(--gutter);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+  }
+  .header__brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--color-ink);
+    font-weight: 900;
+    font-style: italic;
+    font-size: 18px;
+    text-decoration: none;
+  }
+  .header__handle {
+    margin-left: 6px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--color-mint);
+  }
+  /* 40 px entre opciones: el tajo de una no puede tocar a la siguiente. */
+  .header__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 28px;
+  }
+  .header__link {
+    font-size: 20px;
+    color: var(--color-ink);
+  }
+  .header__tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header__toggle {
+    display: none;
+  }
+  /* Escritorio: todo en una fila (marca, 5 apartados, NishixAI e idioma), también con los textos en español. */
+  @media (min-width: 1024px) {
+    .header__bar {
+      flex-wrap: nowrap;
+    }
+    .header__nav {
+      flex-wrap: nowrap;
+      gap: 4px 14px;
+    }
+    .header__link {
+      font-size: 15px;
+      white-space: nowrap;
+    }
+  }
+  @media (min-width: 1280px) {
+    .header__nav {
+      gap: 4px 24px;
+    }
+    .header__link {
+      font-size: 18px;
+    }
+  }
+  /* En escritorio el idioma va en la barra; el del menú solo aparece en móvil. */
+  .header__nav :global(.lang--menu) {
+    display: none;
+  }
+
+  /* Móvil (mobile first): barra de una fila (marca, NishixAI, Menu) y los apartados en un panel
+     que se abre con el botón. Cada enlace del panel mide 48 px de alto para tocarlo sin fallar. */
+  @media (max-width: 767px) {
+    .header__bar {
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      gap: 0 4px;
+      padding-block: 6px;
+    }
+    .header__brand {
+      order: 1;
+      flex: 0 0 auto;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .header__handle {
+      display: none;
+    }
+    .header__tools {
+      order: 2;
+      margin-left: auto;
+      gap: 0;
+      min-width: 0;
+    }
+    .header__tools :global(.lang) {
+      display: none;
+    }
+    .header__nav :global(.lang--menu) {
+      display: flex;
+      align-self: flex-start;
+      margin-top: 8px;
+    }
+    .header__toggle {
+      order: 3;
+      flex: none;
+      margin-left: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0 12px;
+      border: 1px solid rgba(168, 240, 200, 0.35);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--color-ink);
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .header__toggle-bars,
+    .header__toggle-bars::before,
+    .header__toggle-bars::after {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: currentColor;
+    }
+    .header__toggle-bars {
+      position: relative;
+    }
+    .header__toggle-bars::before,
+    .header__toggle-bars::after {
+      content: '';
+      position: absolute;
+      left: 0;
+    }
+    .header__toggle-bars::before {
+      top: -6px;
+    }
+    .header__toggle-bars::after {
+      top: 6px;
+    }
+    /* En pantallas muy estrechas el botón queda solo con el icono; la palabra sigue para lectores de pantalla. */
+    @media (max-width: 479px) {
+      .header__toggle {
+        padding: 0 13px;
+      }
+      .header__toggle-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+    }
+    /* El panel flota bajo la barra (no empuja la página) con fondo sólido y sombra. */
+    .header__nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      padding: 4px var(--gutter) 12px;
+      background: var(--color-bg);
+      border-bottom: 1px solid rgba(168, 240, 200, 0.25);
+      box-shadow: 0 18px 30px rgba(0, 0, 0, 0.55);
+    }
+    .header__bar[data-open='true'] .header__nav {
+      display: flex;
+    }
+    /* Abierto: las tres barras pasan a ✕ y la etiqueta a «Close». */
+    .header__bar[data-open='true'] .header__toggle-bars {
+      background: transparent;
+    }
+    .header__bar[data-open='true'] .header__toggle-bars::before {
+      top: 0;
+      transform: rotate(45deg);
+    }
+    .header__bar[data-open='true'] .header__toggle-bars::after {
+      top: 0;
+      transform: rotate(-45deg);
+    }
+    .header__link {
+      min-height: 48px;
+      font-size: 24px;
+    }
+  }
+</style>
+
+<script>
+  /** Menú móvil: botón con aria-expanded; Esc lo cierra y devuelve el foco; al elegir un enlace se cierra. */
+  const setup = () => {
+    const bar = document.querySelector<HTMLElement>('.header__bar');
+    const toggle = document.querySelector<HTMLButtonElement>('.header__toggle');
+    if (!bar || !toggle) return;
+    const set = (open: boolean) => {
+      bar.dataset.open = String(open);
+      toggle.setAttribute('aria-expanded', String(open));
+      const label = toggle.querySelector<HTMLElement>('.header__toggle-text');
+      if (label) label.textContent = (open ? label.dataset.open : label.dataset.closed) ?? '';
+    };
+    toggle.addEventListener('click', () => set(bar.dataset.open !== 'true'));
+    bar.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && bar.dataset.open === 'true') {
+        event.stopPropagation();
+        set(false);
+        toggle.focus();
+      }
+    });
+    bar.querySelectorAll('.header__nav a').forEach((link) => link.addEventListener('click', () => set(false)));
+  };
+  document.addEventListener('astro:page-load', setup);
+</script>

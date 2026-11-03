@@ -1,0 +1,170 @@
+---
+/**
+ * Recorte del avatar de Iván para una página. Dentro de .page (position: relative): se coloca con
+ * `placement` y entra cayendo girado. Decorativo (aria-hidden): el contenido de la página es HTML.
+ *
+ * Cada vista tiene su posición, su inclinación y su difuminado; las tiras (public/avatar) miden
+ * 600×780 por cuadro. Ver src/styles/avatar.css para las capas y las animaciones.
+ */
+type Page = 'hero' | 'projects' | 'stack' | 'journey' | 'about' | 'contact';
+
+interface Props {
+  page: Page;
+}
+
+type View = {
+  /** Posición y tamaño de la caja, en CSS. */
+  box: string;
+  /** Giro del recorte en grados. */
+  tilt: number;
+  /** Variables del difuminado lateral (el recorte se funde en el borde cortado). */
+  feather?: string;
+  /** Duración de la entrada en ms y cuadros de la tira de entrada. */
+  entryMs: number;
+  entryFrames: number;
+  /** Máscara vertical: el recorte se funde antes de llegar a lo que tiene debajo. */
+  mask?: string;
+  /** Difuminado de 140 px en el borde inferior de la sección. */
+  fade?: boolean;
+  /** Journey: el reposo es un solo cuadro con balanceo. */
+  walk?: boolean;
+};
+
+const bottomEdge = 'clip-path:inset(-999px -999px 0 -999px)';
+// Fundido inferior: de a% a b% de la caja el avatar se funde con el fondo (ver .cutin[data-fade]::after).
+const maskTo = (a: number, b: number) => `--box-fade-from:${a}%;--box-fade-to:${b}%`;
+
+const views: Record<Page, View> = {
+  hero: {
+    box: 'right:-150px;top:-130px;width:780px;height:1014px',
+    tilt: 0,
+    feather: '--feather:22%',
+    entryMs: 800,
+    entryFrames: 24,
+    fade: true,
+  },
+  projects: {
+    box: `right:-110px;top:40px;width:640px;height:832px;${maskTo(85, 100)}`,
+    tilt: -9,
+    entryMs: 1000,
+    entryFrames: 12,
+    fade: true,
+  },
+  stack: {
+    box: `right:-96px;bottom:76px;width:631px;height:821px;${bottomEdge};${maskTo(82, 100)}`,
+    tilt: 8,
+    entryMs: 1000,
+    entryFrames: 12,
+  },
+  journey: {
+    box: `right:-60px;top:20px;width:520px;height:676px;${maskTo(62, 82)}`,
+    tilt: -16,
+    entryMs: 700,
+    entryFrames: 12,
+    fade: true,
+    walk: true,
+  },
+  about: {
+    box: `left:-40px;top:-30px;width:360px;height:468px;${maskTo(58, 86)}`,
+    tilt: -7,
+    feather: '--feather-r:18%',
+    entryMs: 1000,
+    entryFrames: 12,
+  },
+  contact: {
+    box: `right:35px;bottom:76px;width:610px;height:793px;${bottomEdge};${maskTo(82, 100)}`,
+    tilt: -5,
+    entryMs: 1000,
+    entryFrames: 12,
+  },
+};
+
+const { page } = Astro.props;
+const view = views[page];
+// La caja va en variables --box-* (valores de escritorio). avatar.css usa --cx-* cuando una pantalla los
+// cambia y si no cae en --box-*: una variable escrita en style ganaría a la de la hoja de estilos.
+const box = view.box.replace(/\b(right|top|left|bottom|width|height):/g, '--box-$1:');
+const base = `/avatar/${page}`;
+const seconds = `${view.entryMs / 1000}s`;
+const strip = (frames: number) => `width:${frames * 100}%;--n:${frames}`;
+const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
+---
+
+<div
+  class="cutin"
+  aria-hidden="true"
+  style={box}
+  data-page={page}
+  data-fade={view.box.includes('--box-fade-from') ? '' : undefined}
+  data-loop
+>
+  <div class="cutin__body" style={`transform:rotate(${view.tilt}deg);${view.feather ?? ''}`}>
+    <div class="cutin__fall">
+      <div class="cutin__wash"></div>
+      <div class="cutin__band"></div>
+      <div class="cutin__drift">
+        <div class="cutin__art">
+          {page === 'hero' ? (
+            <>
+              <span class="cutin__clip cutin__clip--hero-entry">
+                <img
+                  class="cutin__strip"
+                  src={`${base}-entry.webp`}
+                  alt=""
+                  fetchpriority="high"
+                  decoding="async"
+                  style={`${strip(24)};--d:800ms;--i:1;--e:-95.8333%`}
+                />
+              </span>
+              <span class="cutin__clip cutin__clip--hero-a">
+                <img
+                  class="cutin__strip"
+                  src={`${base}-rest-0.webp`}
+                  alt=""
+                  decoding="async"
+                  style={`${strip(24)};--d:4000ms;--w:0.8s;--e:-95.8333%`}
+                />
+              </span>
+              <span class="cutin__clip cutin__clip--hero-b">
+                <img
+                  class="cutin__strip"
+                  src={`${base}-rest-1.webp`}
+                  alt=""
+                  decoding="async"
+                  style={`${strip(24)};--d:4000ms;--w:0.8s;--e:-95.8333%`}
+                />
+              </span>
+            </>
+          ) : (
+            <>
+              <span class="cutin__clip cutin__clip--entry" style={`--t:${seconds}`}>
+                <img
+                  class="cutin__strip"
+                  src={`${base}-entry.webp`}
+                  alt=""
+                  fetchpriority="high"
+                  decoding="async"
+                  style={`${strip(view.entryFrames)};--d:${view.entryMs}ms;--i:1;${entryEnd}`}
+                />
+              </span>
+              <span
+                class:list={['cutin__clip', 'cutin__clip--rest', { 'cutin__clip--walk': view.walk }]}
+                style={`--t:${seconds}`}
+              >
+                <img
+                  class="cutin__strip"
+                  src={`${base}-rest.webp`}
+                  alt=""
+                  decoding="async"
+                  style={`${strip(24)};--d:4000ms;--w:${seconds};--e:-95.8333%`}
+                />
+              </span>
+            </>
+          )}
+        </div>
+      </div>
+      <div class="cutin__lines"></div>
+    </div>
+  </div>
+</div>
+{view.fade && <div class="cutin-fade" aria-hidden="true"></div>}

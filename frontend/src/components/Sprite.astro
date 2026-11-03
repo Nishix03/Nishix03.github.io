@@ -1,0 +1,89 @@
+---
+/**
+ * Un sprite del reparto. Si Codex ya entregó la tira (`ready`), anima los cuadros con steps()
+ * moviendo la tira con transform (compositor, plan §14.2). Si no, muestra una caja de marcador
+ * del mismo tamaño para que el layout y los movimientos del boceto sigan funcionando.
+ */
+import { sprites, type SpriteSlot } from '../sprites/manifest';
+import '../styles/sprite-keyframes.css';
+
+interface Props {
+  sprite: SpriteSlot | keyof typeof sprites;
+  class?: string;
+  /** Texto corto del marcador (por ejemplo las dos letras de una tecnología). */
+  fallback?: string;
+  background?: string;
+  color?: string;
+}
+
+const { sprite: spriteProp, class: className, fallback, background, color } = Astro.props;
+const slot = typeof spriteProp === 'string' ? sprites[spriteProp] : spriteProp;
+const duration = slot.frames > 1 ? slot.frames / slot.fps : 0;
+---
+
+<span
+  class:list={['sprite', className, { 'sprite--placeholder': !slot.ready }]}
+  style={`width:${slot.width}px;height:${slot.height}px;${background ? `--sprite-bg:${background};` : ''}${color ? `--sprite-fg:${color};` : ''}`}
+  data-sprite={slot.id}
+  data-loop
+  aria-hidden="true"
+>
+  {slot.ready ? (
+    <img
+      class="sprite__strip"
+      src={`/sprites/${slot.file}`}
+      alt=""
+      width={slot.width * slot.frames}
+      height={slot.height}
+      decoding="async"
+      style={
+        slot.frames > 1
+          ? `width:${slot.width * slot.frames}px;animation:sprite-${slot.id} ${duration}s steps(${slot.frames}) infinite`
+          : undefined
+      }
+    />
+  ) : (
+    <span class="sprite__marker">{fallback ?? ''}</span>
+  )}
+</span>
+
+<style>
+  .sprite {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    flex: none;
+  }
+  .sprite__strip {
+    display: block;
+    max-width: none;
+    height: 100%;
+    image-rendering: pixelated;
+  }
+  .sprite--placeholder {
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--line-strong);
+    background: var(--sprite-bg, rgba(168, 240, 200, 0.06));
+    color: var(--sprite-fg, var(--color-mint));
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+  }
+  /* Chip oscuro: el texto del marcador cumple contraste sea cual sea el color de marca de fondo. */
+  .sprite__marker {
+    padding: 1px 3px;
+    background: var(--color-surface);
+    color: var(--color-ink);
+    text-transform: uppercase;
+  }
+</style>
+
+<style is:global>
+  @media (prefers-reduced-motion: reduce) {
+    .sprite__strip {
+      animation: none !important;
+    }
+  }
+</style>

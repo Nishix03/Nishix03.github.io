@@ -1,0 +1,142 @@
+[
+  {
+    "path": "src\\components\\Header.astro",
+    "sha256": "DCD2CFC781CF3B22DA5DB2CDB88959F759D29D50318A3DB3BED3E99A88F876C5"
+  },
+  {
+    "path": "src\\components\\NishixChat.css",
+    "sha256": "BB0484947E43D72777972685B3115D23FCAB97BAA43DB67F4096AD7762415F26"
+  },
+  {
+    "path": "src\\components\\NishixChat.tsx",
+    "sha256": "ADE4D5EA96376925B47D50A395EDA5C2AD5997C9145CEF8652C9B76F2D05A7C4"
+  },
+  {
+    "path": "src\\components\\PageShell.astro",
+    "sha256": "6B85FDB201819C6EEAC7B431C53A1FAA8F304A1315D6AEDAEAF22169F275B422"
+  },
+  {
+    "path": "src\\components\\PoseFigure.astro",
+    "sha256": "9D57E63F5E9E087E816A546103A25A9BDEF32B145B94C36A42C08FF98C423B95"
+  },
+  {
+    "path": "src\\components\\Sprite.astro",
+    "sha256": "9772475B0EBCD4D6EDAB522888D66CE46B1F264C57371D5B7DF1A88D95D2E5A8"
+  },
+  {
+    "path": "src\\components\\TarotBack.astro",
+    "sha256": "B914E26B5A3B5B28E2EC645F1A4CFC11CB7FAEED172CC7E3CD8DE8AC037871B9"
+  },
+  {
+    "path": "src\\content\\index.ts",
+    "sha256": "53323D677F59CFAD756525D787557716840E20387889BC0D0D9D0E3E16347712"
+  },
+  {
+    "path": "src\\content\\types.ts",
+    "sha256": "5BEB96C849E19003FA67A6EC2F5BCEBC62BB9E562ECF75F06F61E7A5BC2A8E7F"
+  },
+  {
+    "path": "src\\content\\en\\chat.ts",
+    "sha256": "DDFA089A9402AEC436671EEA6E22FAD2527254B618ED6CCF1B154C4B7E6CB5E7"
+  },
+  {
+    "path": "src\\content\\en\\contact.ts",
+    "sha256": "85FC58195115F298CD7409FACF03047C3EF54D51116BC6A364E695CC9B90B182"
+  },
+  {
+    "path": "src\\content\\en\\hero.ts",
+    "sha256": "D00070EBCB5415D9DBB7EA5F60B9B2C44A3EBE8F9CF288BB9E71CE250CD4AFD9"
+  },
+  {
+    "path": "src\\content\\en\\journey.ts",
+    "sha256": "987CAFB20EF555B78064481EC82BBF0C2B9B0995C21E41040DEE6DF6E4F56AEA"
+  },
+  {
+    "path": "src\\content\\en\\projects.ts",
+    "sha256": "AEE077A89E16416123B61394F0497F574459643F8AD62FE56B2DC7504598130F"
+  },
+  {
+    "path": "src\\content\\en\\stack.ts",
+    "sha256": "928C7202351C7D73966894B2D8311C2DAA696621A3F58A185E3C9235659D10BB"
+  },
+  {
+    "path": "src\\content\\en\\ui.ts",
+    "sha256": "F80F82B817D426CC82ECCCCFD933778EFE5115E18CCEE14E77898DC89D460C9D"
+  },
+  {
+    "path": "src\\layouts\\BaseLayout.astro",
+    "sha256": "35B97423D4B764CECDF5920AD8BE99432052B4570F7442AB47A2C0564127FC33"
+  },
+  {
+    "path": "src\\pages\\contact.astro",
+    "sha256": "68B5E8631BEC0387DC87A5552A3F1D845DE011E27B9CF06E7909E56DF4F27696"
+  },
+  {
+    "path": "src\\pages\\index.astro",
+    "sha256": "63ECD8BF06FEE04F0DD6B9896A67CFB559C1A864AF2A528C1A70E286F83C5343"
+  },
+  {
+    "path": "src\\pages\\journey.astro",
+    "sha256": "D6462BFF92920D56D3CA5E51F1C78A3745010609BDE5C9EC763A0BA24712190D"
+  },
+  {
+    "path": "src\\pages\\projects.astro",
+    "sha256": "E304D2367F075DBBF77B994EE245331FB4769042913A1B870ADA287AEB376DAC"
+  },
+  {
+    "path": "src\\pages\\stack.astro",
+    "sha256": "B8675561D0CE97699560B1DAA56A223A3D753520CB0D658010366C73CAC4EA2E"
+  },
+  {
+    "path": "src\\scripts\\init.ts",
+    "sha256": "E2ABDD92A24B821F6D7BEB315B0B38A599A0799F8B017E79DD7FB56E8E818D28"
+  },
+  {
+    "path": "src\\scripts\\keys.ts",
+    "sha256": "431BB0B846A871B502CE52F90727A78D705854F6065501FDB901984D1E669255"
+  },
+  {
+    "path": "src\\scripts\\loops.ts",
+    "sha256": "920031DAF74C8FEA9A5E450478AF2FE8B266A63EF49538C59F1AA29DF7C403A2"
+  },
+  {
+    "path": "src\\scripts\\select-group.ts",
+    "sha256": "6CAD2C10165743C7672A4C1C94727FA52CFC39507E9833F03B1D3739D37328F5"
+  },
+  {
+    "path": "src\\sprites\\manifest.ts",
+    "sha256": "4AD8F9EDCB14E85032B149B812081E8196DED2E76AD3FAF4AA9F1F79DCFC52F8"
+  },
+  {
+    "path": "src\\styles\\base.css",
+    "sha256": "BD5DF2735F9B04DF21F4804C8FB2A196F556D8177215A15BCB6BF7C183BDA699"
+  },
+  {
+    "path": "src\\styles\\global.css",
+    "sha256": "B0DEC94D5219728D222C345F46738B75C3A2BFB8F4F97CC5EF4271D1B83B677D"
+  },
+  {
+    "path": "src\\styles\\motion.css",
+    "sha256": "6CD0342366A915D9B432754C76A528C511C872A0CD459C66528EB68950788EDF"
+  },
+  {
+    "path": "src\\styles\\option.css",
+    "sha256": "A3982ECB63E0833B6E6010896B0A062220128C0219D8AAA9A1C97BE44904BB32"
+  },
+  {
+    "path": "src\\styles\\pixel.css",
+    "sha256": "4405B73076BA2DD78D54C7E72126F0E2CEE6EC4F6E661C2C325155310A3561CE"
+  },
+  {
+    "path": "src\\styles\\pose.css",
+    "sha256": "DE61210295885C2F01ACDAB1096743368DC902BF5D46E18B58A5BEBD6AB8B062"
+  },
+  {
+    "path": "src\\styles\\sprite-keyframes.css",
+    "sha256": "BE3AA6DDE9891602CFB0BB2E680B2A8F9D4D6FFC47B689B13C97ED1A20609941"
+  },
+  {
+    "path": "src\\styles\\tokens.css",
+    "sha256": "835884B1DC7F261E663F0E93AB0EF865122F1D7E91C96FA94B92C8FC1A6E2B2C"
+  }
+]

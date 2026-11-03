@@ -1,0 +1,96 @@
+---
+/**
+ * Un personaje con varios clips (reposo, flechas, giro…). Todos comparten el tamaño de cuadro,
+ * así que caben en la misma ventana; solo se ve el clip activo y los demás llevan `hidden`.
+ * Cambiar de clip = quitar `hidden` al nuevo, y eso reinicia su animación (src/scripts/clips.ts).
+ *
+ * La animación mueve la tira con transform y steps(n, jump-none): n cuadros con la misma duración,
+ * y un clip de una sola pasada se queda en su último cuadro (forwards) sin mostrar un cuadro vacío.
+ */
+import { clip, type ClipId } from '../sprites/clips';
+
+interface Props {
+  clips: ClipId[];
+  /** Nombre del actor para los scripts: data-actor="boyfriend". */
+  name: string;
+  /** Escala entera (2 = cada píxel del sprite ocupa 2×2). */
+  scale?: number;
+  class?: string;
+}
+
+const { clips: ids, name, scale = 1, class: className } = Astro.props;
+const list = ids.map(clip);
+const [first] = list;
+---
+
+<span
+  class:list={['clip', className]}
+  style={`width:${first.width * scale}px;height:${first.height * scale}px`}
+  data-actor={name}
+  data-clip={first.id}
+  aria-hidden="true"
+>
+  {list.map((c) => {
+    const w = c.width * scale;
+    // Cuadro de reposo con movimiento reducido: el final para la invocación, el inicial para el resto.
+    const rest = c.terminalFrame ?? c.reducedMotionFrame ?? 0;
+    return (
+      <img
+        class:list={['clip__strip', { 'clip__strip--still': c.frames === 1 }]}
+        src={`/sprites/${c.file}`}
+        alt=""
+        width={w * c.frames}
+        height={c.height * scale}
+        decoding="async"
+        data-clip-name={c.id}
+        hidden={c.id !== first.id}
+        style={[
+          `--clip-w:${w}px`,
+          `--clip-end:${-(c.frames - 1) * w}px`,
+          `--clip-steps:${c.frames}`,
+          `--clip-dur:${c.durationMs}ms`,
+          `--clip-iter:${c.loop ? 'infinite' : 1}`,
+          `--clip-rest:${-rest * w}px`,
+        ].join(';')}
+      />
+    );
+  })}
+</span>
+
+<style is:global>
+  .clip {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    flex: none;
+  }
+  .clip__strip {
+    display: block;
+    max-width: none;
+    image-rendering: pixelated;
+    /* --play-* los pone src/scripts/clips.ts para reproducir solo un tramo (p. ej. sostener una flecha). */
+    animation: clip-play var(--play-dur, var(--clip-dur))
+      steps(var(--play-steps, var(--clip-steps)), jump-none) var(--play-iter, var(--clip-iter))
+      forwards;
+  }
+  .clip__strip--still {
+    animation: none;
+  }
+  .clip__strip[hidden] {
+    display: none;
+  }
+  @keyframes clip-play {
+    from {
+      transform: translateX(var(--play-from, 0px));
+    }
+    to {
+      transform: translateX(var(--play-end, var(--clip-end)));
+    }
+  }
+  /* Movimiento reducido: un cuadro fijo (motion.css ya quita todas las animaciones). */
+  @media (prefers-reduced-motion: reduce) {
+    .clip__strip {
+      transform: translateX(var(--clip-rest));
+    }
+  }
+</style>

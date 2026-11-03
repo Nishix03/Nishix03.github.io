@@ -1,0 +1,135 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import '../styles/global.css';
+import { getContent, localeFromUrl, localePath, locales, switchLocale } from '../content';
+
+interface Props {
+  title?: string;
+  /** En el inicio no se muestra el botón "Esc Return". */
+  home?: boolean;
+}
+
+const locale = localeFromUrl(Astro.url);
+const { ui } = getContent(locale);
+const { title = ui.siteTitle, home = false } = Astro.props;
+
+// El avatar es lo primero que se ve: su tira de entrada se pide antes que el CSS de las páginas y las fuentes.
+const avatarPages = ['about', 'projects', 'stack', 'journey', 'contact'];
+const section = Astro.url.pathname.split('/').filter(Boolean).at(-1) ?? '';
+const avatar = home ? 'hero' : avatarPages.includes(section) ? section : undefined;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={ui.description} />
+    <meta name="theme-color" content="#07110c" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {locales.map((l) => (
+      <link rel="alternate" hreflang={l} href={new URL(switchLocale(Astro.url, l), Astro.site ?? Astro.url).href} />
+    ))}
+    {avatar && (
+      <link rel="preload" as="image" href={`/avatar/${avatar}-entry.webp`} fetchpriority="high" />
+    )}
+    <title>{title}</title>
+    <!-- Transición entre páginas: la hacemos nosotros (barrido + círculo), así que se apaga la de Astro. -->
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <a class="skip sr-only" href="#main">
+      {ui.skip}
+    </a>
+    <div class="app">
+      <Header />
+      <main id="main" transition:animate="none">
+        <slot />
+      </main>
+      {!home && (
+        <nav class="back" aria-label={ui.backLabel}>
+          <a class="option back__link" href={localePath(locale)}>
+            <span class="option__slash" aria-hidden="true" />
+            <span class="option__plate" aria-hidden="true" />
+            <span class="option__label back__text">{ui.back}</span>
+            <span class="back__arrow" aria-hidden="true">←</span>
+          </a>
+        </nav>
+      )}
+    </div>
+    <script>
+      import '../scripts/init';
+    </script>
+  </body>
+</html>
+
+<style>
+  .app {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  .skip:focus {
+    position: fixed;
+    left: 12px;
+    top: 12px;
+    z-index: 100;
+    width: auto;
+    height: auto;
+    padding: 10px 16px;
+    clip-path: none;
+    background: var(--color-paper);
+    color: var(--color-bg);
+  }
+  @media (max-width: 767px) {
+    .app {
+      padding-bottom: 72px;
+    }
+  }
+  .back {
+    position: fixed;
+    right: 20px;
+    bottom: 16px;
+    z-index: 35;
+    display: flex;
+    gap: 10px;
+  }
+  .back__arrow {
+    display: none;
+    position: relative;
+  }
+  /* En móvil no hay tecla Esc: el botón es una flecha de 48 px con fondo sólido y sombra. */
+  @media (max-width: 767px) {
+    .back {
+      right: 12px;
+      bottom: 12px;
+    }
+    .back__text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .back__arrow {
+      display: inline;
+      font-size: 26px;
+    }
+    .back__link {
+      min-width: 48px;
+      min-height: 48px;
+      justify-content: center;
+      background: var(--color-bg);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    }
+  }
+  .back__link {
+    font-size: 18px;
+    color: var(--color-ink);
+    background: rgba(7, 17, 12, 0.85);
+  }
+</style>

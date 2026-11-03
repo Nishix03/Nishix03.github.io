@@ -1,0 +1,176 @@
+/*
+  Selección P3R (A21, A22): tajo del color de selección + placa blanca + desplazamiento x.
+  Dos bloques que comparten la idea:
+    .option      → opciones grandes (cabecera, hero, contacto)
+    .project-row → filas de proyecto
+  El estado seleccionado llega por [data-sel="true"], [aria-current="page"] o [aria-pressed="true"],
+  de modo que el CSS no depende de ningún script.
+*/
+.option {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  min-height: 44px;
+  padding: 4px 30px 6px 14px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  line-height: 0.95;
+  transition: transform var(--dur-fast) var(--ease-p3r);
+}
+.option__slash {
+  position: absolute;
+  left: -10px;
+  right: -18px;
+  top: 22%;
+  bottom: -16%;
+  background: var(--sel);
+  clip-path: polygon(0 34%, 100% 0, 93% 100%, 5% 78%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-fast) var(--ease-p3r);
+}
+.option__plate {
+  position: absolute;
+  inset: 0;
+  background: var(--color-paper);
+  clip-path: polygon(0 10%, 100% 0, 96% 100%, 2% 92%);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-p3r);
+}
+.option__label,
+.option__sub {
+  position: relative;
+}
+.option__sub {
+  font-family: var(--font-pixel);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  text-transform: none;
+  color: var(--color-mint);
+}
+.option__icon {
+  position: relative;
+  width: 36px;
+  height: 28px;
+  margin-right: 2px;
+}
+.option:is(
+  :hover,
+  :focus-visible,
+  [data-sel='true'],
+  [aria-current='page'],
+  [aria-expanded='true']
+) {
+  transform: translateX(12px);
+}
+.option:is(:hover, :focus-visible, [data-sel='true'], [aria-current='page'], [aria-expanded='true'])
+  .option__slash {
+  transform: scaleX(1);
+  animation: throb 1.2s var(--ease-breathe) var(--dur-fast) infinite;
+}
+.option:is(:hover, :focus-visible, [data-sel='true'], [aria-current='page'], [aria-expanded='true'])
+  .option__plate {
+  opacity: 1;
+}
+.option:is(:hover, :focus-visible, [data-sel='true'], [aria-current='page'], [aria-expanded='true'])
+  :is(.option__label, .option__sub) {
+  color: var(--color-bg);
+}
+.option:active {
+  transform: translateX(12px) scale(0.96);
+}
+
+/* ---------- Fila de proyecto ---------- */
+.project-row {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 26px 16px 16px;
+  border: 1px solid var(--line);
+  background: var(--tint);
+  color: var(--color-ink);
+  text-align: left;
+  transition: transform var(--dur-fast) var(--ease-p3r);
+}
+.project-row__slash {
+  position: absolute;
+  left: -8px;
+  right: -14px;
+  top: 14%;
+  bottom: -12%;
+  background: var(--sel);
+  clip-path: polygon(0 20%, 100% 0, 97% 100%, 2% 86%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-fast) var(--ease-p3r);
+}
+.project-row__plate {
+  position: absolute;
+  inset: 0;
+  background: var(--color-paper);
+  clip-path: polygon(0 0, 100% 6%, 98% 100%, 1% 92%);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-p3r);
+}
+.project-row__in {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+}
+.project-row__badge {
+  width: 54px;
+  height: 54px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 3px solid currentColor;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 24px;
+  transition: transform var(--dur-fast) var(--ease-p3r);
+}
+.project-row:is(:focus-visible, [aria-pressed='true']) {
+  transform: translateX(12px);
+}
+.project-row:is(:focus-visible, [aria-pressed='true']) .project-row__slash {
+  transform: scaleX(1);
+}
+.project-row:is(:focus-visible, [aria-pressed='true']) .project-row__plate {
+  opacity: 1;
+}
+.project-row:is(:focus-visible, [aria-pressed='true']) .project-row__in {
+  color: var(--color-bg);
+}
+/* El resaltado por hover solo con ratón y pantalla ancha: en táctil queda «pegado» tras tocar y se verían dos filas resaltadas. */
+@media (hover: hover) and (min-width: 768px) {
+  .project-row:hover {
+    transform: translateX(12px);
+  }
+  .project-row:hover .project-row__slash {
+    transform: scaleX(1);
+  }
+  .project-row:hover .project-row__plate {
+    opacity: 1;
+  }
+  .project-row:hover .project-row__in {
+    color: var(--color-bg);
+  }
+}
+.project-row[aria-pressed='true'] .project-row__badge {
+  transform: rotate(-8deg) scale(1.08);
+}
+.project-row:active {
+  transform: translateX(12px) scale(0.96);
+}

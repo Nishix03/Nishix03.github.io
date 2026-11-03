@@ -1,0 +1,176 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageShell from '../components/PageShell.astro';
+import AvatarCutin from '../components/AvatarCutin.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Sprite from '../components/Sprite.astro';
+import { getContent, localeFromUrl, localePath } from '../content';
+import { techIconSlot } from '../sprites/manifest';
+
+const locale = localeFromUrl(Astro.url);
+const { stack, stackIntro, ui } = getContent(locale);
+const page = ui.pages.stack;
+
+// 10 segmentos que se llenan con scaleX (A23): 20 ms entre segmento y 40 ms entre tarjetas.
+const segments = (percent: number, tileIndex: number) =>
+  Array.from({ length: 10 }, (_, j) => ({
+    on: j < Math.round(percent / 10),
+    delay: (0.3 + tileIndex * 0.04 + j * 0.02).toFixed(2),
+  }));
+---
+
+<BaseLayout title={`${page.title} — ${ui.siteTitle}`}>
+  <PageShell word={page.word} num={page.num} wordSize={260} wordTop={40} wordRight={-60} minHeight={900}>
+    <AvatarCutin slot="bg" page="stack" />
+    <div class="stack__head fx-cascade">
+      <h1 class="stack__title display">{page.title}</h1>
+    </div>
+    <p class="stack__intro fx-cascade" style="animation-delay: .06s">
+      {stackIntro}
+    </p>
+
+    <div class="stack__layout">
+      <ul class="stack__grid">
+        {stack.map((tech, i) => (
+          <li class="tile fx-cascade" style={`animation-delay: ${(0.1 + i * 0.04).toFixed(2)}s`}>
+            <span class="tile__icon" aria-hidden="true">
+              <Sprite
+                sprite={techIconSlot(tech.id)}
+                fallback={tech.code}
+                background={tech.background}
+                color={tech.foreground}
+              />
+            </span>
+            <span class="tile__body">
+              <span class="tile__top">
+                <span class="tile__name">{tech.name}</span>
+                <span class="tile__percent">{tech.percent}%</span>
+              </span>
+              <span
+                class="tile__bar"
+                role="img"
+                aria-label={`${tech.name} ${tech.percent} percent`}
+              >
+                {segments(tech.percent, i).map((segment) => (
+                  <span
+                    class:list={['tile__seg', 'fx-seg', { 'tile__seg--on': segment.on }]}
+                    style={`animation-delay:${segment.delay}s`}
+                  />
+                ))}
+              </span>
+              <span class="tile__evidence">{tech.evidence}</span>
+            </span>
+            <span class="tile__rank mono">R{tech.rank}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <SiteFooter slot="after" />
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .stack__head {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    margin-bottom: 6px;
+  }
+  .stack__title {
+    margin: 0;
+    font-size: clamp(44px, 7vw, 84px);
+    line-height: 0.9;
+  }
+  .stack__intro {
+    margin: 0 0 18px;
+    max-width: 70ch;
+    color: var(--color-mint);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  @media (min-width: 1024px) {
+    .stack__layout {
+      max-width: 780px;
+    }
+  }
+  .stack__layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-top: 28px;
+    align-items: flex-start;
+  }
+  .stack__grid {
+    flex: 1 1 520px;
+    min-width: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+  }
+
+  .tile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #0f1c15;
+    border: 1px solid rgba(168, 240, 200, 0.14);
+    border-radius: 12px;
+  }
+  .tile__icon {
+    flex: none;
+    outline: 2px solid var(--color-surface);
+  }
+  .tile__body {
+    flex: 1;
+    min-width: 0;
+  }
+  .tile__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .tile__name {
+    font-weight: 800;
+    font-size: 16px;
+  }
+  .tile__percent {
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--color-neon);
+  }
+  .tile__bar {
+    display: flex;
+    gap: 2px;
+    width: 100px;
+    height: 6px;
+    margin-top: 6px;
+  }
+  .tile__seg {
+    flex: 1;
+    background: rgba(168, 240, 200, 0.15);
+  }
+  .tile__seg--on {
+    background: var(--color-neon);
+  }
+  .tile__evidence {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--color-mint);
+  }
+  .tile__rank {
+    flex: none;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--color-mint);
+    color: var(--color-bg);
+    font-size: 13px;
+  }
+</style>

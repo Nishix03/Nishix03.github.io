@@ -1,0 +1,1026 @@
+{
+  "generator": "Built-in imagegen; deterministic Sharp packaging",
+  "palette": [
+    "#0b1a12",
+    "#07110c",
+    "#18372a",
+    "#397052",
+    "#6b987c",
+    "#a8f0c8",
+    "#39ff88",
+    "#49e0f0",
+    "#ffb340",
+    "#b47432",
+    "#f4d098",
+    "#fff0d1",
+    "#647583",
+    "#afc4cc",
+    "#eff6f4",
+    "#47352c",
+    "#e5394a",
+    "#215ec9",
+    "#238cdb",
+    "#777b3b",
+    "#a5a559"
+  ],
+  "sprites": {
+    "argenta": {
+      "label": "Blue-Eyes White Dragon",
+      "file": "argenta.webp",
+      "png": "argenta.png",
+      "width": 80,
+      "height": 60,
+      "frames": 10,
+      "fps": 10,
+      "duration": 1,
+      "states": {
+        "wings": {
+          "start": 0,
+          "frames": 4,
+          "fps": 10,
+          "file": "argenta-wings.webp"
+        },
+        "idle": {
+          "start": 4,
+          "frames": 6,
+          "fps": 10,
+          "file": "argenta-idle.webp"
+        }
+      },
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta/01.png"
+        },
+        {
+          "index": 1,
+          "x": 80,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta/02.png"
+        },
+        {
+          "index": 2,
+          "x": 160,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta/03.png"
+        },
+        {
+          "index": 3,
+          "x": 240,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta/04.png"
+        },
+        {
+          "index": 4,
+          "x": 320,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta/05.png"
+        },
+        {
+          "index": 5,
+          "x": 400,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta/06.png"
+        },
+        {
+          "index": 6,
+          "x": 480,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta/07.png"
+        },
+        {
+          "index": 7,
+          "x": 560,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta/08.png"
+        },
+        {
+          "index": 8,
+          "x": 640,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta/09.png"
+        },
+        {
+          "index": 9,
+          "x": 720,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta/10.png"
+        }
+      ]
+    },
+    "argenta-wings": {
+      "label": "Blue-Eyes White Dragon · wings",
+      "file": "argenta-wings.webp",
+      "png": "argenta-wings.png",
+      "width": 80,
+      "height": 60,
+      "frames": 4,
+      "fps": 10,
+      "duration": 0.4,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta-wings/01.png"
+        },
+        {
+          "index": 1,
+          "x": 80,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta-wings/02.png"
+        },
+        {
+          "index": 2,
+          "x": 160,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta-wings/03.png"
+        },
+        {
+          "index": 3,
+          "x": 240,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta-wings/04.png"
+        }
+      ]
+    },
+    "argenta-idle": {
+      "label": "Blue-Eyes White Dragon · idle",
+      "file": "argenta-idle.webp",
+      "png": "argenta-idle.png",
+      "width": 80,
+      "height": 60,
+      "frames": 6,
+      "fps": 10,
+      "duration": 0.6,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta-idle/01.png"
+        },
+        {
+          "index": 1,
+          "x": 80,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta-idle/02.png"
+        },
+        {
+          "index": 2,
+          "x": 160,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta-idle/03.png"
+        },
+        {
+          "index": 3,
+          "x": 240,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta-idle/04.png"
+        },
+        {
+          "index": 4,
+          "x": 320,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta-idle/05.png"
+        },
+        {
+          "index": 5,
+          "x": 400,
+          "y": 0,
+          "width": 80,
+          "height": 60,
+          "file": "keyframes/argenta-idle/06.png"
+        }
+      ]
+    },
+    "tuerca": {
+      "label": "Springtrap",
+      "file": "tuerca.webp",
+      "png": "tuerca.png",
+      "width": 48,
+      "height": 64,
+      "frames": 5,
+      "fps": 10,
+      "duration": 0.5,
+      "states": {
+        "walk": {
+          "start": 0,
+          "frames": 2,
+          "fps": 10,
+          "file": "tuerca-walk.webp"
+        },
+        "glitch": {
+          "start": 2,
+          "frames": 3,
+          "fps": 10,
+          "file": "tuerca-glitch.webp"
+        }
+      },
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 64,
+          "file": "keyframes/tuerca/01.png"
+        },
+        {
+          "index": 1,
+          "x": 48,
+          "y": 0,
+          "width": 48,
+          "height": 64,
+          "file": "keyframes/tuerca/02.png"
+        },
+        {
+          "index": 2,
+          "x": 96,
+          "y": 0,
+          "width": 48,
+          "height": 64,
+          "file": "keyframes/tuerca/03.png"
+        },
+        {
+          "index": 3,
+          "x": 144,
+          "y": 0,
+          "width": 48,
+          "height": 64,
+          "file": "keyframes/tuerca/04.png"
+        },
+        {
+          "index": 4,
+          "x": 192,
+          "y": 0,
+          "width": 48,
+          "height": 64,
+          "file": "keyframes/tuerca/05.png"
+        }
+      ]
+    },
+    "tuerca-walk": {
+      "label": "Springtrap · walk",
+      "file": "tuerca-walk.webp",
+      "png": "tuerca-walk.png",
+      "width": 48,
+      "height": 64,
+      "frames": 2,
+      "fps": 10,
+      "duration": 0.2,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 64,
+          "file": "keyframes/tuerca-walk/01.png"
+        },
+        {
+          "index": 1,
+          "x": 48,
+          "y": 0,
+          "width": 48,
+          "height": 64,
+          "file": "keyframes/tuerca-walk/02.png"
+        }
+      ]
+    },
+    "tuerca-glitch": {
+      "label": "Springtrap · glitch",
+      "file": "tuerca-glitch.webp",
+      "png": "tuerca-glitch.png",
+      "width": 48,
+      "height": 64,
+      "frames": 3,
+      "fps": 10,
+      "duration": 0.3,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 48,
+          "height": 64,
+          "file": "keyframes/tuerca-glitch/01.png"
+        },
+        {
+          "index": 1,
+          "x": 48,
+          "y": 0,
+          "width": 48,
+          "height": 64,
+          "file": "keyframes/tuerca-glitch/02.png"
+        },
+        {
+          "index": 2,
+          "x": 96,
+          "y": 0,
+          "width": 48,
+          "height": 64,
+          "file": "keyframes/tuerca-glitch/03.png"
+        }
+      ]
+    },
+    "eco": {
+      "label": "Boyfriend (FNF)",
+      "file": "eco.webp",
+      "png": "eco.png",
+      "width": 70,
+      "height": 80,
+      "frames": 6,
+      "fps": 10,
+      "duration": 0.6,
+      "states": {
+        "bounce": {
+          "start": 0,
+          "frames": 4,
+          "fps": 10,
+          "file": "eco-bounce.webp"
+        },
+        "mouth": {
+          "start": 4,
+          "frames": 2,
+          "fps": 10,
+          "file": "eco-mouth.webp"
+        }
+      },
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco/01.png"
+        },
+        {
+          "index": 1,
+          "x": 70,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco/02.png"
+        },
+        {
+          "index": 2,
+          "x": 140,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco/03.png"
+        },
+        {
+          "index": 3,
+          "x": 210,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco/04.png"
+        },
+        {
+          "index": 4,
+          "x": 280,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco/05.png"
+        },
+        {
+          "index": 5,
+          "x": 350,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco/06.png"
+        }
+      ]
+    },
+    "eco-bounce": {
+      "label": "Boyfriend (FNF) · bounce",
+      "file": "eco-bounce.webp",
+      "png": "eco-bounce.png",
+      "width": 70,
+      "height": 80,
+      "frames": 4,
+      "fps": 10,
+      "duration": 0.4,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco-bounce/01.png"
+        },
+        {
+          "index": 1,
+          "x": 70,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco-bounce/02.png"
+        },
+        {
+          "index": 2,
+          "x": 140,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco-bounce/03.png"
+        },
+        {
+          "index": 3,
+          "x": 210,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco-bounce/04.png"
+        }
+      ]
+    },
+    "eco-mouth": {
+      "label": "Boyfriend (FNF) · mouth",
+      "file": "eco-mouth.webp",
+      "png": "eco-mouth.png",
+      "width": 70,
+      "height": 80,
+      "frames": 2,
+      "fps": 10,
+      "duration": 0.2,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco-mouth/01.png"
+        },
+        {
+          "index": 1,
+          "x": 70,
+          "y": 0,
+          "width": 70,
+          "height": 80,
+          "file": "keyframes/eco-mouth/02.png"
+        }
+      ]
+    },
+    "butterfly": {
+      "label": "Mariposa de Persona 3",
+      "file": "butterfly.webp",
+      "png": "butterfly.png",
+      "width": 45,
+      "height": 35,
+      "frames": 2,
+      "fps": 6,
+      "duration": 0.3333333333333333,
+      "states": {
+        "wings": {
+          "start": 0,
+          "frames": 2,
+          "fps": 6,
+          "file": "butterfly-wings.webp"
+        }
+      },
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 45,
+          "height": 35,
+          "file": "keyframes/butterfly/01.png"
+        },
+        {
+          "index": 1,
+          "x": 45,
+          "y": 0,
+          "width": 45,
+          "height": 35,
+          "file": "keyframes/butterfly/02.png"
+        }
+      ]
+    },
+    "butterfly-wings": {
+      "label": "Mariposa de Persona 3 · wings",
+      "file": "butterfly-wings.webp",
+      "png": "butterfly-wings.png",
+      "width": 45,
+      "height": 35,
+      "frames": 2,
+      "fps": 6,
+      "duration": 0.3333333333333333,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 45,
+          "height": 35,
+          "file": "keyframes/butterfly-wings/01.png"
+        },
+        {
+          "index": 1,
+          "x": 45,
+          "y": 0,
+          "width": 45,
+          "height": 35,
+          "file": "keyframes/butterfly-wings/02.png"
+        }
+      ]
+    },
+    "icon-html": {
+      "label": "icon-html",
+      "file": "icon-html.webp",
+      "png": "icon-html.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-html/01.png"
+        }
+      ]
+    },
+    "icon-css": {
+      "label": "icon-css",
+      "file": "icon-css.webp",
+      "png": "icon-css.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-css/01.png"
+        }
+      ]
+    },
+    "icon-javascript": {
+      "label": "icon-javascript",
+      "file": "icon-javascript.webp",
+      "png": "icon-javascript.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-javascript/01.png"
+        }
+      ]
+    },
+    "icon-git": {
+      "label": "icon-git",
+      "file": "icon-git.webp",
+      "png": "icon-git.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-git/01.png"
+        }
+      ]
+    },
+    "icon-playwright": {
+      "label": "icon-playwright",
+      "file": "icon-playwright.webp",
+      "png": "icon-playwright.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-playwright/01.png"
+        }
+      ]
+    },
+    "icon-java": {
+      "label": "icon-java",
+      "file": "icon-java.webp",
+      "png": "icon-java.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-java/01.png"
+        }
+      ]
+    },
+    "icon-sql": {
+      "label": "icon-sql",
+      "file": "icon-sql.webp",
+      "png": "icon-sql.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-sql/01.png"
+        }
+      ]
+    },
+    "icon-typescript": {
+      "label": "icon-typescript",
+      "file": "icon-typescript.webp",
+      "png": "icon-typescript.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-typescript/01.png"
+        }
+      ]
+    },
+    "icon-astro": {
+      "label": "icon-astro",
+      "file": "icon-astro.webp",
+      "png": "icon-astro.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-astro/01.png"
+        }
+      ]
+    },
+    "icon-react": {
+      "label": "icon-react",
+      "file": "icon-react.webp",
+      "png": "icon-react.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-react/01.png"
+        }
+      ]
+    },
+    "icon-tailwind": {
+      "label": "icon-tailwind",
+      "file": "icon-tailwind.webp",
+      "png": "icon-tailwind.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-tailwind/01.png"
+        }
+      ]
+    },
+    "icon-gsap": {
+      "label": "icon-gsap",
+      "file": "icon-gsap.webp",
+      "png": "icon-gsap.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-gsap/01.png"
+        }
+      ]
+    },
+    "icon-claude-code": {
+      "label": "icon-claude-code",
+      "file": "icon-claude-code.webp",
+      "png": "icon-claude-code.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-claude-code/01.png"
+        }
+      ]
+    },
+    "icon-codex": {
+      "label": "icon-codex",
+      "file": "icon-codex.webp",
+      "png": "icon-codex.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-codex/01.png"
+        }
+      ]
+    },
+    "icon-nishixai": {
+      "label": "icon-nishixai",
+      "file": "icon-nishixai.webp",
+      "png": "icon-nishixai.png",
+      "width": 36,
+      "height": 28,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 28,
+          "file": "keyframes/icon-nishixai/01.png"
+        }
+      ]
+    },
+    "arrow-up": {
+      "label": "arrow-up",
+      "file": "arrow-up.webp",
+      "png": "arrow-up.png",
+      "width": 27,
+      "height": 27,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 27,
+          "height": 27,
+          "file": "keyframes/arrow-up/01.png"
+        }
+      ]
+    },
+    "arrow-right": {
+      "label": "arrow-right",
+      "file": "arrow-right.webp",
+      "png": "arrow-right.png",
+      "width": 27,
+      "height": 27,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 27,
+          "height": 27,
+          "file": "keyframes/arrow-right/01.png"
+        }
+      ]
+    },
+    "arrow-down": {
+      "label": "arrow-down",
+      "file": "arrow-down.webp",
+      "png": "arrow-down.png",
+      "width": 27,
+      "height": 27,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 27,
+          "height": 27,
+          "file": "keyframes/arrow-down/01.png"
+        }
+      ]
+    },
+    "arrow-left": {
+      "label": "arrow-left",
+      "file": "arrow-left.webp",
+      "png": "arrow-left.png",
+      "width": 27,
+      "height": 27,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 27,
+          "height": 27,
+          "file": "keyframes/arrow-left/01.png"
+        }
+      ]
+    },
+    "compass": {
+      "label": "compass",
+      "file": "compass.webp",
+      "png": "compass.png",
+      "width": 36,
+      "height": 36,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 36,
+          "height": 36,
+          "file": "keyframes/compass/01.png"
+        }
+      ]
+    },
+    "menace": {
+      "label": "menace",
+      "file": "menace.webp",
+      "png": "menace.png",
+      "width": 40,
+      "height": 24,
+      "frames": 1,
+      "fps": 0,
+      "duration": 0,
+      "states": {},
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 40,
+          "height": 24,
+          "file": "keyframes/menace/01.png"
+        }
+      ]
+    }
+  }
+}

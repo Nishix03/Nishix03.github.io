@@ -1,0 +1,304 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageShell from '../components/PageShell.astro';
+import AvatarCutin from '../components/AvatarCutin.astro';
+import Sprite from '../components/Sprite.astro';
+import { getContent, localeFromUrl, localePath } from '../content';
+
+const locale = localeFromUrl(Astro.url);
+const { about, ui } = getContent(locale);
+const page = ui.pages.about;
+---
+
+<BaseLayout title={`${page.title} — ${ui.siteTitle}`}>
+  <PageShell
+    word={page.word}
+    num={page.num}
+    wordSize={230}
+    wordTop={50}
+    wordRight={-60}
+    wordRotate={-8}
+    class="about-page"
+  >
+    <div class="about">
+      <section class="about__intro">
+        <div class="about__portrait" aria-hidden="true">
+          <AvatarCutin page="about" />
+        </div>
+        <div class="about__text">
+          <p class="about__eyebrow mono fx-cascade">{about.eyebrow}</p>
+          <h1 class="about__title display fx-cascade" style="animation-delay: .06s">
+            {page.title}
+          </h1>
+          <p class="about__place mono fx-cascade" style="animation-delay: .12s">{about.place}</p>
+          <p class="about__lead fx-cascade" style="animation-delay: .18s">{about.lead}</p>
+          {about.body.map((paragraph, i) => (
+            <p
+              class="about__body fx-cascade"
+              style={`animation-delay: ${(0.24 + i * 0.06).toFixed(2)}s`}
+            >
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="about-how">
+        <h2 id="about-how" class="about__h fx-cascade">{about.howTitle}</h2>
+        <ul class="about__how">
+          {about.how.map((item, i) => (
+            <li
+              class="about__how-item fx-cascade"
+              style={`animation-delay: ${(0.1 + i * 0.06).toFixed(2)}s`}
+            >
+              <b>{item.title}</b>
+              <span>{item.text}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <div class="about__cols">
+        <section class="about__now" aria-labelledby="about-now">
+          <div class="about__now-head">
+            <h2 id="about-now" class="about__h about__h--inline fx-cascade">{about.nowTitle}</h2>
+            <span class="about__menace" aria-hidden="true" data-loop>
+              {[0, 1, 2].map((i) => (
+                <span
+                  class="fx-menace about__menace-item"
+                  style={`margin-top:${i * -10}px;animation-delay:${i * 0.3}s`}
+                >
+                  <Sprite sprite="menace" fallback="ゴ" />
+                </span>
+              ))}
+            </span>
+          </div>
+          <dl class="about__now-list">
+            {about.now.map((row, i) => (
+              <div
+                class="about__now-row fx-cascade"
+                style={`animation-delay: ${(0.1 + i * 0.06).toFixed(2)}s`}
+              >
+                <dt class="mono">{row.label}</dt>
+                <dd>{row.text}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        <section class="about__off" aria-labelledby="about-off">
+          <h2 id="about-off" class="about__off-title">{about.offTitle}</h2>
+          <dl class="about__off-list">
+            {about.off.map((row) => (
+              <div>
+                <dt class="mono">{row.label}</dt>
+                <dd>{row.text}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      </div>
+
+      <nav class="about__cta" aria-label={ui.nextSteps}>
+        <a class="option" href={localePath(locale, about.talk.href)} style="font-size:34px;color:var(--color-ink)">
+          <span class="option__slash" aria-hidden="true" />
+          <span class="option__plate" aria-hidden="true" />
+          <span class="option__label">{about.talk.label}</span>
+          <span class="option__sub">{about.talk.sub}</span>
+        </a>
+      </nav>
+      <p class="about__cv-soon">{about.cv.label} — {ui.cvSoon}</p>
+    </div>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  /* About usa el dorado como color de selección (la banda del avatar y los tajos). */
+  :global(.about-page) {
+    --sel: var(--color-gold);
+  }
+  .about {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  .about__intro {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    align-items: flex-end;
+  }
+  .about__portrait {
+    position: relative;
+    flex: 0 1 300px;
+    min-width: 240px;
+    height: 380px;
+  }
+  @media (max-width: 767px) {
+    .about__portrait {
+      flex-basis: 100%;
+      height: 330px; /* franja de retrato: el avatar se ve entero (ver avatar.css) */
+    }
+  }
+  /* Por encima del retrato: el fundido de su borde inferior no debe tapar la primera línea. */
+  .about__text {
+    position: relative;
+    z-index: 1;
+    flex: 999 1 460px;
+    min-width: 0;
+  }
+  .about__eyebrow {
+    margin: 0 0 10px;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    color: var(--color-gold);
+  }
+  /* El título es una placa blanca inclinada, como las de P3R. */
+  .about__title {
+    display: inline-block;
+    margin: 0 0 14px;
+    padding: 6px 40px 10px 18px;
+    background: var(--color-paper);
+    color: var(--color-bg);
+    font-size: clamp(48px, 7vw, 92px);
+    line-height: 0.86;
+    clip-path: polygon(0 10%, 100% 0, 96% 100%, 2% 92%);
+    transform: rotate(-4deg);
+    transform-origin: left top;
+  }
+  .about__place {
+    margin: 8px 0 18px;
+    font-size: 14px;
+    color: var(--color-mint);
+  }
+  .about__lead {
+    margin: 0 0 10px;
+    max-width: 56ch;
+    font-size: 19px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+  .about__body {
+    margin: 0 0 10px;
+    max-width: 56ch;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--color-mint);
+  }
+  .about__h {
+    margin: 0 0 14px;
+    font-size: 32px;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+  }
+  .about__h--inline {
+    margin: 0;
+  }
+  .about__how {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .about__how-item {
+    padding: 16px 18px;
+    border: 1px solid rgba(232, 198, 106, 0.35);
+    border-left: 0;
+    background: rgba(232, 198, 106, 0.05);
+    clip-path: polygon(0 0, 100% 4%, 98% 100%, 1% 96%);
+  }
+  .about__how-item b {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 18px;
+  }
+  .about__how-item span {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-mint);
+  }
+  .about__cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+  }
+  .about__now {
+    flex: 2 1 420px;
+    min-width: 0;
+  }
+  .about__now-head {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .about__menace {
+    display: flex;
+    gap: 4px;
+  }
+  .about__now-list {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 16px;
+  }
+  .about__now-row {
+    display: flex;
+    gap: 14px;
+  }
+  .about__now-row dt {
+    flex: none;
+    width: 92px;
+    font-size: 12px;
+    color: var(--color-gold);
+  }
+  .about__now-row dd {
+    margin: 0;
+  }
+  .about__off {
+    flex: 1 1 260px;
+    padding: 18px 20px;
+    border: 1px dashed rgba(232, 198, 106, 0.5);
+    border-radius: 12px;
+  }
+  .about__off-title {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+  }
+  .about__off-list {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .about__off-list dt {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+  .about__off-list dd {
+    margin: 0;
+    color: var(--color-mint);
+  }
+  .about__cv-soon {
+    margin: -24px 0 0;
+    font-size: 14px;
+    color: var(--color-mint);
+    opacity: 0.7;
+  }
+  .about__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 32px;
+  }
+</style>

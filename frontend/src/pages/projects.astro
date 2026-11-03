@@ -1,0 +1,398 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageShell from '../components/PageShell.astro';
+import AvatarCutin from '../components/AvatarCutin.astro';
+import { clip } from '../sprites/clips';
+import { getContent, localeFromUrl, localePath } from '../content';
+
+const locale = localeFromUrl(Astro.url);
+const { projects, ui } = getContent(locale);
+const page = ui.pages.projects;
+const card = clip('yugioh-card-back-still');
+const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
+---
+
+<BaseLayout title={`${page.title} — ${ui.siteTitle}`}>
+  <PageShell
+    word={page.word}
+    num={page.num}
+    wordSize={220}
+    wordTop={60}
+    wordRight={-40}
+    wordRotate={-12}
+  >
+    <AvatarCutin slot="bg" page="projects" />
+    <div class="projects__head fx-cascade">
+      <h1 class="projects__title display">{page.title}</h1>
+    </div>
+    <p class="projects__hint mono fx-cascade" style="animation-delay: .06s">
+      {page.hint}
+    </p>
+
+    <div class="projects__layout">
+      <ol
+        id="project-list"
+        class="projects__list"
+        data-select-group
+        data-select-attr="aria-pressed"
+        data-select-targets="#project-cards,#project-details,#project-numerals"
+      >
+        {projects.map((project, i) => (
+          <li class="fx-cascade" style={`animation-delay: ${(0.1 + i * 0.06).toFixed(2)}s`}>
+            <button
+              class="project-row"
+              type="button"
+              data-select-item
+              aria-pressed={i === 0 ? 'true' : 'false'}
+            >
+              <span class="project-row__slash" aria-hidden="true" />
+              <span class="project-row__plate" aria-hidden="true" />
+              <span class="project-row__in">
+                <span class="project-row__badge">{project.numeral}</span>
+                <span class="projects__row-text">
+                  <span class="projects__arcana mono">{project.arcana}</span>
+                  <span class="projects__name">{project.name}</span>
+                  <span class="projects__tag mono">{project.tag}</span>
+                </span>
+                <span class="projects__rank">
+                  <span class="projects__rank-label">{page.rank}</span>
+                  <span class="projects__rank-value">{project.rank}</span>
+                </span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ol>
+
+      <div class="projects__display">
+        <!-- El mazo: reverso real de Yu-Gi-Oh a escala 3, inclinado detrás del detalle. Gira al cambiar. -->
+        <div class="projects__card-back" id="project-cards" aria-hidden="true">
+          {projects.map((_, i) => (
+            <div class="projects__panel fx-flip" data-panel hidden={i !== 0}>
+              <img
+                class="projects__card"
+                src={`/sprites/${card.file}`}
+                alt=""
+                width={card.width * 3}
+                height={card.height * 3}
+                decoding="async"
+              />
+            </div>
+          ))}
+        </div>
+
+        <div class="projects__details" id="project-details" aria-live="polite">
+          {projects.map((project, i) => (
+            <article class="detail fx-flip" data-panel hidden={i !== 0}>
+              <div class="detail__inner">
+                <div class="detail__row fx-cascade" style="animation-delay: .15s">
+                  <h2 class="detail__name">{project.name}</h2>
+                  <span class="detail__status mono">{project.status}</span>
+                </div>
+                <div
+                  class="detail__stars fx-cascade"
+                  role="img"
+                  aria-label={`Level ${project.rank} of 5`}
+                  style="animation-delay: .2s"
+                >
+                  {stars(project.rank)}
+                </div>
+                {!project.screenshot.startsWith('[') && (
+                  <div class="detail__shot fx-cascade" style="animation-delay: .25s">
+                    {project.screenshot}
+                  </div>
+                )}
+                <div class="detail__type mono fx-cascade" style="animation-delay: .3s">
+                  [ {project.type} ]
+                </div>
+                <p class="detail__desc fx-cascade" style="animation-delay: .35s">
+                  {project.description}
+                </p>
+                <div class="detail__stack fx-cascade" style="animation-delay: .4s">
+                  {project.stack}
+                </div>
+                {project.href.startsWith('#') ? (
+                  <p class="detail__cta detail__cta--soon fx-cascade" style="animation-delay: .45s">
+                    {project.cta.startsWith('[') ? ui.linkSoon : project.cta}
+                  </p>
+                ) : (
+                  <a
+                    class="detail__cta link fx-cascade"
+                    href={project.href}
+                    style="animation-delay: .45s"
+                  >
+                    {project.cta}
+                  </a>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </PageShell>
+</BaseLayout>
+
+<script>
+  // Móvil: acordeón. El detalle se mueve justo debajo de la fila elegida (dentro de un <li> propio, porque
+  // en un <ol> solo puede haber <li>) y la fila sube a la vista. En escritorio vuelve a su columna.
+  document.addEventListener('astro:page-load', () => {
+    const list = document.querySelector<HTMLElement>('#project-list');
+    const details = document.querySelector<HTMLElement>('.projects__display');
+    if (!list || !details) return;
+    const home = details.parentElement;
+    const slot = document.createElement('li');
+    slot.className = 'projects__slot';
+    const narrow = window.matchMedia('(max-width: 767px)');
+    const place = () => {
+      const row = list.querySelector('.project-row[aria-pressed="true"]')?.closest('li');
+      if (narrow.matches && row) {
+        row.after(slot);
+        slot.append(details);
+      } else if (home && details.parentElement !== home) {
+        home.append(details);
+        slot.remove();
+      }
+    };
+    // Al elegir otra fila en móvil: el detalle se mueve bajo ella y la página sube hasta la fila.
+    // Se hace al cambiar la selección (llega con el foco del toque), no en el clic: al moverse el detalle
+    // la fila cambia de sitio y el clic caería en el hueco.
+    list.addEventListener('select:change', () => {
+      place();
+      const row = list.querySelector<HTMLElement>('.project-row[aria-pressed="true"]');
+      if (!narrow.matches || !row) return;
+      // Mientras dura el desplazamiento automático el cursor no cambia la selección (select-group.ts);
+      // se limpia con scrollend y, por si el navegador no lo emite, a los 1,5 s.
+      const root = document.documentElement;
+      root.dataset.autoScroll = 'true';
+      const done = () => delete root.dataset.autoScroll;
+      window.addEventListener('scrollend', done, { once: true });
+      window.setTimeout(done, 1500);
+      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      requestAnimationFrame(() => {
+        const top = row.getBoundingClientRect().top + window.scrollY - 72; // 72 px: cabecera fija y aire
+        window.scrollTo({ top, behavior: calm ? 'auto' : 'smooth' });
+      });
+    });
+    narrow.addEventListener('change', place);
+    place();
+  });
+</script>
+
+<style>
+  .projects__list :global(.projects__slot) {
+    list-style: none;
+    margin: 4px 0 8px;
+  }
+  .detail__cta--soon {
+    margin: 0;
+    color: var(--color-mint);
+    font-size: 14px;
+  }
+  #project-list,
+  .projects__list :global(.project-row) {
+    scroll-margin-top: 72px; /* al volver, la cabecera fija no tapa «PROJECTS» ni la primera fila */
+  }
+  .projects__display {
+    scroll-margin-top: 72px; /* deja libre la cabecera fija de 57 px al llegar */
+  }
+  @media (max-width: 767px) {
+    /* Sin el mazo de fondo ni el hueco reservado: debajo del detalle no queda un espacio vacío. */
+    .projects__layout .projects__display {
+      min-height: 0; /* más específica que la regla base (560 px), que va después */
+    }
+    .projects__card-back {
+      display: none;
+    }
+    /* Las filas son opacas para que el avatar de fondo no se mezcle con las líneas pequeñas. */
+    .projects__list :global(.project-row) {
+      background: rgba(7, 17, 12, 0.92);
+    }
+  }
+  .projects__head {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    margin-bottom: 6px;
+  }
+  .projects__title {
+    margin: 0;
+    font-size: clamp(44px, 7vw, 84px);
+    line-height: 0.9;
+  }
+  .projects__hint {
+    margin: 0 0 32px;
+    color: var(--color-mint);
+    font-size: 15px;
+  }
+  /* En escritorio el contenido ocupa la izquierda y deja visible la cara del avatar a la derecha. */
+  @media (min-width: 1024px) {
+    .projects__layout {
+      max-width: 940px;
+    }
+  }
+  .projects__layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    align-items: flex-start;
+  }
+  .projects__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1 1 420px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .projects__row-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .projects__arcana,
+  .projects__tag {
+    display: block;
+    opacity: 0.75;
+  }
+  .projects__arcana {
+    font-size: 11px;
+  }
+  .projects__name {
+    display: block;
+    font-weight: 900;
+    font-size: 21px;
+  }
+  .projects__tag {
+    margin-top: 4px;
+    font-size: 12px;
+    opacity: 0.85;
+  }
+  .projects__rank {
+    flex: none;
+    text-align: right;
+    font-weight: 900;
+    font-style: italic;
+  }
+  .projects__rank-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .projects__rank-value {
+    font-size: 42px;
+    line-height: 0.9;
+  }
+
+  .projects__display {
+    /* Hueco para el dragón: la carta de la invocación acaba 5 px por encima de su borde inferior */
+    --summon-room: 0px;
+    position: relative;
+    flex: 1 1 340px;
+    max-width: 380px;
+    min-width: 280px;
+    min-height: calc(560px + var(--summon-room));
+  }
+  .projects__card-back {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: var(--summon-room);
+    height: 540px;
+    transform: translate(34px, -22px) rotate(7deg);
+  }
+  .projects__card {
+    display: block;
+    image-rendering: pixelated;
+  }
+  .projects__panel {
+    position: absolute;
+    inset: 0;
+  }
+  .projects__details {
+    margin-top: var(--summon-room);
+  }
+
+  .detail {
+    position: relative;
+    z-index: 1;
+    padding: 12px;
+    background: linear-gradient(135deg, #1f8f5a, #49e0f0 50%, #39ff88);
+    border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    animation-delay: 0.08s;
+  }
+  .detail__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 500px;
+    padding: 16px;
+    box-sizing: border-box;
+    background: var(--color-surface);
+    border-radius: 8px;
+  }
+  .detail__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .detail__name {
+    margin: 0;
+    font-weight: 900;
+    font-size: 20px;
+  }
+  .detail__status {
+    font-size: 12px;
+    color: var(--color-neon);
+  }
+  .detail__stars {
+    color: var(--color-amber);
+    font-size: 14px;
+    letter-spacing: 3px;
+  }
+  /* En móvil el recuadro de captura (aún sin imagen) ocupaba media pantalla: se oculta hasta tener la captura real. */
+  @media (max-width: 767px) {
+    .detail .detail__shot {
+      display: none;
+    }
+    .detail .detail__inner {
+      min-height: 0;
+    }
+  }
+  .detail__shot {
+    aspect-ratio: 4 / 3;
+    display: grid;
+    place-items: center;
+    padding: 12px;
+    border: 1px dashed rgba(168, 240, 200, 0.4);
+    text-align: center;
+    color: var(--color-mint);
+    font-size: 13px;
+  }
+  .detail__type {
+    font-size: 12px;
+    color: var(--color-mint);
+  }
+  .detail__desc {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .detail__stack {
+    padding-top: 8px;
+    border-top: 1px solid rgba(168, 240, 200, 0.2);
+    font-size: 12px;
+    color: var(--color-mint);
+  }
+  .detail__cta {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 800;
+  }
+</style>

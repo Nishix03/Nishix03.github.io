@@ -1,0 +1,9 @@
+/* Los sprites los pinta <Sprite />. Aquí solo la capa de "actor": contenedor posicionado donde se mueve el sprite. */
+.actor {
+  position: absolute;
+  pointer-events: none;
+}
+.actor > .sprite {
+  position: absolute;
+  inset: 0;
+}

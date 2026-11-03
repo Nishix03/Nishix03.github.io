@@ -1,0 +1,97 @@
+---
+/**
+ * Marco de cada página (plan §16.1-16.2): la página entra con un círculo desde arriba a la derecha
+ * y dos barridos (color de selección y blanco) la cruzan. Palabra gigante y número grande de fondo,
+ * ambos aria-hidden. Con ClientRouter el contenido nuevo se inserta y la animación CSS arranca sola.
+ */
+interface Props {
+  word?: string;
+  num?: string;
+  wordSize?: number;
+  wordTop?: number;
+  wordRight?: number;
+  wordRotate?: number;
+  padTop?: number;
+  /** Alto mínimo de la sección en px (Stack y Contact necesitan 900 para que quepan avatar y footer). */
+  minHeight?: number;
+  class?: string;
+}
+
+const {
+  word,
+  num,
+  wordSize = 240,
+  wordTop = 40,
+  wordRight = -60,
+  wordRotate = 0,
+  padTop = 56,
+  minHeight = 800,
+} = Astro.props;
+---
+
+<section class:list={['page', 'page-enter', Astro.props.class]} style={`--page-min:${minHeight}px`}>
+  {word && (
+    <div
+      class="page__word"
+      aria-hidden="true"
+      style={`font-size:${wordSize}px;top:${wordTop}px;right:${wordRight}px;${wordRotate ? `transform:rotate(${wordRotate}deg);` : ''}`}
+    >
+      {word}
+    </div>
+  )}
+  {num && (
+    <div class="page__num" aria-hidden="true">
+      {num}
+    </div>
+  )}
+  <slot name="bg" />
+  <div class="page__inner" style={`--pad-top:${padTop}px`}>
+    <slot />
+  </div>
+  <slot name="after" />
+  <div class="sweep" aria-hidden="true"></div>
+  <div class="sweep sweep--white" aria-hidden="true"></div>
+</section>
+
+<style>
+  /* En columna para que el footer (slot "after") quede siempre pegado al fondo de la sección. */
+  .page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: var(--page-min, 800px);
+  }
+  /* Móvil: la sección mide lo que su contenido (como mínimo la pantalla); sin relleno vacío al final. */
+  @media (max-width: 767px) {
+    .page {
+      min-height: calc(100svh - var(--header-h));
+    }
+  }
+  .page__word {
+    position: absolute;
+    font-weight: 900;
+    font-style: italic;
+    color: rgba(168, 240, 200, 0.05);
+    line-height: 0.8;
+    white-space: nowrap;
+  }
+  .page__num {
+    position: absolute;
+    left: 24px;
+    bottom: 0;
+    font-size: 260px;
+    font-weight: 900;
+    color: rgba(255, 62, 95, 0.07);
+    line-height: 0.8;
+  }
+  .page__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: var(--pad-top) var(--gutter) 72px;
+  }
+</style>
