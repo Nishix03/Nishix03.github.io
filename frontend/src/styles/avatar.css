@@ -9,12 +9,12 @@
   position: absolute;
   z-index: 0;
   pointer-events: none;
-  top: var(--cx-top, auto);
-  right: var(--cx-right, auto);
-  bottom: var(--cx-bottom, auto);
-  left: var(--cx-left, auto);
-  width: var(--cx-width);
-  height: var(--cx-height);
+  top: var(--cx-top, var(--box-top, auto));
+  right: var(--cx-right, var(--box-right, auto));
+  bottom: var(--cx-bottom, var(--box-bottom, auto));
+  left: var(--cx-left, var(--box-left, auto));
+  width: var(--cx-width, var(--box-width));
+  height: var(--cx-height, var(--box-height));
 }
 /* El difuminado va en la capa que gira, así el borde que se funde es el del cuadro.
    En el Hero (fondo con degradado) es una máscara; en el resto, cuyo fondo es liso, un degradado del
@@ -39,7 +39,10 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(rgba(7, 17, 12, 0) var(--fade-from), var(--color-bg) var(--fade-to));
+  background: linear-gradient(
+    rgba(7, 17, 12, 0) var(--fade-from, var(--box-fade-from)),
+    var(--color-bg) var(--fade-to, var(--box-fade-to))
+  );
 }
 .cutin[data-page='hero'] .cutin__body {
   mask-image: linear-gradient(
@@ -236,6 +239,41 @@
   /* En About el retrato no está detrás de nada: se ve entero. */
   .cutin[data-page='about'] {
     opacity: 1;
+  }
+}
+
+/* Móvil: en Stack, Journey y About el avatar es una franja de retrato arriba de la página, a opacidad
+   completa y a media escala exacta (300×390 px, cada píxel del dibujo = medio píxel), así se ve nítido.
+   Se funde hacia abajo con el fondo y el título de la página queda montado sobre ese borde; el contenido
+   empieza debajo, sobre fondo liso, sin nada detrás. */
+@media (max-width: 767px) {
+  .cutin[data-page='stack'],
+  .cutin[data-page='journey'],
+  .cutin[data-page='about'] {
+    opacity: 1;
+    --cx-width: 300px;
+    --cx-height: 390px;
+    --cx-top: 0;
+    --cx-bottom: auto;
+    --fade-from: 60%;
+    --fade-to: 97%;
+  }
+  /* El fundido termina en ~290 px: el título queda sobre el borde y el párrafo ya va sobre fondo liso. */
+  .cutin[data-page='stack'],
+  .cutin[data-page='journey'] {
+    --cx-right: max(-24px, calc(50% - 230px));
+    --fade-from: 40%;
+    --fade-to: 74%;
+  }
+  /* La franja de About mide 330 px: el retrato se funde antes de llegar al texto. */
+  .cutin[data-page='about'] {
+    --cx-left: calc(50% - 150px);
+    --fade-from: 56%;
+    --fade-to: 84%;
+  }
+  .page:has(> .cutin[data-page='stack']) > .page__inner,
+  .page:has(> .cutin[data-page='journey']) > .page__inner {
+    padding-top: 250px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

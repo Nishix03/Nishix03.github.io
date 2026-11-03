@@ -32,7 +32,7 @@ type View = {
 
 const bottomEdge = 'clip-path:inset(-999px -999px 0 -999px)';
 // Fundido inferior: de a% a b% de la caja el avatar se funde con el fondo (ver .cutin[data-fade]::after).
-const maskTo = (a: number, b: number) => `--fade-from:${a}%;--fade-to:${b}%`;
+const maskTo = (a: number, b: number) => `--box-fade-from:${a}%;--box-fade-to:${b}%`;
 
 const views: Record<Page, View> = {
   hero: {
@@ -81,8 +81,9 @@ const views: Record<Page, View> = {
 
 const { page } = Astro.props;
 const view = views[page];
-// La caja va en variables (--cx-*): avatar.css las usa y las cambia por página en pantallas pequeñas.
-const box = view.box.replace(/(right|top|left|bottom|width|height):/g, '--cx-$1:');
+// La caja va en variables --box-* (valores de escritorio). avatar.css usa --cx-* cuando una pantalla los
+// cambia y si no cae en --box-*: una variable escrita en style ganaría a la de la hoja de estilos.
+const box = view.box.replace(/\b(right|top|left|bottom|width|height):/g, '--box-$1:');
 const base = `/avatar/${page}`;
 const seconds = `${view.entryMs / 1000}s`;
 const strip = (frames: number) => `width:${frames * 100}%;--n:${frames}`;
@@ -94,7 +95,7 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
   aria-hidden="true"
   style={box}
   data-page={page}
-  data-fade={view.box.includes('--fade-from') ? '' : undefined}
+  data-fade={view.box.includes('--box-fade-from') ? '' : undefined}
   data-loop
 >
   <div class="cutin__body" style={`transform:rotate(${view.tilt}deg);${view.feather ?? ''}`}>

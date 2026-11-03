@@ -137,10 +137,13 @@ const page = ui.pages.about;
   @media (max-width: 767px) {
     .about__portrait {
       flex-basis: 100%;
-      height: min(38vh, 320px);
+      height: 330px; /* franja de retrato: el avatar se ve entero (ver avatar.css) */
     }
   }
+  /* Por encima del retrato: el fundido de su borde inferior no debe tapar la primera línea. */
   .about__text {
+    position: relative;
+    z-index: 1;
     flex: 999 1 460px;
     min-width: 0;
   }
