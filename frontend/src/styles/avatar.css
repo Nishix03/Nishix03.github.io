@@ -208,11 +208,14 @@
     opacity: 0.22;
   }
   /* Más pequeño y hacia el borde: la cara no se queda detrás del titular ni de los textos. */
+  /* El Hero se ve más: a media escala exacta (390×507), pegado a la derecha y con opacidad 0,75. El menú
+     lleva un contorno oscuro (index.astro) para seguir leyéndose encima. */
   .cutin[data-page='hero'] {
-    --cx-width: 330px;
-    --cx-height: 429px;
-    --cx-right: -50px;
-    --cx-top: 40px;
+    --cx-width: 390px;
+    --cx-height: 507px;
+    --cx-right: -150px;
+    --cx-top: 20px;
+    opacity: 0.75;
   }
   .cutin[data-page='projects'] {
     --cx-width: 340px;
@@ -249,6 +252,7 @@
 @media (max-width: 767px) {
   .cutin[data-page='stack'],
   .cutin[data-page='journey'],
+  .cutin[data-page='projects'],
   .cutin[data-page='about'] {
     opacity: 1;
     --cx-width: 300px;
@@ -260,7 +264,8 @@
   }
   /* El fundido termina en ~290 px: el título queda sobre el borde y el párrafo ya va sobre fondo liso. */
   .cutin[data-page='stack'],
-  .cutin[data-page='journey'] {
+  .cutin[data-page='journey'],
+  .cutin[data-page='projects'] {
     --cx-right: max(-24px, calc(50% - 230px));
     --fade-from: 40%;
     --fade-to: 74%;
@@ -272,7 +277,8 @@
     --fade-to: 84%;
   }
   .page:has(> .cutin[data-page='stack']) > .page__inner,
-  .page:has(> .cutin[data-page='journey']) > .page__inner {
+  .page:has(> .cutin[data-page='journey']) > .page__inner,
+  .page:has(> .cutin[data-page='projects']) > .page__inner {
     padding-top: 250px;
   }
 }
