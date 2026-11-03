@@ -31,7 +31,8 @@ type View = {
 };
 
 const bottomEdge = 'clip-path:inset(-999px -999px 0 -999px)';
-const maskTo = (a: number, b: number) => `mask-image:linear-gradient(#000 ${a}%, transparent ${b}%)`;
+// Fundido inferior: de a% a b% de la caja el avatar se funde con el fondo (ver .cutin[data-fade]::after).
+const maskTo = (a: number, b: number) => `--fade-from:${a}%;--fade-to:${b}%`;
 
 const views: Record<Page, View> = {
   hero: {
@@ -88,7 +89,14 @@ const strip = (frames: number) => `width:${frames * 100}%;--n:${frames}`;
 const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
 ---
 
-<div class="cutin" aria-hidden="true" style={box} data-page={page} data-loop>
+<div
+  class="cutin"
+  aria-hidden="true"
+  style={box}
+  data-page={page}
+  data-fade={view.box.includes('--fade-from') ? '' : undefined}
+  data-loop
+>
   <div class="cutin__body" style={`transform:rotate(${view.tilt}deg);${view.feather ?? ''}`}>
     <div class="cutin__fall">
       <div class="cutin__wash"></div>
@@ -102,6 +110,8 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
                   class="cutin__strip"
                   src={`${base}-entry.webp`}
                   alt=""
+                  fetchpriority="high"
+                  decoding="async"
                   style={`${strip(24)};--d:800ms;--i:1;--e:-95.8333%`}
                 />
               </span>
@@ -110,6 +120,7 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
                   class="cutin__strip"
                   src={`${base}-rest-0.webp`}
                   alt=""
+                  decoding="async"
                   style={`${strip(24)};--d:4000ms;--w:0.8s;--e:-95.8333%`}
                 />
               </span>
@@ -118,6 +129,7 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
                   class="cutin__strip"
                   src={`${base}-rest-1.webp`}
                   alt=""
+                  decoding="async"
                   style={`${strip(24)};--d:4000ms;--w:0.8s;--e:-95.8333%`}
                 />
               </span>
@@ -129,6 +141,8 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
                   class="cutin__strip"
                   src={`${base}-entry.webp`}
                   alt=""
+                  fetchpriority="high"
+                  decoding="async"
                   style={`${strip(view.entryFrames)};--d:${view.entryMs}ms;--i:1;${entryEnd}`}
                 />
               </span>
@@ -140,6 +154,7 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
                   class="cutin__strip"
                   src={`${base}-rest.webp`}
                   alt=""
+                  decoding="async"
                   style={`${strip(24)};--d:4000ms;--w:${seconds};--e:-95.8333%`}
                 />
               </span>

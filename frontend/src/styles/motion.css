@@ -5,9 +5,12 @@
   "fx-bob", "fx-float", "fx-fly"... mueven con transform continuo.
 */
 
-/* ---------- Entradas de página ---------- */
+/* ---------- Entradas de página ----------
+   Con fill-mode «backwards» la animación solo se aplica antes y durante: al terminar el elemento
+   vuelve a su estilo normal. Con «both» se quedaban aplicados clip-path y filter en capas grandes
+   y el navegador repintaba la página entera en cada fotograma (bajaba a ~15 fps). */
 .page-enter {
-  animation: circle-in 0.6s var(--ease-p3r) both;
+  animation: circle-in 0.42s var(--ease-p3r) backwards;
 }
 .sweep {
   position: absolute;
@@ -18,29 +21,29 @@
   background: var(--sel);
   transform: translateX(-140%) skewX(-20deg);
   animation:
-    sweep 0.55s var(--ease-p3r) both,
-    sweep-off 1ms linear 0.7s forwards;
+    sweep 0.4s var(--ease-p3r) both,
+    sweep-off 1ms linear 0.5s forwards;
   pointer-events: none;
   z-index: 30;
 }
 .sweep--white {
   background: var(--color-paper);
-  animation-delay: 0.06s, 0.7s;
+  animation-delay: 0.05s, 0.5s;
   width: 40%;
 }
 .fx-flip {
   transform-origin: 50% 50%;
-  animation: flip-in 0.45s var(--ease-p3r) both;
+  animation: flip-in 0.45s var(--ease-p3r) backwards;
 }
 .fx-cascade {
-  animation: cascade 0.35s var(--ease-p3r) both;
+  animation: cascade 0.35s var(--ease-p3r) backwards;
 }
 .fx-seg {
   transform-origin: left center;
-  animation: seg-in 0.25s var(--ease-p3r) both;
+  animation: seg-in 0.25s var(--ease-p3r) backwards;
 }
 .fx-fade {
-  animation: fade-in 0.15s var(--ease-p3r) both;
+  animation: fade-in 0.15s var(--ease-p3r) backwards;
 }
 
 /* ---------- Sprites: movimiento continuo ---------- */

@@ -97,7 +97,7 @@
   animation: sk-mail 2.5s var(--ease-breathe) infinite;
 }
 .sk-pose-in {
-  animation: fade-in 0.15s var(--ease-p3r) both;
+  animation: fade-in 0.15s var(--ease-p3r) backwards;
 }
 
 @media (prefers-reduced-motion: reduce) {

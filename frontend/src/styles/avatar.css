@@ -16,10 +16,32 @@
   width: var(--cx-width);
   height: var(--cx-height);
 }
-/* El difuminado va en la capa que gira, así el borde que se funde es el del cuadro. */
+/* El difuminado va en la capa que gira, así el borde que se funde es el del cuadro.
+   En el Hero (fondo con degradado) es una máscara; en el resto, cuyo fondo es liso, un degradado del
+   color del fondo encima: se ve igual y el navegador no recalcula la máscara en cada fotograma. */
 .cutin__body {
   position: absolute;
   inset: 0;
+}
+.cutin:not([data-page='hero']) .cutin__body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    var(--color-bg) 0,
+    rgba(7, 17, 12, 0) var(--feather, 16%),
+    rgba(7, 17, 12, 0) calc(100% - var(--feather-r, 0%)),
+    var(--color-bg) 100%
+  );
+}
+.cutin[data-fade]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(7, 17, 12, 0) var(--fade-from), var(--color-bg) var(--fade-to));
+}
+.cutin[data-page='hero'] .cutin__body {
   mask-image: linear-gradient(
     90deg,
     transparent 0,
@@ -31,7 +53,7 @@
 .cutin__fall {
   position: absolute;
   inset: 0;
-  animation: cut-fall 0.6s var(--ease-drop) 0.1s both;
+  animation: cut-fall 0.6s var(--ease-drop) 0.1s backwards;
 }
 .cutin__wash {
   position: absolute;
@@ -59,14 +81,14 @@
 .cutin__drift {
   position: absolute;
   inset: 0;
-  transform-origin: 50% 30%;
-  animation: cut-drift 4s var(--ease-breathe) 1s infinite;
+  /* Sin balanceo continuo: girar en cada fotograma una capa de ~800×1000 px con máscara bajaba la
+     página a ~20 fps. El movimiento lo ponen las tiras (reposo y caminata). */
 }
 .cutin__art {
   position: absolute;
   inset: 0;
   transform-origin: 60% 40%;
-  animation: cut-in 0.22s var(--ease-p3r) both;
+  animation: cut-in 0.22s var(--ease-p3r) backwards;
 }
 .cutin__lines {
   position: absolute;
@@ -139,16 +161,10 @@
   from { transform: translate(-120px, -260px); opacity: 0; }
   to { transform: none; opacity: 1; }
 }
-@keyframes cut-drift {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(-4px, 3px) rotate(0.6deg); }
-}
+/* Entrada tipo «whip-zoom» solo con transform y opacity (el compositor la hace sin repintar). */
 @keyframes cut-in {
-  0% {
-    transform: scale(1.3) translate(6%, 4%);
-    filter: grayscale(1) sepia(1) hue-rotate(170deg) saturate(4) brightness(1.3) blur(2px);
-  }
-  100% { transform: none; filter: none; }
+  0% { transform: scale(1.3) translate(6%, 4%); opacity: 0; }
+  100% { transform: none; opacity: 1; }
 }
 @keyframes avatar-play {
   from { transform: translateX(0); }
