@@ -7,7 +7,7 @@ test('sprites reales: cargan todas las hojas y conservan el tamaño de cuadro', 
   for (const path of pages) {
     await page.goto(path);
     await expect(page.locator('.sprite--placeholder')).toHaveCount(0);
-    for (const strip of await page.locator('.sprite__strip').all()) {
+    for (const strip of await page.locator('.sprite__strip, .clip__strip:not([hidden])').all()) {
       await expect(strip).toHaveJSProperty('complete', true);
       const dimensions = await strip.evaluate((img: HTMLImageElement) => ({
         natural: img.naturalWidth,
@@ -15,23 +15,86 @@ test('sprites reales: cargan todas las hojas y conservan el tamaño de cuadro', 
         height: img.naturalHeight,
       }));
       expect(dimensions.natural).toBeGreaterThan(0);
-      expect(dimensions.natural).toBe(dimensions.rendered);
+      // Los clips pueden ir a escala entera (la carta va ×3): el ancho pintado es múltiplo exacto.
+      expect(dimensions.rendered % dimensions.natural).toBe(0);
       expect(dimensions.height).toBeGreaterThan(0);
     }
   }
 });
 
 test('los ciclos pixel se pausan fuera de pantalla', async ({ page }) => {
-  await page.goto('/projects');
-  const sprite = page.locator('[data-sprite="argenta"]');
-  await sprite.scrollIntoViewIfNeeded();
-  await expect(sprite).toHaveAttribute('data-paused', 'false');
-  await sprite.evaluate((el) => {
+  await page.goto('/contact');
+  const stage = page.locator('.contact__frisk');
+  await stage.scrollIntoViewIfNeeded();
+  await expect(stage).toHaveAttribute('data-paused', 'false');
+  await stage.evaluate((el) => {
     (el as HTMLElement).style.position = 'fixed';
     (el as HTMLElement).style.top = '-1000px';
   });
-  await expect(sprite).toHaveAttribute('data-paused', 'true');
-  await expect(sprite.locator('img')).toHaveCSS('animation-play-state', 'paused');
+  await expect(stage).toHaveAttribute('data-paused', 'true');
+  await expect(stage.locator('.clip__strip:not([hidden])')).toHaveCSS(
+    'animation-play-state',
+    'paused',
+  );
+});
+
+test('Boyfriend canta con cada flecha, sostiene la pose y vuelve al reposo', async ({ page }) => {
+  await page.goto('/');
+  const boyfriend = page.locator('[data-actor="boyfriend"]');
+  // Fuera de pantalla sus clips están en pausa (loops.ts) y la pose esperaría a verse.
+  await boyfriend.scrollIntoViewIfNeeded();
+  await expect(boyfriend).toHaveAttribute('data-clip', 'boyfriend-idle');
+  for (const [key, dir] of [
+    ['ArrowLeft', 'left'],
+    ['ArrowRight', 'right'],
+  ]) {
+    await page.keyboard.down(key);
+    await expect(boyfriend).toHaveAttribute('data-clip', `boyfriend-${dir}`);
+    // Solo se enciende la flecha pulsada
+    await expect(page.locator('[data-arrow][data-hit]')).toHaveAttribute('data-arrow', dir);
+    await page.keyboard.up(key);
+    await expect(boyfriend).toHaveAttribute('data-clip', 'boyfriend-idle');
+    await expect(page.locator('[data-arrow][data-hit]')).toHaveCount(0);
+  }
+});
+
+test('Blue-Eyes sale de la carta al cambiar de proyecto y se queda en el último cuadro', async ({
+  page,
+}) => {
+  await page.goto('/projects');
+  const strip = page.locator('[data-clip-name="blue-eyes-emerge-summon"]');
+  await page.locator('.project-row').nth(2).hover();
+  await expect
+    .poll(() => strip.evaluate((img) => img.getAnimations()[0]?.playState))
+    .toBe('finished');
+  // Cuadro 11 de 12: la tira queda desplazada 11 cuadros de 256 px.
+  await expect(strip).toHaveCSS('transform', 'matrix(1, 0, 0, 1, -2816, 0)');
+});
+
+test('Springtrap se traba sin cambiar de lado y gira en el extremo', async ({ page }) => {
+  await page.goto('/stack');
+  const patrol = page.locator('.stack__patrol');
+  const springtrap = page.locator('[data-actor="springtrap"]');
+  // Tras ~6 ciclos de paso (≈5 s) se traba mirando hacia donde caminaba.
+  await expect(patrol).toHaveAttribute('data-phase', 'glitch', { timeout: 8000 });
+  await expect(springtrap).toHaveAttribute('data-clip', 'springtrap-glitch-right');
+  await expect(patrol).toHaveAttribute('data-phase', 'walk');
+  // Se adelanta el recorrido hasta el final: llega al extremo, gira y vuelve por la izquierda.
+  await patrol.locator('.stack__patrol-track').evaluate((el) => {
+    const anim = el.getAnimations()[0];
+    if (anim) anim.currentTime = Number(anim.effect?.getTiming().duration) - 50;
+  });
+  await expect(springtrap).toHaveAttribute('data-clip', 'springtrap-turn-left');
+  await expect(patrol).toHaveAttribute('data-dir', 'left');
+  await expect(springtrap).toHaveAttribute('data-clip', 'springtrap-walk-left');
+});
+
+test('Frisk saluda al llegar a Contact y vuelve al reposo', async ({ page }) => {
+  await page.goto('/contact');
+  const frisk = page.locator('[data-actor="frisk"]');
+  await frisk.scrollIntoViewIfNeeded();
+  await expect(frisk).toHaveAttribute('data-clip', 'frisk-greet');
+  await expect(frisk).toHaveAttribute('data-clip', 'frisk-idle');
 });
 
 // axe mide colores reales: se espera a que acaben las entradas (la más larga dura ~1,5 s).

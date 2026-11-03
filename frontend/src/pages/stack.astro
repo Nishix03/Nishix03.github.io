@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import PoseFigure from '../components/PoseFigure.astro';
 import Sprite from '../components/Sprite.astro';
+import Clip from '../components/Clip.astro';
 import { getContent } from '../content';
 import { techIconSlot } from '../sprites/manifest';
 
@@ -26,14 +27,21 @@ const segments = (percent: number, tileIndex: number) =>
       {stackIntro}
     </p>
 
-    <!-- Tuerca patrulla de lado a lado; a veces el glitch le mueve los ojos -->
-    <div class="stack__patrol" aria-hidden="true" data-loop>
-      <div class="fx-patrol stack__patrol-track">
-        <div class="fx-glitch stack__patrol-actor">
-          <div class="fx-walk" style="position:absolute;inset:0">
-            <Sprite sprite="tuerca" fallback="Tuerca" />
-          </div>
-        </div>
+    <!-- Springtrap patrulla: camina, gira en cada extremo y cada ~5 s se traba (scripts/actors.ts).
+         El contenedor pone el avance; la tira solo dibuja los pasos en el sitio. -->
+    <div class="stack__patrol" aria-hidden="true" data-loop data-dir="right" data-phase="walk">
+      <div class="stack__patrol-track">
+        <Clip
+          name="springtrap"
+          clips={[
+            'springtrap-walk-right',
+            'springtrap-walk-left',
+            'springtrap-turn-left',
+            'springtrap-turn-right',
+            'springtrap-glitch-left',
+            'springtrap-glitch-right',
+          ]}
+        />
       </div>
     </div>
 
@@ -102,21 +110,39 @@ const segments = (percent: number, tileIndex: number) =>
   }
   .stack__patrol {
     position: relative;
-    height: 72px;
+    height: 88px;
   }
+  /* El ancho del recorrido es el del contenedor menos un cuadro (64 px): translateX(100%) llega al borde. */
   .stack__patrol-track {
     position: absolute;
     left: 0;
     top: 0;
-    width: calc(100% - 48px);
-    height: 64px;
+    width: calc(100% - 64px);
+    height: 80px;
+    animation: patrol-right var(--patrol-dur, 16s) linear forwards;
   }
-  .stack__patrol-actor {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 48px;
-    height: 64px;
+  .stack__patrol[data-dir='left'] .stack__patrol-track {
+    animation-name: patrol-left;
+  }
+  /* Mientras gira o se traba, no avanza */
+  .stack__patrol:not([data-phase='walk']) .stack__patrol-track {
+    animation-play-state: paused;
+  }
+  @keyframes patrol-right {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes patrol-left {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
   }
   .stack__layout {
     display: flex;

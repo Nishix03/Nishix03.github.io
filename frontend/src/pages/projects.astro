@@ -2,12 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import PoseFigure from '../components/PoseFigure.astro';
-import TarotBack from '../components/TarotBack.astro';
-import Sprite from '../components/Sprite.astro';
+import Clip from '../components/Clip.astro';
+import { clip } from '../sprites/clips';
 import { getContent } from '../content';
 
 const { projects, ui } = getContent();
 const page = ui.pages.projects;
+const card = clip('yugioh-card-back-still');
 const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
 ---
 
@@ -62,25 +63,28 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
       </ol>
 
       <div class="projects__display">
-        <!-- Reverso de carta detrás, inclinado; Argenta vuela sobre su esquina -->
+        <!-- Blue-Eyes sale de su carta al elegir un proyecto y se queda encima (cuadro 11) -->
+        <div class="projects__summon" aria-hidden="true" data-loop>
+          <Clip name="summon" clips={['blue-eyes-emerge-summon']} />
+        </div>
+
+        <!-- El mazo: reverso real de Yu-Gi-Oh a escala 3, inclinado detrás del detalle. Gira al cambiar. -->
         <div class="projects__card-back" id="project-cards" aria-hidden="true">
-          {projects.map((project, i) => (
-            <div class="projects__panel" data-panel hidden={i !== 0}>
-              <TarotBack
-                numeral={project.numeral}
-                title={project.arcanaTitle}
-                symbol={project.symbol}
+          {projects.map((_, i) => (
+            <div class="projects__panel fx-flip" data-panel hidden={i !== 0}>
+              <img
+                class="projects__card"
+                src={`/sprites/${card.file}`}
+                alt=""
+                width={card.width * 3}
+                height={card.height * 3}
+                decoding="async"
               />
             </div>
           ))}
         </div>
-        <div class="actor projects__argenta" aria-hidden="true" data-loop>
-          <div class="fx-float" style="position:absolute;inset:0">
-            <Sprite sprite="argenta" fallback="Argenta" />
-          </div>
-        </div>
 
-        <div id="project-details" aria-live="polite">
+        <div class="projects__details" id="project-details" aria-live="polite">
           {projects.map((project, i) => (
             <article class="detail fx-flip" data-panel hidden={i !== 0}>
               <div class="detail__inner">
@@ -203,30 +207,40 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
   }
 
   .projects__display {
+    /* Hueco para el dragón: la carta de la invocación acaba 5 px por encima de su borde inferior */
+    --summon-room: 236px;
     position: relative;
     flex: 1 1 340px;
     max-width: 380px;
     min-width: 280px;
-    min-height: 560px;
+    min-height: calc(560px + var(--summon-room));
   }
   .projects__card-back {
     position: absolute;
     left: 0;
     right: 0;
-    top: 0;
+    top: var(--summon-room);
     height: 540px;
     transform: translate(34px, -22px) rotate(7deg);
+  }
+  .projects__card {
+    display: block;
+    image-rendering: pixelated;
   }
   .projects__panel {
     position: absolute;
     inset: 0;
   }
-  .projects__argenta {
-    right: 6px;
-    top: -78px;
-    width: 80px;
-    height: 60px;
+  /* La invocación mide 256×256 y trae su propia carta abajo; esa carta se apoya en el borde del detalle. */
+  .projects__summon {
+    position: absolute;
+    top: 0;
+    right: 0;
     z-index: 3;
+    pointer-events: none;
+  }
+  .projects__details {
+    margin-top: var(--summon-room);
   }
 
   .detail {

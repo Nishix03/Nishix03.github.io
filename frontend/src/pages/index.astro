@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Sprite from '../components/Sprite.astro';
+import Clip from '../components/Clip.astro';
 import { getContent } from '../content';
 import { sprites } from '../sprites/manifest';
 
@@ -21,7 +22,13 @@ const bubbles = [
 ];
 
 // Cuatro flechas de ritmo; cada una llega ya orientada desde Codex (←↓↑→).
-const arrows = [sprites.arrowLeft, sprites.arrowDown, sprites.arrowUp, sprites.arrowRight];
+// data-arrow las une con el clip de Boyfriend de la misma dirección (scripts/actors.ts).
+const arrows = [
+  { slot: sprites.arrowLeft, dir: 'left', glyph: '←' },
+  { slot: sprites.arrowDown, dir: 'down', glyph: '↓' },
+  { slot: sprites.arrowUp, dir: 'up', glyph: '↑' },
+  { slot: sprites.arrowRight, dir: 'right', glyph: '→' },
+];
 ---
 
 <BaseLayout home title={ui.siteTitle}>
@@ -108,8 +115,9 @@ const arrows = [sprites.arrowLeft, sprites.arrowDown, sprites.arrowUp, sprites.a
           </div>
         </div>
         <div class="actor hero__late hero__butterfly" data-loop>
-          <div class="fx-fly" style="position:absolute;inset:0">
-            <Sprite sprite="butterfly" fallback="mariposa" />
+          <!-- La ruta la pone fx-fly; el aleteo lo dibuja la tira. Sobre la silueta se posa (hover). -->
+          <div class="fx-fly hero__butterfly-route">
+            <Clip name="butterfly" clips={['p3-butterfly-fly', 'p3-butterfly-hover']} />
           </div>
         </div>
       </div>
@@ -117,18 +125,26 @@ const arrows = [sprites.arrowLeft, sprites.arrowDown, sprites.arrowUp, sprites.a
 
     <div class="hero__hint hero__late">
       <span class="hero__eco" aria-hidden="true" data-loop>
-        <span class="fx-eco-beat" style="position:absolute;inset:0">
-          <Sprite sprite="eco" fallback="Eco" />
-        </span>
+        <!-- Sin fx-eco-beat: el reposo dibujado ya late a 100 BPM y el rebote saldría doble -->
+        <Clip
+          name="boyfriend"
+          clips={[
+            'boyfriend-idle',
+            'boyfriend-up',
+            'boyfriend-down',
+            'boyfriend-left',
+            'boyfriend-right',
+          ]}
+        />
       </span>
       <span class="hero__keys" aria-hidden="true" data-loop>
-        {arrows.map((slot, i) => (
-          <span class="hero__arrow">
+        {arrows.map(({ slot, dir, glyph }, i) => (
+          <span class="hero__arrow" data-arrow={dir}>
             <span
               class="fx-beat-key"
               style={`position:absolute;inset:0;animation-delay:${i * 0.15}s`}
             >
-              <Sprite sprite={slot} fallback={['←', '↓', '↑', '→'][i]} />
+              <Sprite sprite={slot} fallback={glyph} />
             </span>
           </span>
         ))}
@@ -352,8 +368,8 @@ const arrows = [sprites.arrowLeft, sprites.arrowDown, sprites.arrowUp, sprites.a
   }
   .hero__eco {
     position: relative;
-    width: 70px;
-    height: 80px;
+    width: 96px;
+    height: 96px;
     margin-right: 6px;
   }
   .hero__keys {
@@ -364,5 +380,23 @@ const arrows = [sprites.arrowLeft, sprites.arrowDown, sprites.arrowUp, sprites.a
     position: relative;
     width: 28px;
     height: 28px;
+    cursor: pointer;
+    touch-action: none;
+    transition:
+      transform 0.08s var(--ease-p3r),
+      filter 0.08s ease-out;
+  }
+  /* Solo se enciende la flecha que se está pulsando */
+  .hero__arrow[data-hit] {
+    transform: scale(1.3);
+    filter: brightness(1.5) drop-shadow(0 0 6px var(--color-neon));
+  }
+  .hero__butterfly-route {
+    position: absolute;
+    inset: 0;
+  }
+  /* Posada sobre la silueta: la ruta se detiene y solo bate las alas */
+  .hero__butterfly[data-rest] .hero__butterfly-route {
+    animation-play-state: paused;
   }
 </style>

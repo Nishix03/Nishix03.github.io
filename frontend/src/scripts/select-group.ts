@@ -24,6 +24,8 @@ const select = (group: HTMLElement, index: number) => {
     // toggleAttribute (y no la propiedad .hidden) porque algún panel es un <text> de SVG.
     panels.forEach((panel, i) => panel.toggleAttribute('hidden', i !== index));
   }
+  // Aviso para quien quiera reaccionar al cambio (la invocación de Blue-Eyes en Projects).
+  group.dispatchEvent(new CustomEvent('select:change', { detail: { index } }));
 };
 
 export const initSelectGroups = () => {

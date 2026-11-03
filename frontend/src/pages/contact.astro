@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import PoseFigure from '../components/PoseFigure.astro';
-import Sprite from '../components/Sprite.astro';
+import Clip from '../components/Clip.astro';
 import { getContent } from '../content';
 
 const { ui, contactIntro, contacts, footer } = getContent();
@@ -53,14 +53,10 @@ const isExternal = (href: string) => href.startsWith('http');
 
       <PoseFigure variant="contact" style="--pose-w:250px;--pose-h:340px" />
 
-      <!-- Lumi con su farol: la luciérnaga orbita el farol -->
-      <div class="contact__lumi" aria-hidden="true" data-loop>
-        <div class="contact__lumi-stage">
-          <div class="fx-glow contact__lumi-glow"></div>
-          <div class="fx-bob" style="position:absolute;inset:0;animation-duration:2s">
-            <Sprite sprite="lumi" fallback="Lumi" />
-          </div>
-          <div class="fx-firefly contact__firefly"></div>
+      <!-- Frisk respira en reposo y saluda al llegar a Contact o al enfocar un enlace (scripts/actors.ts) -->
+      <div class="contact__frisk" aria-hidden="true" data-loop>
+        <div class="contact__frisk-stage">
+          <Clip name="frisk" clips={['frisk-idle', 'frisk-greet']} />
         </div>
       </div>
     </div>
@@ -105,35 +101,15 @@ const isExternal = (href: string) => href.startsWith('http');
     flex-direction: column;
     gap: 4px;
   }
-  .contact__lumi {
+  .contact__frisk {
     flex: 0 0 160px;
     height: 140px;
     position: relative;
   }
-  .contact__lumi-stage {
+  .contact__frisk-stage {
     position: absolute;
     left: 10px;
     bottom: 0;
-    width: 80px;
-    height: 75px;
-  }
-  .contact__lumi-glow {
-    position: absolute;
-    left: 40px;
-    top: 20px;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 179, 64, 0.45), rgba(255, 179, 64, 0) 70%);
-  }
-  .contact__firefly {
-    position: absolute;
-    left: 70px;
-    top: 10px;
-    width: 5px;
-    height: 5px;
-    background: #fff6b0;
-    box-shadow: 0 0 6px var(--color-amber);
   }
   .footer {
     position: relative;

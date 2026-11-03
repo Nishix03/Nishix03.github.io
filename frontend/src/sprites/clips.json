@@ -1,0 +1,312 @@
+{
+  "clips": {
+    "blue-eyes-idle": {
+      "width": 80,
+      "height": 60,
+      "frames": 6,
+      "fps": 6,
+      "loop": true,
+      "durationMs": 1000,
+      "anchor": {
+        "x": 40,
+        "y": 57
+      },
+      "file": "clips/blue-eyes-idle.webp",
+      "reducedMotionFrame": 0
+    },
+    "blue-eyes-hover": {
+      "width": 80,
+      "height": 60,
+      "frames": 6,
+      "fps": 10,
+      "loop": true,
+      "durationMs": 600,
+      "anchor": {
+        "x": 40,
+        "y": 57
+      },
+      "file": "clips/blue-eyes-hover.webp",
+      "reducedMotionFrame": 0
+    },
+    "boyfriend-idle": {
+      "width": 96,
+      "height": 96,
+      "frames": 6,
+      "fps": 10,
+      "loop": true,
+      "durationMs": 600,
+      "anchor": {
+        "x": 48,
+        "y": 93
+      },
+      "file": "clips/boyfriend-idle.webp",
+      "reducedMotionFrame": 0
+    },
+    "boyfriend-up": {
+      "width": 96,
+      "height": 96,
+      "frames": 4,
+      "fps": 12,
+      "loop": false,
+      "durationMs": 333,
+      "anchor": {
+        "x": 48,
+        "y": 93
+      },
+      "file": "clips/boyfriend-up.webp",
+      "hitFrame": 1,
+      "sustainFrame": 2,
+      "releaseFrame": 3,
+      "reducedMotionFrame": 0
+    },
+    "boyfriend-down": {
+      "width": 96,
+      "height": 96,
+      "frames": 4,
+      "fps": 12,
+      "loop": false,
+      "durationMs": 333,
+      "anchor": {
+        "x": 48,
+        "y": 93
+      },
+      "file": "clips/boyfriend-down.webp",
+      "hitFrame": 1,
+      "sustainFrame": 2,
+      "releaseFrame": 3,
+      "reducedMotionFrame": 0
+    },
+    "boyfriend-left": {
+      "width": 96,
+      "height": 96,
+      "frames": 4,
+      "fps": 12,
+      "loop": false,
+      "durationMs": 333,
+      "anchor": {
+        "x": 48,
+        "y": 93
+      },
+      "file": "clips/boyfriend-left.webp",
+      "hitFrame": 1,
+      "sustainFrame": 2,
+      "releaseFrame": 3,
+      "reducedMotionFrame": 0
+    },
+    "boyfriend-right": {
+      "width": 96,
+      "height": 96,
+      "frames": 4,
+      "fps": 12,
+      "loop": false,
+      "durationMs": 333,
+      "anchor": {
+        "x": 48,
+        "y": 93
+      },
+      "file": "clips/boyfriend-right.webp",
+      "hitFrame": 1,
+      "sustainFrame": 2,
+      "releaseFrame": 3,
+      "reducedMotionFrame": 0
+    },
+    "springtrap-walk-right": {
+      "width": 64,
+      "height": 80,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "durationMs": 800,
+      "anchor": {
+        "x": 32,
+        "y": 77
+      },
+      "file": "clips/springtrap-walk-right.webp",
+      "reducedMotionFrame": 0
+    },
+    "springtrap-walk-left": {
+      "width": 64,
+      "height": 80,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "durationMs": 800,
+      "anchor": {
+        "x": 32,
+        "y": 77
+      },
+      "file": "clips/springtrap-walk-left.webp",
+      "reducedMotionFrame": 0
+    },
+    "springtrap-turn-left": {
+      "width": 64,
+      "height": 80,
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "durationMs": 400,
+      "anchor": {
+        "x": 32,
+        "y": 77
+      },
+      "file": "clips/springtrap-turn-left.webp",
+      "reducedMotionFrame": 0
+    },
+    "springtrap-turn-right": {
+      "width": 64,
+      "height": 80,
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "durationMs": 400,
+      "anchor": {
+        "x": 32,
+        "y": 77
+      },
+      "file": "clips/springtrap-turn-right.webp",
+      "reducedMotionFrame": 0
+    },
+    "springtrap-glitch-left": {
+      "width": 64,
+      "height": 80,
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "durationMs": 400,
+      "anchor": {
+        "x": 32,
+        "y": 77
+      },
+      "file": "clips/springtrap-glitch-left.webp",
+      "reducedMotionFrame": 0
+    },
+    "springtrap-glitch-right": {
+      "width": 64,
+      "height": 80,
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "durationMs": 400,
+      "anchor": {
+        "x": 32,
+        "y": 77
+      },
+      "file": "clips/springtrap-glitch-right.webp",
+      "reducedMotionFrame": 0
+    },
+    "p3-butterfly-fly": {
+      "width": 45,
+      "height": 35,
+      "frames": 8,
+      "fps": 12,
+      "loop": true,
+      "durationMs": 667,
+      "anchor": {
+        "x": 22.5,
+        "y": 17.5
+      },
+      "file": "clips/p3-butterfly-fly.webp",
+      "reducedMotionFrame": 0
+    },
+    "p3-butterfly-hover": {
+      "width": 45,
+      "height": 35,
+      "frames": 4,
+      "fps": 8,
+      "loop": true,
+      "durationMs": 500,
+      "anchor": {
+        "x": 22.5,
+        "y": 17.5
+      },
+      "file": "clips/p3-butterfly-hover.webp",
+      "reducedMotionFrame": 0
+    },
+    "frisk-idle": {
+      "width": 60,
+      "height": 75,
+      "frames": 6,
+      "fps": 5,
+      "loop": true,
+      "durationMs": 1200,
+      "anchor": {
+        "x": 30,
+        "y": 72
+      },
+      "file": "clips/frisk-idle.webp",
+      "reducedMotionFrame": 0
+    },
+    "frisk-greet": {
+      "width": 60,
+      "height": 75,
+      "frames": 6,
+      "fps": 8,
+      "loop": false,
+      "durationMs": 750,
+      "anchor": {
+        "x": 30,
+        "y": 72
+      },
+      "file": "clips/frisk-greet.webp",
+      "reducedMotionFrame": 0
+    },
+    "yugioh-card-back-still": {
+      "width": 118,
+      "height": 172,
+      "frames": 1,
+      "fps": 0,
+      "loop": false,
+      "durationMs": 0,
+      "anchor": {
+        "x": 59,
+        "y": 169
+      },
+      "file": "clips/yugioh-card-back-still.webp",
+      "reducedMotionFrame": 0
+    },
+    "blue-eyes-emerge-summon": {
+      "width": 256,
+      "height": 256,
+      "frames": 12,
+      "fps": 12,
+      "loop": false,
+      "durationMs": 1000,
+      "anchor": {
+        "x": 128,
+        "y": 251
+      },
+      "file": "clips/blue-eyes-emerge-summon.webp",
+      "terminalFrame": 11,
+      "reducedMotionFrame": 11
+    }
+  },
+  "actions": {
+    "hero": {
+      "idle": "boyfriend-idle",
+      "ArrowUp": "boyfriend-up",
+      "ArrowDown": "boyfriend-down",
+      "ArrowLeft": "boyfriend-left",
+      "ArrowRight": "boyfriend-right",
+      "butterflyFly": "p3-butterfly-fly",
+      "butterflyHover": "p3-butterfly-hover"
+    },
+    "projects": {
+      "card": "yugioh-card-back-still",
+      "idle": "blue-eyes-idle",
+      "hover": "blue-eyes-hover",
+      "reveal": "blue-eyes-emerge-summon"
+    },
+    "stack": {
+      "right": "springtrap-walk-right",
+      "left": "springtrap-walk-left",
+      "turnLeft": "springtrap-turn-left",
+      "turnRight": "springtrap-turn-right",
+      "glitchLeft": "springtrap-glitch-left",
+      "glitchRight": "springtrap-glitch-right"
+    },
+    "contact": {
+      "idle": "frisk-idle",
+      "enter": "frisk-greet"
+    }
+  }
+}

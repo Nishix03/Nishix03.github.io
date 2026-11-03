@@ -60,9 +60,17 @@ frontend/
 - `prefers-reduced-motion`: todo en su estado final, sin recorrido y sin barridos.
 - Sin JS el contenido sigue visible (solo cambia la selección interactiva).
 
+## Sprites por acción
+
+Cada personaje es un `<Clip>` con varios clips (reposo, flechas, giro…) del paquete de Codex.
+
+- `npm run sprites:clips` copia las tiras de `art/sprites/ready-to-integrate/` a `public/sprites/clips/` y genera `src/sprites/clips.json`.
+- `src/scripts/actors.ts` decide qué clip toca: Boyfriend canta con ←↓↑→ (hero), Blue-Eyes sale de la carta al elegir proyecto, Springtrap patrulla, gira y se traba (Stack) y Frisk saluda al llegar (Contact).
+- Todo se encadena con `animationend`, así que fuera de pantalla o con la pestaña oculta la secuencia se pausa sola.
+
 ## Qué falta (no es código)
 
-- Sprites pixel definitivos → Codex (`SPRITES.md`). Mientras tanto se ven cajas de marcador del mismo tamaño.
+- Nada de sprites: el paquete por acción de Codex ya está conectado (ver abajo). Para revisar los clips sueltos: `art/sprites/ready-to-integrate/preview.html`.
 - Renders 3D del personaje (hero y una pose por apartado) → Blender. Hoy el hero y las figuras usan el boceto.
 - URL real de LinkedIn en `src/content/en/contact.ts`.
 - Versión en español (`/es`).

@@ -1,10 +1,10 @@
 /**
- * Lista de sprites que Codex debe generar (plan §14.6). El frontend ya los espera con este tamaño y
- * esta cantidad de cuadros. Para activar uno:
- *   1. Guarda la tira horizontal en `public/sprites/<archivo>` (cuadros uno al lado del otro, fondo transparente).
- *   2. Cambia `ready` a `true` aquí.
- * Mientras `ready` sea false se ve una caja de marcador, así la maquetación y los movimientos ya se pueden probar.
+ * Slots de integración: el catálogo generado aporta las dimensiones y los ciclos reales.
+ * Ejecuta `npm run sprites:build` después de editar las fuentes en art/sprites.
+ * Un ID ausente conserva el marcador para hacer visible un recurso pendiente.
  */
+import packed from '../../public/sprites/manifest.json';
+
 export type SpriteSlot = {
   /** Nombre corto que se usa en los componentes. */
   id: string;
@@ -27,15 +27,28 @@ const slot = (
   height: number,
   frames: number,
   fps = 12,
-): SpriteSlot => ({ id, label, width, height, frames, fps, file: `${id}.webp`, ready: false });
+): SpriteSlot => {
+  const asset = (
+    packed.sprites as Partial<
+      Record<string, { width: number; height: number; frames: number; fps: number; file: string }>
+    >
+  )[id];
+  return asset
+    ? {
+        id,
+        label,
+        width: asset.width,
+        height: asset.height,
+        frames: asset.frames,
+        fps: asset.fps,
+        file: asset.file,
+        ready: true,
+      }
+    : { id, label, width, height, frames, fps, file: `${id}.webp`, ready: false };
+};
 
 export const sprites = {
-  // Reparto (plan §14.1)
-  eco: slot('eco', 'Eco · late al ritmo, boca abierta/cerrada', 70, 80, 2, 3.3),
-  butterfly: slot('butterfly', 'Mariposa · alas abiertas/cerradas', 45, 35, 2, 6),
-  argenta: slot('argenta', 'Argenta · alas arriba/abajo', 80, 60, 2, 3.3),
-  tuerca: slot('tuerca', 'Tuerca · ojos normales/glitch', 48, 64, 2, 1),
-  lumi: slot('lumi', 'Lumi · con farol, parpadea', 60, 75, 2, 1),
+  // El reparto (Boyfriend, mariposa, Blue-Eyes, Springtrap, Frisk) vive en clips.ts: un clip por acción.
   // Adornos (plan §14.1b)
   compass: slot('compass', 'Brújula del diario', 36, 36, 1),
   menace: slot('menace', 'Flechas ゴゴゴ de LATEST', 40, 24, 1),
