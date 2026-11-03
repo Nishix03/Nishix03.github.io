@@ -422,6 +422,8 @@ Cada proyecto tiene su carta de tarot, como los arcanos de P3R que ya usa la lis
 
 ### 14.6 Encargo a Codex: versiones definitivas
 
+**Actualización de Iván (2 de noviembre de 2026):** los sprites deben representar a Blue-Eyes White Dragon, Boyfriend de FNF, Springtrap y la mariposa de Persona 3. Esta decisión sustituye las reglas anteriores de originalidad para esos cuatro diseños. Se dibujan desde cero como fan-art, con keyframes y créditos a sus respectivos propietarios. Lumi se mantiene. Los IDs internos de integración siguen siendo `argenta`, `eco`, `tuerca` y `butterfly`.
+
 **Obra de referencia de cada personaje (solo tono).** Iván pidió dejar escrito en qué se inspira cada uno. Queda anotado, pero como referencia de **tono y energía**, no como diseño a copiar:
 
 | Personaje | Obra que lo inspira | Qué se toma (tono) | Qué no se toma |
@@ -726,3 +728,61 @@ Iván los quitó porque hacían ver el portafolio un poco infantil. Desaparecen 
 4. **Accesibilidad:** foco dentro del panel mientras está abierto, Esc lo cierra y devuelve el foco al botón, mensajes nuevos anunciados con `aria-live`.
 5. **Mensaje del hero:** cuando NishixAI funcione de verdad, será el **demo de IA propio** que pide §9 (punto 3) para sostener "AI-powered features"; hasta entonces no cuenta como evidencia.
 6. Si se publica antes de tener backend, se queda con respuestas fijas y la etiqueta de prototipo.
+
+## Entrega de sprites por acción: actualización del 2 de noviembre de 2026
+
+La especificación vigente está en `frontend/art/sprites/ready-to-integrate/IMPLEMENTATION.md` y su catálogo en `manifest.json` del mismo directorio. Esta entrega es de recursos preparados, sin conectar los nuevos estados a las páginas.
+
+- Boyfriend: reposo a 100 BPM y cuatro secuencias independientes para las flechas arriba, abajo, izquierda y derecha.
+- Springtrap: patrulla lateral con pasos, giro en ambos extremos y glitch según su orientación.
+- Mariposa de Persona 3: vuelo y aleteo de espera.
+- Blue-Eyes: reposo, aleteo y una salida progresiva de 12 cuadros desde una carta de Yu-Gi-Oh.
+- El reverso del arcano propio de §14.5 se sustituirá por el reverso marrón/naranja de Yu-Gi-Oh.
+- Frisk de Undertale sustituye a Lumi en Contact, con reposo y saludo. Los archivos de Lumi se retiraron; el cambio del consumidor en Contact queda para la implementación.
+
+Se entregan 19 secuencias y 103 keyframes, fuentes Piskel, PNG/WebP, metadatos, CSS preparado y una galería sin servidor. No se han modificado páginas ni componentes para implementar este paquete.
+
+**Integrado el 2 nov 2026 (rama `plan-portafolio-p3r`):** los clips se copian con `npm run sprites:clips` a `frontend/public/sprites/clips/` y se pintan con `Clip.astro`; `frontend/src/scripts/actors.ts` decide qué clip toca en cada sección. Desviación consciente: en Projects el reverso grande (×3) se queda como mazo detrás del detalle y la invocación de 256×256 va encima, con su propia carta apoyada en el borde del detalle; por eso los clips de Blue-Eyes de 80×60 (reposo y aleteo) no se usan en Projects y pasan a About (§18).
+
+## 18. Página «About me» (diseño, sin implementar)
+
+Objetivo: que un reclutador sepa en 20 segundos quién es Iván, cómo trabaja y por qué el sitio tiene estos personajes. Sin stats, niveles ni XP (§17.2): todo sale de datos verificados (§2, §17.3) o queda como marcador para que Iván lo escriba.
+
+### 18.1 Lugar en el sitio
+- Ruta `/about`, **número 01** (el hero no lleva número; Projects sigue siendo 02). Palabra gigante de fondo: **«PERSONA»** (la máscara, el «yo»; guiño directo a P3R).
+- Primera opción del hero y de la cabecera: About, Projects, Stack, Journey, Contact (5 de 6 ítems máximos, §3). Color de selección propio: **gold `#e8c66a`**, el único color de marca que aún no tiene página.
+- Mismo `PageShell`: entrada en círculo, dos barridos, número coral y «Esc Return».
+
+### 18.2 Estructura (de arriba abajo)
+1. **Ficha** (h1 «About me»). A la izquierda, el recorte 3D cayendo como en el hero (`sil-drop` + `sway`), versión **ABOUT**: brazos cruzados, media sonrisa, mirada a cámara (§15.3: una pose nueva, mismo flujo de Blender). A la derecha, placa blanca inclinada con el nombre y debajo tres líneas mono: *Systems Engineering student · USAT · 4th semester*, *Chiclayo, Perú*, *@Nishix_03*. Bio de 2-3 frases **escrita por Iván** (marcador: «[Who I am, in your words]»). Dato fijo que sí se puede decir: empezó con Java de escritorio (Swing) y ahora hace web de punta a punta.
+2. **Cómo trabajo** (h2). Tres filas con la selección P3R, cada una con su prueba:
+   - *Demos honestas*: todo prototipo dice «(demo)», sin datos inventados (prototipos de Chiclayo, GastroClinic con datos ficticios).
+   - *Si no se prueba, no está*: Playwright + axe en este sitio; garantías G1-G5 en LeeContigo IA.
+   - *Commits pequeños y explicados*: reparto de commits en el equipo de futurX.
+3. **Party** (h2; «lo que dio forma a este sitio»). Rejilla de cartas, una por saga, cada una con su personaje y una frase de qué aporta al portafolio. Es la explicación de los guiños de §14.1b:
+   | Carta | Sprite (clip) | Qué aporta |
+   |---|---|---|
+   | Persona 3 Reload | Mariposa (`p3-butterfly-hover`) | El lenguaje visual: menús inclinados, cortes y selección |
+   | Friday Night Funkin' | Boyfriend (`boyfriend-idle` → flecha al azar) | El teclado: todo el sitio se usa con flechas |
+   | Yu-Gi-Oh! | Blue-Eyes (`blue-eyes-idle` → `blue-eyes-hover`) | Los proyectos como cartas que se invocan |
+   | Five Nights at Freddy's | Springtrap (`springtrap-walk-right` → `glitch-right`) | La patrulla del Stack |
+   | Undertale | Frisk (`frisk-idle` → `frisk-greet`) | El tono amable de Contact |
+   | Dragon Ball · JoJo · Uncharted | Esfera, «ゴゴゴ», brújula (adornos fijos) | Los secretos del Journey y el footer |
+   Al lado, un **panel de detalle** (`aria-live="polite"`) con el texto largo de la carta elegida y su número de arcano mayor, que gira con `fx-flip` como el detalle de Projects.
+4. **Ahora** (h2). Tres líneas con fecha: aprendiendo backend (Spring Boot, plan de 15 etapas), GastroClinic en desarrollo, 4.º ciclo en curso. Las «ゴゴゴ» de JoJo flotan junto a la primera línea.
+5. **Fuera del teclado** (h2, opcional). Marcador «[2-3 hobbies, in your words]». No se rellena con suposiciones.
+6. **Cierre**: dos opciones P3R, «Download CV» y «Let's talk → Contact».
+
+### 18.3 Animaciones
+- **Entrada**: `page-enter`; la ficha cae girando (`sil-drop`, 0,7 s) y la placa entra con `cascade`; las filas de «Cómo trabajo» y las cartas de la Party en cascada escalonada (60 ms).
+- **Selección de carta**: `data-select-group` con `aria-pressed` (mismo script que Projects). La carta elegida sube 12 px con su tajo; **solo su sprite pasa al clip de acción** y los demás se quedan en el cuadro 0 con `data-paused`. Así nunca hay más de 2-3 sprites animados a la vez (tope 8, §14.4).
+- **Boyfriend** en su carta repite la regla del hero: las flechas del teclado le cambian la pose también aquí.
+- **Blue-Eyes** usa por fin los clips de 80×60: reposo cuando no está elegida, aleteo con flotación (`fx-float`) cuando sí.
+- **Easter egg**: una esfera de Dragon Ball escondida en la ficha suma 1 al contador «ORBS n/7» del footer.
+- **Movimiento reducido**: sin caída ni cascada; cada sprite en su `reducedMotionFrame`; la selección cambia sin animación.
+
+### 18.4 Implementación prevista
+- `src/pages/about.astro`, contenido en `src/content/en/about.ts` (y luego `es/`).
+- Reutiliza `PageShell`, `PoseFigure` (variante nueva `about`), `Clip` y `select-group`; `actors.ts` gana `initParty()`, que escucha `select:change` y cambia el clip de la carta elegida.
+- Pruebas: axe, desbordamiento a 360/1440 px, que elegir una carta cambie el detalle y que solo un sprite de la Party se anime.
+- Créditos: la línea del footer ya nombra las sagas; About no añade arte nuevo, solo reutiliza los clips de Codex.
