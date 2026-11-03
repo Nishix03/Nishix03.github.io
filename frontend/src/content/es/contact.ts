@@ -26,6 +26,6 @@ export const contacts: Contact[] = contactsEn.map((contact) => ({ ...contact, ..
 
 export const footer = {
   credit:
-    '© 2026 Iván Rodas · Render 3D y sprites pixel hechos con ayuda de IA. Fan art: Yu-Gi-Oh!, FNF, Persona 3 y Undertale. Los personajes pertenecen a sus respectivos dueños.',
+    '© 2026 Iván Rodas · Render 3D y sprites pixel hechos con ayuda de IA. Fan art: Yu-Gi-Oh! y Persona 3. Los personajes pertenecen a sus respectivos dueños.',
   orbs: 'ORBES 0/7',
 };

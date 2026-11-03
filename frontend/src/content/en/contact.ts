@@ -39,6 +39,6 @@ export const contacts: Contact[] = [
 
 export const footer = {
   credit:
-    '© 2026 Iván Rodas · 3D render and pixel sprites made with AI assistance. Fan art: Yu-Gi-Oh!, FNF, Persona 3 and Undertale. Third-party characters belong to their respective owners.',
+    '© 2026 Iván Rodas · 3D render and pixel sprites made with AI assistance. Fan art: Yu-Gi-Oh! and Persona 3. Third-party characters belong to their respective owners.',
   orbs: 'ORBS 0/7',
 };

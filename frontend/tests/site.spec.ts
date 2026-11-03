@@ -24,8 +24,8 @@ test('sprites reales: cargan todas las hojas y conservan el tamaño de cuadro', 
 });
 
 test('los ciclos pixel se pausan fuera de pantalla', async ({ page }) => {
-  await page.goto('/contact');
-  const stage = page.locator('.contact__frisk');
+  await page.goto('/');
+  const stage = page.locator('.hero__butterfly');
   await stage.scrollIntoViewIfNeeded();
   await expect(stage).toHaveAttribute('data-paused', 'false');
   await stage.evaluate((el) => {
@@ -37,34 +37,6 @@ test('los ciclos pixel se pausan fuera de pantalla', async ({ page }) => {
     'animation-play-state',
     'paused',
   );
-});
-
-test('Boyfriend canta con cada flecha, sostiene la pose y vuelve al reposo', async ({ page }) => {
-  await page.goto('/');
-  const boyfriend = page.locator('[data-actor="boyfriend"]');
-  // Fuera de pantalla sus clips están en pausa (loops.ts) y la pose esperaría a verse.
-  await boyfriend.scrollIntoViewIfNeeded();
-  await expect(boyfriend).toHaveAttribute('data-clip', 'boyfriend-idle');
-  for (const [key, dir] of [
-    ['ArrowLeft', 'left'],
-    ['ArrowRight', 'right'],
-  ]) {
-    await page.keyboard.down(key);
-    await expect(boyfriend).toHaveAttribute('data-clip', `boyfriend-${dir}`);
-    // Solo se enciende la flecha pulsada
-    await expect(page.locator('[data-arrow][data-hit]')).toHaveAttribute('data-arrow', dir);
-    await page.keyboard.up(key);
-    await expect(boyfriend).toHaveAttribute('data-clip', 'boyfriend-idle');
-    await expect(page.locator('[data-arrow][data-hit]')).toHaveCount(0);
-  }
-});
-
-test('Frisk saluda al llegar a Contact y vuelve al reposo', async ({ page }) => {
-  await page.goto('/contact');
-  const frisk = page.locator('[data-actor="frisk"]');
-  await frisk.scrollIntoViewIfNeeded();
-  await expect(frisk).toHaveAttribute('data-clip', 'frisk-greet');
-  await expect(frisk).toHaveAttribute('data-clip', 'frisk-idle');
 });
 
 // axe mide colores reales: se espera a que acaben las entradas (la más larga dura ~1,5 s).

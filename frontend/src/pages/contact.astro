@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
-import Clip from '../components/Clip.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { getContent, localeFromUrl, localePath } from '../content';
 
@@ -90,13 +89,6 @@ const glyph = (id: string) => {
           })}
         </ul>
       </div>
-
-      <!-- Frisk respira en reposo y saluda al llegar a Contact o al enfocar un enlace (scripts/actors.ts) -->
-      <div class="contact__frisk" aria-hidden="true" data-loop>
-        <div class="contact__frisk-stage">
-          <Clip name="frisk" clips={['frisk-idle', 'frisk-greet']} />
-        </div>
-      </div>
     </div>
 
     <SiteFooter slot="after" />
@@ -176,34 +168,6 @@ const glyph = (id: string) => {
     display: flex;
     flex-direction: column;
     gap: 4px;
-  }
-  .contact__frisk {
-    flex: 0 0 160px;
-    height: 140px;
-    position: relative;
-  }
-  /* Móvil: Frisk saluda arriba a la derecha, junto al título, en vez de quedar solo al final. */
-  @media (max-width: 767px) {
-    .contact__layout {
-      position: relative;
-    }
-    .contact__frisk {
-      position: absolute;
-      right: 0;
-      top: -70px;
-      flex: none;
-      width: 72px;
-      height: 90px;
-    }
-    .contact__frisk-stage {
-      left: auto;
-      right: 0;
-    }
-  }
-  .contact__frisk-stage {
-    position: absolute;
-    left: 10px;
-    bottom: 0;
   }
   /* Icono pixel: 12 columnas de 3 px. Toma el color del texto y lo cambia con la selección. */
   .contact__ico {
