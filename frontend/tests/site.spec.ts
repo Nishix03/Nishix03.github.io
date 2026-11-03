@@ -1,9 +1,10 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-const pages = ['/', '/projects', '/stack', '/journey', '/contact'];
+const pages = ['/', '/about', '/projects', '/stack', '/journey', '/contact'];
 
 test('sprites reales: cargan todas las hojas y conservan el tamaño de cuadro', async ({ page }) => {
+  test.setTimeout(90_000); // recorre seis páginas con hojas grandes
   for (const path of pages) {
     await page.goto(path);
     await expect(page.locator('.sprite--placeholder')).toHaveCount(0);
@@ -58,37 +59,6 @@ test('Boyfriend canta con cada flecha, sostiene la pose y vuelve al reposo', asy
   }
 });
 
-test('Blue-Eyes sale de la carta al cambiar de proyecto y se queda en el último cuadro', async ({
-  page,
-}) => {
-  await page.goto('/projects');
-  const strip = page.locator('[data-clip-name="blue-eyes-emerge-summon"]');
-  await page.locator('.project-row').nth(2).hover();
-  await expect
-    .poll(() => strip.evaluate((img) => img.getAnimations()[0]?.playState))
-    .toBe('finished');
-  // Cuadro 11 de 12: la tira queda desplazada 11 cuadros de 256 px.
-  await expect(strip).toHaveCSS('transform', 'matrix(1, 0, 0, 1, -2816, 0)');
-});
-
-test('Springtrap se traba sin cambiar de lado y gira en el extremo', async ({ page }) => {
-  await page.goto('/stack');
-  const patrol = page.locator('.stack__patrol');
-  const springtrap = page.locator('[data-actor="springtrap"]');
-  // Tras ~6 ciclos de paso (≈5 s) se traba mirando hacia donde caminaba.
-  await expect(patrol).toHaveAttribute('data-phase', 'glitch', { timeout: 8000 });
-  await expect(springtrap).toHaveAttribute('data-clip', 'springtrap-glitch-right');
-  await expect(patrol).toHaveAttribute('data-phase', 'walk');
-  // Se adelanta el recorrido hasta el final: llega al extremo, gira y vuelve por la izquierda.
-  await patrol.locator('.stack__patrol-track').evaluate((el) => {
-    const anim = el.getAnimations()[0];
-    if (anim) anim.currentTime = Number(anim.effect?.getTiming().duration) - 50;
-  });
-  await expect(springtrap).toHaveAttribute('data-clip', 'springtrap-turn-left');
-  await expect(patrol).toHaveAttribute('data-dir', 'left');
-  await expect(springtrap).toHaveAttribute('data-clip', 'springtrap-walk-left');
-});
-
 test('Frisk saluda al llegar a Contact y vuelve al reposo', async ({ page }) => {
   await page.goto('/contact');
   const frisk = page.locator('[data-actor="frisk"]');
@@ -138,12 +108,29 @@ for (const path of pages) {
   });
 }
 
+test('el avatar de cada página es decorativo y carga sus tiras', async ({ page }) => {
+  for (const path of ['/', '/about', '/projects', '/stack', '/journey', '/contact']) {
+    await page.goto(path);
+    const cutin = page.locator('.cutin').first();
+    await expect(cutin).toHaveAttribute('aria-hidden', 'true');
+    for (const strip of await cutin.locator('.cutin__strip').all()) {
+      await expect(strip).toHaveJSProperty('complete', true);
+      expect(await strip.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
+    }
+  }
+});
+
+test('Contact muestra un icono pixel por cada medio de contacto', async ({ page }) => {
+  await page.goto('/contact');
+  await expect(page.locator('.contact__list .contact__ico')).toHaveCount(6);
+});
+
 test('la cabecera marca la página actual con aria-current', async ({ page }) => {
   await page.goto('/stack');
   await expect(page.locator('a.header__link[aria-current="page"]')).toHaveText('Stack');
 });
 
-test('el hero cambia la pose al enfocar otra opción y las flechas mueven el foco', async ({
+test('el hero no cambia el avatar con la opción y las flechas mueven el foco', async ({
   page,
 }) => {
   await page.goto('/');
@@ -152,18 +139,16 @@ test('el hero cambia la pose al enfocar otra opción y las flechas mueven el foc
   await page.keyboard.press('ArrowDown');
   await expect(options.nth(1)).toBeFocused();
   await expect(options.nth(1)).toHaveAttribute('data-sel', 'true');
-  await expect(page.locator('.hero__pose:not([hidden])')).toContainText('POSE 2');
+  // Un solo avatar en reposo: seleccionar otra opción no lo cambia ni lo reinicia.
+  await expect(page.locator('.hero .cutin')).toHaveCount(1);
 });
 
-test('elegir un proyecto cambia la carta, el detalle y el numeral de la tableta', async ({
-  page,
-}) => {
+test('elegir un proyecto cambia la carta y el detalle', async ({ page }) => {
   await page.goto('/projects');
   await page.locator('.project-row').nth(1).hover();
   await expect(page.locator('#project-details > [data-panel]:not([hidden]) h2')).toHaveText(
     'LeeContigo IA',
   );
-  await expect(page.locator('#project-numerals > :not([hidden])')).toHaveText('II');
 });
 
 test('Esc vuelve al inicio desde un apartado', async ({ page }) => {

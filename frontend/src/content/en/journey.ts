@@ -32,7 +32,12 @@ export const diary = {
   kicker: 'EXPEDITION LOG · OCT 2026',
   title: 'Won futurX 2026 with LeeContigo IA',
   body: '1st place out of 500+ participants from 9 countries. 6 merged PRs on the team repo: XP system, sounds, tutorial fix and the G1–G5 guarantees.',
-  learned: 'Learned: [to write — one line in your own words]',
+  link: {
+    label: 'Read the USAT news ↗',
+    href: 'https://www.usat.edu.pe/noticias/estudiantes-de-ingenieria-de-sistemas-y-computacion-usat-obtienen-el-primer-lugar-en-la-hackathon-futurx-2026/',
+  },
+  learned:
+    'Learned: I leaned on Claude to plan which branch each teammate would own to improve the prototype’s features, so we could work in parallel without stepping on each other’s code. I also learned to analyze how people interact with an interface built for a specific audience or niche.',
 };
 
 export const platzi = {

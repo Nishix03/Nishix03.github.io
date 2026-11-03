@@ -24,16 +24,27 @@ const select = (group: HTMLElement, index: number) => {
     // toggleAttribute (y no la propiedad .hidden) porque algún panel es un <text> de SVG.
     panels.forEach((panel, i) => panel.toggleAttribute('hidden', i !== index));
   }
-  // Aviso para quien quiera reaccionar al cambio (la invocación de Blue-Eyes en Projects).
+  // Aviso para quien quiera reaccionar al cambio (por ejemplo, para animar algo al cambiar la selección).
   group.dispatchEvent(new CustomEvent('select:change', { detail: { index } }));
 };
+
+const narrow = window.matchMedia('(max-width: 767px)');
+const noHover = window.matchMedia('(hover: none)');
 
 export const initSelectGroups = () => {
   document.querySelectorAll<HTMLElement>('[data-select-group]').forEach((group) => {
     const items = [...group.querySelectorAll<HTMLElement>('[data-select-item]')];
     items.forEach((item, index) => {
       const pick = () => select(group, index);
-      item.addEventListener('pointerenter', pick);
+      // Al pasar el cursor se selecciona, pero no con el dedo (un toque al empezar un scroll no debe elegir)
+      // ni mientras la página se desplaza sola (el cursor queda quieto sobre otra fila).
+      item.addEventListener('pointerenter', (event) => {
+        // En pantallas estrechas o sin hover solo seleccionan el clic y el foco: el cursor puede quedar quieto
+        // sobre otra fila al terminar un scroll y no debe cambiar la selección.
+        if (event.pointerType === 'touch' || narrow.matches || noHover.matches) return;
+        if (document.documentElement.dataset.autoScroll === 'true') return;
+        pick();
+      });
       item.addEventListener('focus', pick);
       item.addEventListener('click', pick);
     });

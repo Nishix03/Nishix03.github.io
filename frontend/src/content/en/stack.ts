@@ -84,5 +84,5 @@ export const stack: Technology[] = [
     50,
     'Chiclayo prototypes · this portfolio',
   ),
-  tech('codex', 'Codex', 'CX', '#10141a', '#f2fff7', 1, 20, '[evidence to add]'),
+  tech('codex', 'Codex', 'CX', '#10141a', '#f2fff7', 1, 20, 'Sprites and code reviews for this portfolio'),
 ];

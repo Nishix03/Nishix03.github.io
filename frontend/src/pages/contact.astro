@@ -1,13 +1,28 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
-import PoseFigure from '../components/PoseFigure.astro';
+import AvatarCutin from '../components/AvatarCutin.astro';
 import Clip from '../components/Clip.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import { getContent } from '../content';
 
-const { ui, contactIntro, contacts, footer } = getContent();
+const { ui, contactIntro, contactGlyphs, contacts } = getContent();
 const page = ui.pages.contact;
 const isExternal = (href: string) => href.startsWith('http');
+// LinkedIn y el CV aún no tienen destino real: se muestran apagados, no como enlaces muertos.
+const isPending = (href: string) => href.startsWith('#');
+
+// Cada '#' de la rejilla es una celda de 3 px; box-shadow las dibuja todas desde un solo elemento.
+const CELL = 3;
+const glyph = (id: string) => {
+  const rows = contactGlyphs[id] ?? [];
+  const shadow = rows
+    .flatMap((row, y) =>
+      [...row].flatMap((ch, x) => (ch === '#' ? [`${x * CELL}px ${y * CELL}px 0 currentColor`] : [])),
+    )
+    .join(',');
+  return { shadow, height: rows.length * CELL };
+};
 ---
 
 <BaseLayout title={`Contact — ${ui.siteTitle}`}>
@@ -18,7 +33,10 @@ const isExternal = (href: string) => href.startsWith('http');
     wordTop={40}
     wordRight={-60}
     padTop={90}
+    minHeight={900}
   >
+    <AvatarCutin slot="bg" page="contact" />
+
     <div class="contact__layout">
       <div class="contact__main">
         <h1 class="contact__title display fx-cascade">
@@ -27,31 +45,50 @@ const isExternal = (href: string) => href.startsWith('http');
           <span class="contact__accent">{page.accent}</span>
         </h1>
         <p class="contact__intro fx-cascade" style="animation-delay: .06s">
-          {contactIntro}
+          {contactIntro.map((line) => (
+            <>
+              {line.lead && <b class="contact__lead">{line.lead}</b>} {line.text}
+              <br />
+            </>
+          ))}
         </p>
         <ul class="contact__list" data-select-group data-arrow-nav>
-          {contacts.map((contact, i) => (
-            <li class="fx-cascade" style={`animation-delay: ${(0.12 + i * 0.06).toFixed(2)}s`}>
-              <a
-                class="option"
-                href={contact.href}
-                data-select-item
-                data-sel={String(i === 0)}
-                rel={isExternal(contact.href) ? 'noopener' : undefined}
-                target={isExternal(contact.href) ? '_blank' : undefined}
-                style={`font-size:${contact.size}px;color:var(--color-ink)`}
-              >
-                <span class="option__slash" aria-hidden="true" />
-                <span class="option__plate" aria-hidden="true" />
-                <span class="option__label">{contact.label}</span>
-                <span class="option__sub">{contact.sub}</span>
-              </a>
-            </li>
-          ))}
+          {contacts.map((contact, i) => {
+            const g = glyph(contact.id);
+            return (
+              <li class="fx-cascade" style={`animation-delay: ${(0.12 + i * 0.06).toFixed(2)}s`}>
+                {isPending(contact.href) ? (
+                  <span class="option contact__soon" aria-disabled="true" style={`--opt-size:${contact.size}px`}>
+                    <span class="contact__ico" aria-hidden="true" style={`height:${g.height}px`}>
+                      <i style={`box-shadow:${g.shadow}`} />
+                    </span>
+                    <span class="option__label">{contact.label}</span>
+                    <span class="option__sub">Coming soon</span>
+                  </span>
+                ) : (
+                <a
+                    class="option"
+                    href={contact.href}
+                    data-select-item
+                    data-sel={String(i === 0)}
+                    rel={isExternal(contact.href) ? 'noopener' : undefined}
+                    target={isExternal(contact.href) ? '_blank' : undefined}
+                    style={`--opt-size:${contact.size}px;color:var(--color-ink)`}
+                  >
+                    <span class="option__slash" aria-hidden="true" />
+                    <span class="option__plate" aria-hidden="true" />
+                    <span class="contact__ico" aria-hidden="true" style={`height:${g.height}px`}>
+                      <i style={`box-shadow:${g.shadow}`} />
+                    </span>
+                    <span class="option__label">{contact.label}</span>
+                    <span class="option__sub">{contact.sub}</span>
+                  </a>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
-
-      <PoseFigure variant="contact" style="--pose-w:250px;--pose-h:340px" />
 
       <!-- Frisk respira en reposo y saluda al llegar a Contact o al enfocar un enlace (scripts/actors.ts) -->
       <div class="contact__frisk" aria-hidden="true" data-loop>
@@ -61,10 +98,7 @@ const isExternal = (href: string) => href.startsWith('http');
       </div>
     </div>
 
-    <footer slot="after" class="footer">
-      <span>{footer.credit}</span>
-      <span class="mono">{footer.orbs}</span>
-    </footer>
+    <SiteFooter slot="after" />
   </PageShell>
 </BaseLayout>
 
@@ -93,6 +127,42 @@ const isExternal = (href: string) => href.startsWith('http');
     font-size: 17px;
     color: var(--color-mint);
   }
+  .contact__lead {
+    color: var(--color-ink);
+  }
+  /* El tamaño sigue al ancho de la pantalla: el correo largo no se corta en 360 px. */
+  .contact__list :global(.option) {
+    max-width: 100%;
+    font-size: clamp(18px, 5.2vw, var(--opt-size));
+  }
+  .contact__list :global(.option__label) {
+    overflow-wrap: normal;
+  }
+  /* El correo es el dato clave: en móvil se reduce lo justo para que quepa en una sola línea. */
+  @media (max-width: 767px) {
+    .contact__list li:first-child :global(.option) {
+      flex-wrap: nowrap;
+      font-size: min(var(--opt-size), 4.6vw);
+    }
+    .contact__list li:first-child :global(.option__sub) {
+      display: none;
+    }
+  }
+  .contact__soon {
+    white-space: nowrap;
+    font-size: clamp(18px, 5.2vw, var(--opt-size));
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+    min-height: 44px;
+    padding: 4px 30px 6px 14px;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    color: var(--color-mint);
+    opacity: 0.6;
+    cursor: default;
+  }
   .contact__list {
     list-style: none;
     margin: 0;
@@ -111,17 +181,23 @@ const isExternal = (href: string) => href.startsWith('http');
     left: 10px;
     bottom: 0;
   }
-  .footer {
+  /* Icono pixel: 12 columnas de 3 px. Toma el color del texto y lo cambia con la selección. */
+  .contact__ico {
     position: relative;
-    max-width: var(--page-max);
-    margin: 0 auto;
-    padding: 20px var(--gutter) 36px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 14px;
-    border-top: 1px solid rgba(168, 240, 200, 0.12);
-    font-size: 13px;
-    color: var(--color-mint);
+    flex: none;
+    align-self: center;
+    width: 36px;
+    color: var(--color-neon);
+    transition: color var(--dur-fast) var(--ease-p3r);
+  }
+  .contact__ico i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 3px;
+  }
+  .option:is(:hover, :focus-visible, [data-sel='true']) .contact__ico {
+    color: var(--color-bg);
   }
 </style>

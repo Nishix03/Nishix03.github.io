@@ -1,8 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
-import PoseFigure from '../components/PoseFigure.astro';
-import Clip from '../components/Clip.astro';
+import AvatarCutin from '../components/AvatarCutin.astro';
 import { clip } from '../sprites/clips';
 import { getContent } from '../content';
 
@@ -21,6 +20,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     wordRight={-40}
     wordRotate={-12}
   >
+    <AvatarCutin slot="bg" page="projects" />
     <div class="projects__head fx-cascade">
       <h1 class="projects__title display">{page.title}</h1>
     </div>
@@ -30,6 +30,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
 
     <div class="projects__layout">
       <ol
+        id="project-list"
         class="projects__list"
         data-select-group
         data-select-attr="aria-pressed"
@@ -63,11 +64,6 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
       </ol>
 
       <div class="projects__display">
-        <!-- Blue-Eyes sale de su carta al elegir un proyecto y se queda encima (cuadro 11) -->
-        <div class="projects__summon" aria-hidden="true" data-loop>
-          <Clip name="summon" clips={['blue-eyes-emerge-summon']} />
-        </div>
-
         <!-- El mazo: reverso real de Yu-Gi-Oh a escala 3, inclinado detrás del detalle. Gira al cambiar. -->
         <div class="projects__card-back" id="project-cards" aria-hidden="true">
           {projects.map((_, i) => (
@@ -84,6 +80,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
           ))}
         </div>
 
+        <a class="projects__back" href="#project-list">↑ Back to the list</a>
         <div class="projects__details" id="project-details" aria-live="polite">
           {projects.map((project, i) => (
             <article class="detail fx-flip" data-panel hidden={i !== 0}>
@@ -112,30 +109,87 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
                 <div class="detail__stack fx-cascade" style="animation-delay: .4s">
                   {project.stack}
                 </div>
-                <a
-                  class="detail__cta link fx-cascade"
-                  href={project.href}
-                  style="animation-delay: .45s"
-                >
-                  {project.cta}
-                </a>
+                {project.href.startsWith('#') ? (
+                  <p class="detail__cta detail__cta--soon fx-cascade" style="animation-delay: .45s">
+                    {project.cta.startsWith('[') ? 'Link coming soon' : project.cta}
+                  </p>
+                ) : (
+                  <a
+                    class="detail__cta link fx-cascade"
+                    href={project.href}
+                    style="animation-delay: .45s"
+                  >
+                    {project.cta}
+                  </a>
+                )}
               </div>
             </article>
           ))}
         </div>
       </div>
 
-      <PoseFigure
-        variant="projects"
-        class="pose-fig--end"
-        arcanaNumerals={projects.map((p) => p.numeral)}
-        style="--pose-w:230px;--pose-h:340px;animation-delay:.3s"
-      />
     </div>
   </PageShell>
 </BaseLayout>
 
+<script>
+  // En móvil el detalle queda debajo de la lista: al tocar una fila se baja hasta él.
+  document.addEventListener('astro:page-load', () => {
+    const list = document.querySelector('#project-list');
+    const details = document.querySelector<HTMLElement>('.projects__display');
+    if (!list || !details) return;
+    list.addEventListener('click', (event) => {
+      if (!(event.target as HTMLElement).closest('.project-row')) return;
+      if (!window.matchMedia('(max-width: 767px)').matches) return;
+      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // Mientras dura el desplazamiento automático no se cambia la selección por el cursor (select-group.ts).
+      const root = document.documentElement;
+      root.dataset.autoScroll = 'true';
+      // Se limpia al terminar el desplazamiento (scrollend) y, por si el navegador no lo emite, a los 1,5 s.
+      const done = () => delete root.dataset.autoScroll;
+      window.addEventListener('scrollend', done, { once: true });
+      window.setTimeout(done, 1500);
+      details.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
+</script>
+
 <style>
+  .projects__back {
+    display: none;
+  }
+  .detail__cta--soon {
+    margin: 0;
+    color: var(--color-mint);
+    font-size: 14px;
+  }
+  #project-list {
+    scroll-margin-top: 72px; /* al volver, la cabecera fija no tapa «PROJECTS» ni la primera fila */
+  }
+  .projects__display {
+    scroll-margin-top: 72px; /* deja libre la cabecera fija de 57 px al llegar */
+  }
+  @media (max-width: 767px) {
+    /* Sin el mazo de fondo ni el hueco reservado: debajo del detalle no queda un espacio vacío. */
+    .projects__display {
+      min-height: 0;
+    }
+    .projects__card-back {
+      display: none;
+    }
+    .projects__back {
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      margin-bottom: 8px;
+      color: var(--color-neon);
+      font-weight: 800;
+    }
+    /* Las filas son opacas para que el avatar de fondo no se mezcle con las líneas pequeñas. */
+    .projects__list :global(.project-row) {
+      background: rgba(7, 17, 12, 0.92);
+    }
+  }
   .projects__head {
     display: flex;
     align-items: flex-end;
@@ -208,7 +262,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
 
   .projects__display {
     /* Hueco para el dragón: la carta de la invocación acaba 5 px por encima de su borde inferior */
-    --summon-room: 236px;
+    --summon-room: 0px;
     position: relative;
     flex: 1 1 340px;
     max-width: 380px;
@@ -230,14 +284,6 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
   .projects__panel {
     position: absolute;
     inset: 0;
-  }
-  /* La invocación mide 256×256 y trae su propia carta abajo; esa carta se apoya en el borde del detalle. */
-  .projects__summon {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 3;
-    pointer-events: none;
   }
   .projects__details {
     margin-top: var(--summon-room);
@@ -281,6 +327,15 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     color: var(--color-amber);
     font-size: 14px;
     letter-spacing: 3px;
+  }
+  /* En móvil el recuadro de captura (aún sin imagen) ocupaba media pantalla: se oculta hasta tener la captura real. */
+  @media (max-width: 767px) {
+    .detail .detail__shot {
+      display: none;
+    }
+    .detail .detail__inner {
+      min-height: 0;
+    }
   }
   .detail__shot {
     aspect-ratio: 4 / 3;

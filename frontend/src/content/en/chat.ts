@@ -35,6 +35,6 @@ export const chatQuestions: ChatQuestion[] = [
   {
     label: 'Open to work?',
     answer:
-      'Yes: internships, junior full-stack roles and small freelance projects. Email: ivannishix@gmail.com',
+      "Yes: I offer website implementation + AI agents that automate business processes, and I'm open to internships and junior full-stack roles. My edge: constant drive to learn and ultra-personalized work. Email: ivannishix@gmail.com",
   },
 ];

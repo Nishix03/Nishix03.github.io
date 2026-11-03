@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Sprite from '../components/Sprite.astro';
 import Clip from '../components/Clip.astro';
+import AvatarCutin from '../components/AvatarCutin.astro';
 import { getContent } from '../content';
 import { sprites } from '../sprites/manifest';
 
@@ -51,6 +52,8 @@ const arrows = [
       ))}
     </div>
 
+    <AvatarCutin page="hero" />
+
     <!-- Franja menta con la palabra lateral cortada por el borde -->
     <div class="hero__side" aria-hidden="true">
       <div class="hero__word">
@@ -71,7 +74,6 @@ const arrows = [
             class="hero__options"
             data-select-group
             data-arrow-nav
-            data-select-targets="#hero-poses"
           >
             {heroOptions.map((option, i) => (
               <li class="hero__item" style={`animation-delay: ${(0.57 + i * 0.06).toFixed(2)}s`}>
@@ -80,7 +82,7 @@ const arrows = [
                   href={`/${option.page}`}
                   data-select-item
                   data-sel={String(i === 0)}
-                  style={`font-size:${option.size}px;color:${option.color}`}
+                  style={`--opt-size:${option.size}px;color:${option.color}`}
                 >
                   <span class="option__slash" aria-hidden="true" />
                   <span class="option__plate" aria-hidden="true" />
@@ -97,23 +99,8 @@ const arrows = [
         </div>
       </div>
 
-      <!-- Recorte 3D: hoy un marcador; luego la tira WebP del personaje (plan §15). Cae girando y queda cortado por el borde. -->
+      <!-- El avatar (un solo reposo, no cambia con la opción) va en AvatarCutin; la mariposa se posa sobre él -->
       <div class="hero__stage" aria-hidden="true">
-        <div class="hero__cutout">
-          <div class="hero__sil">
-            <div class="hero__sway" data-loop>
-              <div class="hero__poses" id="hero-poses">
-                {heroOptions.map((option, i) => (
-                  <div class="hero__pose fx-fade" data-panel hidden={i !== 0}>
-                    <div class="hero__pose-tag mono">RENDER 3D · POSE {i + 1}</div>
-                    <div class="hero__pose-name">[{option.pose}]</div>
-                    <div class="hero__pose-note">{hero.poseNote}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="actor hero__late hero__butterfly" data-loop>
           <!-- La ruta la pone fx-fly; el aleteo lo dibuja la tira. Sobre la silueta se posa (hover). -->
           <div class="fx-fly hero__butterfly-route">
@@ -162,6 +149,61 @@ const arrows = [
 </BaseLayout>
 
 <style>
+  /* El tamaño de cada opción baja con el ancho de la pantalla: «PROJECTS» no se sale en 390 px. */
+  .hero__options :global(.option) {
+    font-size: min(var(--opt-size), 10.5vw);
+  }
+  @media (max-width: 767px) {
+    /* Las etiquetas pequeñas (Persona, Skills…) se salían de la pantalla: el nombre ya dice el apartado. */
+    .hero__options :global(.option__sub) {
+      display: none;
+    }
+  }
+  /* Pantallas muy estrechas: franja menta casi sin ancho y textos que bajan con el ancho (a 320 px todo cabe). */
+  @media (max-width: 479px) {
+    .hero .hero__side {
+      width: 16px;
+    }
+    .hero .hero__inner {
+      padding-left: 28px;
+      padding-right: 16px;
+    }
+    .hero .hero__name {
+      padding: 6px 20px 8px 12px;
+      font-size: min(56px, 13.5vw);
+    }
+    .hero__options :global(.option) {
+      font-size: min(var(--opt-size), 9vw);
+    }
+  }
+  /* Móvil apaisado (poca altura): nombre más pequeño, opciones en 3 columnas y franja estrecha,
+     para ver los cinco apartados sin hacer scroll. */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .hero .hero__side {
+      width: 24px;
+    }
+    .hero .hero__inner {
+      padding: 72px 24px 24px 48px;
+    }
+    .hero .hero__name {
+      font-size: min(56px, 9vh);
+      padding: 4px 24px 6px 14px;
+    }
+    .hero .hero__options {
+      display: grid;
+      grid-template-columns: repeat(3, max-content);
+      gap: 0 28px;
+    }
+    .hero .hero__options :global(.option) {
+      font-size: min(var(--opt-size), 8vh);
+    }
+  }
+  /* «↑↓ Move / Enter Confirm» solo sirve con teclado. */
+  @media (pointer: coarse) {
+    .hero__hint {
+      display: none;
+    }
+  }
   .hero {
     position: relative;
     min-height: 800px;

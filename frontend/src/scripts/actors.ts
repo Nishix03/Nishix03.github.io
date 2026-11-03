@@ -107,73 +107,6 @@ const initButterfly = () => {
   });
 };
 
-/* ---------- Projects: Blue-Eyes sale de la carta ---------- */
-const initSummon = () => {
-  const actor = getActor('summon');
-  const list = document.querySelector<HTMLElement>('.projects__list');
-  if (!actor || !list || reducedMotion()) return;
-  let busy = false;
-  let pending = false;
-  // Selecciones rápidas: se termina la invocación en curso y solo se repite una vez más al final.
-  const summon = async () => {
-    if (busy) {
-      pending = true;
-      return;
-    }
-    busy = true;
-    await play(actor, 'blue-eyes-emerge-summon');
-    busy = false;
-    if (pending) {
-      pending = false;
-      summon();
-    }
-  };
-  list.addEventListener('select:change', summon);
-  summon();
-};
-
-/* ---------- Stack: Springtrap patrulla, gira y a veces se queda trabado ---------- */
-const PATROL_SPEED = 55; // px por segundo: ~44 px por ciclo de 8 pasos, sin que los pies resbalen
-const GLITCH_EVERY = 6; // ciclos de paso (6 × 0,8 s ≈ 5 s)
-
-const initPatrol = () => {
-  const actor = getActor('springtrap');
-  const patrol = actor?.closest<HTMLElement>('.stack__patrol');
-  const track = patrol?.querySelector<HTMLElement>('.stack__patrol-track');
-  if (!actor || !patrol || !track || reducedMotion()) return;
-  let dir: 'right' | 'left' = 'right';
-  let cycles = 0;
-
-  const setPace = () =>
-    track.style.setProperty('--patrol-dur', `${track.offsetWidth / PATROL_SPEED}s`);
-  const walk = () => {
-    cycles = 0;
-    patrol.dataset.phase = 'walk';
-    play(actor, `springtrap-walk-${dir}`);
-  };
-
-  // El contenedor llega a un extremo: gira (una pasada) y camina hacia el otro lado.
-  track.addEventListener('animationend', async (event) => {
-    if (event.target !== track) return;
-    patrol.dataset.phase = 'turn';
-    const next = dir === 'right' ? 'left' : 'right';
-    if (!(await play(actor, `springtrap-turn-${next}`))) return;
-    dir = next;
-    setPace();
-    patrol.dataset.dir = dir; // cambia el keyframe del contenedor y lo reinicia desde este extremo
-    walk();
-  });
-
-  // Cada ciclo de paso cuenta; cada ~5 s el glitch congela el avance sin cambiar de lado.
-  actor.addEventListener('animationiteration', async () => {
-    if (patrol.dataset.phase !== 'walk' || ++cycles < GLITCH_EVERY) return;
-    patrol.dataset.phase = 'glitch';
-    if (await play(actor, `springtrap-glitch-${dir}`)) walk();
-  });
-
-  setPace();
-};
-
 /* ---------- Contact: Frisk saluda al llegar ---------- */
 let friskObserver: IntersectionObserver | undefined;
 
@@ -203,7 +136,5 @@ const initFrisk = () => {
 /** Se llama en cada astro:page-load: cada página arranca a sus actores. */
 export const initActors = () => {
   initButterfly();
-  initSummon();
-  initPatrol();
   initFrisk();
 };
