@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
-import SiteFooter from '../components/SiteFooter.astro';
 import Sprite from '../components/Sprite.astro';
 import { getContent, localeFromUrl, localePath } from '../content';
 import { techIconSlot } from '../sprites/manifest';
@@ -66,7 +65,6 @@ const segments = (percent: number, tileIndex: number) =>
       </ul>
     </div>
 
-    <SiteFooter slot="after" />
   </PageShell>
 </BaseLayout>
 

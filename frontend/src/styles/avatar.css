@@ -16,41 +16,27 @@
   width: var(--cx-width, var(--box-width));
   height: var(--cx-height, var(--box-height));
 }
-/* El difuminado va en la capa que gira, así el borde que se funde es el del cuadro.
-   En el Hero (fondo con degradado) es una máscara; en el resto, cuyo fondo es liso, un degradado del
-   color del fondo encima: se ve igual y el navegador no recalcula la máscara en cada fotograma. */
+/* El difuminado va en la capa que gira, así el borde que se funde es el del cuadro. Son máscaras: el
+   avatar se vuelve transparente (no se pinta encima un degradado negro que tape la banda u otros
+   elementos). will-change las deja en su propia capa para que el compositor las aplique sin repintar. */
 .cutin__body {
   position: absolute;
   inset: 0;
-}
-.cutin:not([data-page='hero']) .cutin__body::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    var(--color-bg) 0,
-    rgba(7, 17, 12, 0) var(--feather, 16%),
-    rgba(7, 17, 12, 0) calc(100% - var(--feather-r, 0%)),
-    var(--color-bg) 100%
-  );
-}
-.cutin[data-fade]::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    rgba(7, 17, 12, 0) var(--fade-from, var(--box-fade-from)),
-    var(--color-bg) var(--fade-to, var(--box-fade-to))
-  );
-}
-.cutin[data-page='hero'] .cutin__body {
+  will-change: transform;
   mask-image: linear-gradient(
     90deg,
     transparent 0,
     #000 var(--feather, 16%),
     #000 calc(100% - var(--feather-r, 0%)),
     transparent 100%
+  );
+}
+/* Fundido inferior: hacia abajo el avatar se vuelve transparente y deja ver lo que hay detrás. */
+.cutin[data-fade] {
+  will-change: transform;
+  mask-image: linear-gradient(
+    #000 var(--fade-from, var(--box-fade-from)),
+    transparent var(--fade-to, var(--box-fade-to))
   );
 }
 .cutin__fall {
@@ -130,7 +116,7 @@
   animation: avatar-walk 2400ms step-end var(--t, 1s) infinite;
   animation-direction: normal;
 }
-/* Hero: dos reposos de 4 s que se turnan en un bucle de 8 s (el segundo va invertido). */
+/* Hero: dos reposos de 2,4 s que se turnan en un bucle de 4,8 s (el segundo va invertido). */
 .cutin__clip--hero-entry {
   animation: avatar-gone 1ms linear 0.8s forwards;
 }
@@ -139,10 +125,10 @@
   opacity: 0;
 }
 .cutin__clip--hero-a {
-  animation: avatar-rest-a 8s linear 0.8s infinite;
+  animation: avatar-rest-a 4.8s linear 0.8s infinite;
 }
 .cutin__clip--hero-b {
-  animation: avatar-rest-b 8s linear 0.8s infinite;
+  animation: avatar-rest-b 4.8s linear 0.8s infinite;
 }
 .cutin__clip--hero-a .cutin__strip,
 .cutin__clip--hero-b .cutin__strip {
@@ -300,4 +286,16 @@
   .cutin__clip--hero-b {
     display: none;
   }
+}
+
+/* Mientras cargan el avatar y las fuentes (scripts/ready.ts) la página no se ve y nada se anima;
+   al terminar, la transición, el avatar y los textos arrancan a la vez. */
+html[data-loading] .page-enter {
+  visibility: hidden;
+}
+html[data-loading] .page-enter,
+html[data-loading] .page-enter *,
+html[data-loading] .page-enter *::before,
+html[data-loading] .page-enter *::after {
+  animation-play-state: paused !important;
 }
