@@ -4,9 +4,10 @@ import PageShell from '../components/PageShell.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
 import Clip from '../components/Clip.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { getContent } from '../content';
+import { getContent, localeFromUrl, localePath } from '../content';
 
-const { ui, contactIntro, contactGlyphs, contacts } = getContent();
+const locale = localeFromUrl(Astro.url);
+const { ui, contactIntro, contactGlyphs, contacts } = getContent(locale);
 const page = ui.pages.contact;
 const isExternal = (href: string) => href.startsWith('http');
 // LinkedIn y el CV aún no tienen destino real: se muestran apagados, no como enlaces muertos.
@@ -63,7 +64,7 @@ const glyph = (id: string) => {
                       <i style={`box-shadow:${g.shadow}`} />
                     </span>
                     <span class="option__label">{contact.label}</span>
-                    <span class="option__sub">Coming soon</span>
+                    <span class="option__sub">{ui.comingSoon}</span>
                   </span>
                 ) : (
                 <a
@@ -103,6 +104,11 @@ const glyph = (id: string) => {
 </BaseLayout>
 
 <style>
+  @media (min-width: 1024px) {
+    .contact__layout {
+      max-width: 820px;
+    }
+  }
   .contact__layout {
     display: flex;
     flex-wrap: wrap;

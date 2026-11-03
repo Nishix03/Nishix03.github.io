@@ -3,9 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
 import Sprite from '../components/Sprite.astro';
-import { getContent } from '../content';
+import { getContent, localeFromUrl, localePath } from '../content';
 
-const { about, ui } = getContent();
+const locale = localeFromUrl(Astro.url);
+const { about, ui } = getContent(locale);
 const page = ui.pages.about;
 ---
 
@@ -98,15 +99,15 @@ const page = ui.pages.about;
         </section>
       </div>
 
-      <nav class="about__cta" aria-label="Next steps">
-        <a class="option" href={about.talk.href} style="font-size:34px;color:var(--color-ink)">
+      <nav class="about__cta" aria-label={ui.nextSteps}>
+        <a class="option" href={localePath(locale, about.talk.href)} style="font-size:34px;color:var(--color-ink)">
           <span class="option__slash" aria-hidden="true" />
           <span class="option__plate" aria-hidden="true" />
           <span class="option__label">{about.talk.label}</span>
           <span class="option__sub">{about.talk.sub}</span>
         </a>
       </nav>
-      <p class="about__cv-soon">{about.cv.label} — coming soon</p>
+      <p class="about__cv-soon">{about.cv.label} — {ui.cvSoon}</p>
     </div>
   </PageShell>
 </BaseLayout>

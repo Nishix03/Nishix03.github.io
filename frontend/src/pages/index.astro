@@ -3,10 +3,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Sprite from '../components/Sprite.astro';
 import Clip from '../components/Clip.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
-import { getContent } from '../content';
+import { getContent, localeFromUrl, localePath } from '../content';
 import { sprites } from '../sprites/manifest';
 
-const { hero, heroOptions, ui } = getContent();
+const locale = localeFromUrl(Astro.url);
+const { hero, heroOptions, ui } = getContent(locale);
 
 // Burbujas cuadradas que suben (plan §10.6): [izquierda %, tamaño px, duración s, retraso s]. Máximo 10.
 const bubbles = [
@@ -64,10 +65,10 @@ const arrows = [
     <div class="hero__inner">
       <div class="hero__main">
         <div class="hero__stack">
-          <p class="hero__label mono hero__item" style="animation-delay: .45s">
+          <p class="hero__label mono hero__item" style="animation-delay: .22s">
             {hero.label}
           </p>
-          <h1 class="hero__name hero__item" style="animation-delay: .51s">
+          <h1 class="hero__name hero__item" style="animation-delay: .28s">
             {hero.name}
           </h1>
           <ul
@@ -76,10 +77,10 @@ const arrows = [
             data-arrow-nav
           >
             {heroOptions.map((option, i) => (
-              <li class="hero__item" style={`animation-delay: ${(0.57 + i * 0.06).toFixed(2)}s`}>
+              <li class="hero__item" style={`animation-delay: ${(0.34 + i * 0.05).toFixed(2)}s`}>
                 <a
                   class="option"
-                  href={`/${option.page}`}
+                  href={localePath(locale, `/${option.page}`)}
                   data-select-item
                   data-sel={String(i === 0)}
                   style={`--opt-size:${option.size}px;color:${option.color}`}
@@ -214,11 +215,12 @@ const arrows = [
     inset: 0;
     background: radial-gradient(circle at 80% 18%, #12493a 0%, #0a2a22 38%, #07110c 80%);
   }
+  /* Rayos fijos: moverlos repintaba el fondo y el avatar que tienen encima en cada fotograma. */
   .hero__ray {
     position: absolute;
     top: -10%;
     height: 130%;
-    animation: drift 9s var(--ease-breathe) infinite alternate;
+    transform: skewX(-20deg);
   }
   .hero__bubble {
     position: absolute;
@@ -239,7 +241,7 @@ const arrows = [
   .hero__word {
     position: absolute;
     inset: 0;
-    animation: slide-up 0.5s var(--ease-p3r) 0.3s both;
+    animation: slide-up 0.5s var(--ease-p3r) 0.3s backwards;
   }
   .hero__word-text {
     position: absolute;
@@ -278,10 +280,10 @@ const arrows = [
     transform-origin: left top;
   }
   .hero__item {
-    animation: cascade 0.45s var(--ease-p3r) both;
+    animation: cascade 0.45s var(--ease-p3r) backwards;
   }
   .hero__late {
-    animation: fade-in 0.3s ease-out 1.1s both;
+    animation: fade-in 0.3s ease-out 0.65s backwards;
   }
   .hero__label {
     margin: 0 0 10px;
@@ -346,7 +348,7 @@ const arrows = [
     inset: 0;
     transform: rotate(-24deg);
     transform-origin: 50% 40%;
-    animation: sil-drop 0.7s var(--ease-drop) 0.15s both;
+    animation: sil-drop 0.7s var(--ease-drop) 0.15s backwards;
   }
   .hero__sway {
     position: absolute;
@@ -395,10 +397,11 @@ const arrows = [
     height: 35px;
   }
 
+  /* A la izquierda: a la derecha quedaba encima del avatar. */
   .hero__hint {
     position: absolute;
     z-index: 2;
-    right: 24px;
+    left: clamp(96px, 14vw, 200px);
     bottom: 20px;
     display: flex;
     gap: 18px;

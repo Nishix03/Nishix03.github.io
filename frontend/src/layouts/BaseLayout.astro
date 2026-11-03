@@ -2,7 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import '../styles/global.css';
-import { getContent } from '../content';
+import { getContent, localeFromUrl, localePath, locales, switchLocale } from '../content';
 
 interface Props {
   title?: string;
@@ -10,25 +10,37 @@ interface Props {
   home?: boolean;
 }
 
-const { ui } = getContent();
+const locale = localeFromUrl(Astro.url);
+const { ui } = getContent(locale);
 const { title = ui.siteTitle, home = false } = Astro.props;
+
+// El avatar es lo primero que se ve: su tira de entrada se pide antes que el CSS de las páginas y las fuentes.
+const avatarPages = ['about', 'projects', 'stack', 'journey', 'contact'];
+const section = Astro.url.pathname.split('/').filter(Boolean).at(-1) ?? '';
+const avatar = home ? 'hero' : avatarPages.includes(section) ? section : undefined;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={ui.description} />
     <meta name="theme-color" content="#07110c" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {locales.map((l) => (
+      <link rel="alternate" hreflang={l} href={new URL(switchLocale(Astro.url, l), Astro.site ?? Astro.url).href} />
+    ))}
+    {avatar && (
+      <link rel="preload" as="image" href={`/avatar/${avatar}-entry.webp`} fetchpriority="high" />
+    )}
     <title>{title}</title>
     <!-- Transición entre páginas: la hacemos nosotros (barrido + círculo), así que se apaga la de Astro. -->
     <ClientRouter fallback="swap" />
   </head>
   <body>
     <a class="skip sr-only" href="#main">
-      Skip to content
+      {ui.skip}
     </a>
     <div class="app">
       <Header />
@@ -36,8 +48,8 @@ const { title = ui.siteTitle, home = false } = Astro.props;
         <slot />
       </main>
       {!home && (
-        <nav class="back" aria-label="Return">
-          <a class="option back__link" href="/">
+        <nav class="back" aria-label={ui.backLabel}>
+          <a class="option back__link" href={localePath(locale)}>
             <span class="option__slash" aria-hidden="true" />
             <span class="option__plate" aria-hidden="true" />
             <span class="option__label back__text">{ui.back}</span>

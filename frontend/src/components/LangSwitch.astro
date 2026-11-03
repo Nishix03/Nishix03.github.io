@@ -1,0 +1,58 @@
+---
+/** Selector de idioma: dos enlaces a la misma página en inglés y en español. */
+import { getContent, localeFromUrl, locales, switchLocale } from '../content';
+
+interface Props {
+  extra?: string;
+}
+
+const { extra } = Astro.props;
+const locale = localeFromUrl(Astro.url);
+const { ui } = getContent(locale);
+---
+
+<nav class:list={['lang', extra]} aria-label={ui.language}>
+  {locales.map((l) => (
+    <a
+      class:list={['lang__btn', { 'lang__btn--on': l === locale }]}
+      href={switchLocale(Astro.url, l)}
+      hreflang={l}
+      lang={l}
+      title={ui.langName[l]}
+      aria-current={l === locale ? 'true' : undefined}
+    >
+      {l.toUpperCase()}
+    </a>
+  ))}
+</nav>
+
+<style>
+  .lang {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid rgba(168, 240, 200, 0.25);
+    border-radius: 8px;
+  }
+  .lang__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    background: transparent;
+    color: var(--color-mint);
+    font-weight: 800;
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .lang__btn:focus-visible {
+    outline: 2px solid var(--color-neon);
+    outline-offset: -2px;
+  }
+  .lang__btn--on {
+    background: var(--color-neon);
+    color: var(--color-bg);
+  }
+</style>

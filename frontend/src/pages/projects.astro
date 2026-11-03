@@ -3,9 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
 import { clip } from '../sprites/clips';
-import { getContent } from '../content';
+import { getContent, localeFromUrl, localePath } from '../content';
 
-const { projects, ui } = getContent();
+const locale = localeFromUrl(Astro.url);
+const { projects, ui } = getContent(locale);
 const page = ui.pages.projects;
 const card = clip('yugioh-card-back-still');
 const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
@@ -80,7 +81,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
           ))}
         </div>
 
-        <a class="projects__back" href="#project-list">↑ Back to the list</a>
+        <a class="projects__back" href="#project-list">{ui.backToList}</a>
         <div class="projects__details" id="project-details" aria-live="polite">
           {projects.map((project, i) => (
             <article class="detail fx-flip" data-panel hidden={i !== 0}>
@@ -97,9 +98,11 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
                 >
                   {stars(project.rank)}
                 </div>
-                <div class="detail__shot fx-cascade" style="animation-delay: .25s">
-                  {project.screenshot}
-                </div>
+                {!project.screenshot.startsWith('[') && (
+                  <div class="detail__shot fx-cascade" style="animation-delay: .25s">
+                    {project.screenshot}
+                  </div>
+                )}
                 <div class="detail__type mono fx-cascade" style="animation-delay: .3s">
                   [ {project.type} ]
                 </div>
@@ -111,7 +114,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
                 </div>
                 {project.href.startsWith('#') ? (
                   <p class="detail__cta detail__cta--soon fx-cascade" style="animation-delay: .45s">
-                    {project.cta.startsWith('[') ? 'Link coming soon' : project.cta}
+                    {project.cta.startsWith('[') ? ui.linkSoon : project.cta}
                   </p>
                 ) : (
                   <a
@@ -205,6 +208,12 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     margin: 0 0 32px;
     color: var(--color-mint);
     font-size: 15px;
+  }
+  /* En escritorio el contenido ocupa la izquierda y deja visible la cara del avatar a la derecha. */
+  @media (min-width: 1024px) {
+    .projects__layout {
+      max-width: 940px;
+    }
   }
   .projects__layout {
     display: flex;

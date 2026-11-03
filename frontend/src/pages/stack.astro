@@ -4,10 +4,11 @@ import PageShell from '../components/PageShell.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import Sprite from '../components/Sprite.astro';
-import { getContent } from '../content';
+import { getContent, localeFromUrl, localePath } from '../content';
 import { techIconSlot } from '../sprites/manifest';
 
-const { stack, stackIntro, ui } = getContent();
+const locale = localeFromUrl(Astro.url);
+const { stack, stackIntro, ui } = getContent(locale);
 const page = ui.pages.stack;
 
 // 10 segmentos que se llenan con scaleX (A23): 20 ms entre segmento y 40 ms entre tarjetas.
@@ -87,6 +88,11 @@ const segments = (percent: number, tileIndex: number) =>
     color: var(--color-mint);
     font-size: 15px;
     line-height: 1.5;
+  }
+  @media (min-width: 1024px) {
+    .stack__layout {
+      max-width: 780px;
+    }
   }
   .stack__layout {
     display: flex;

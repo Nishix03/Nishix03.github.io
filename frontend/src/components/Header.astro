@@ -1,16 +1,18 @@
 ---
 import NishixChat from './NishixChat';
-import { getContent } from '../content';
+import LangSwitch from './LangSwitch.astro';
+import { getContent, localeFromUrl, localePath } from '../content';
 import { sprites } from '../sprites/manifest';
 
-const { ui, chat, chatQuestions } = getContent();
+const locale = localeFromUrl(Astro.url);
+const { ui, chat, chatQuestions } = getContent(locale);
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const icon = sprites.iconNishixAI;
 ---
 
 <header class="header">
   <div class="header__bar">
-    <a class="header__brand focus-ring" href="/">
+    <a class="header__brand focus-ring" href={localePath(locale)}>
       IVÁN RODAS <span class="header__handle mono">{ui.handle}</span>
     </a>
 
@@ -21,27 +23,29 @@ const icon = sprites.iconNishixAI;
       aria-controls="site-menu"
     >
       <span class="header__toggle-bars" aria-hidden="true"></span>
-      <span class="header__toggle-text" data-closed="Menu" data-open="Close">Menu</span>
+      <span class="header__toggle-text" data-closed={ui.menu} data-open={ui.close}>{ui.menu}</span>
     </button>
 
-    <nav class="header__nav" id="site-menu" aria-label="Main">
+    <nav class="header__nav" id="site-menu" aria-label={ui.mainNav}>
       {ui.nav.map((item) => (
         <a
           class="option header__link"
-          href={`/${item.page}`}
-          aria-current={path === `/${item.page}` ? 'page' : undefined}
+          href={localePath(locale, `/${item.page}`)}
+          aria-current={path === localePath(locale, `/${item.page}`) ? 'page' : undefined}
         >
           <span class="option__slash" aria-hidden="true" />
           <span class="option__plate" aria-hidden="true" />
           <span class="option__label">{item.label}</span>
         </a>
       ))}
+      <!-- En móvil el idioma va dentro del menú -->
+      <LangSwitch extra="lang--menu" />
     </nav>
 
     <div class="header__tools">
       <NishixChat
-        client:load
-        transition:persist="nishixai"
+        client:idle
+        transition:persist={`nishixai-${locale}`}
         title={chat.title}
         subtitle={chat.subtitle}
         greeting={chat.greeting}
@@ -51,20 +55,7 @@ const icon = sprites.iconNishixAI;
         questions={chatQuestions}
         iconSrc={icon.ready ? `/sprites/${icon.file}` : undefined}
       />
-      <div class="lang" role="group" aria-label="Language">
-        <button class="lang__btn lang__btn--on" type="button" aria-pressed="true">
-          EN
-        </button>
-        <button
-          class="lang__btn"
-          type="button"
-          aria-pressed="false"
-          aria-disabled="true"
-          title={ui.langSoon}
-        >
-          ES
-        </button>
-      </div>
+      <LangSwitch extra="lang--bar" />
     </div>
   </div>
 </header>
@@ -123,6 +114,32 @@ const icon = sprites.iconNishixAI;
   .header__toggle {
     display: none;
   }
+  /* Escritorio: todo en una fila (marca, 5 apartados, NishixAI e idioma), también con los textos en español. */
+  @media (min-width: 1024px) {
+    .header__bar {
+      flex-wrap: nowrap;
+    }
+    .header__nav {
+      flex-wrap: nowrap;
+      gap: 4px 14px;
+    }
+    .header__link {
+      font-size: 15px;
+      white-space: nowrap;
+    }
+  }
+  @media (min-width: 1280px) {
+    .header__nav {
+      gap: 4px 24px;
+    }
+    .header__link {
+      font-size: 18px;
+    }
+  }
+  /* En escritorio el idioma va en la barra; el del menú solo aparece en móvil. */
+  .header__nav :global(.lang--menu) {
+    display: none;
+  }
 
   /* Móvil (mobile first): barra de una fila (marca, NishixAI, Menu) y los apartados en un panel
      que se abre con el botón. Cada enlace del panel mide 48 px de alto para tocarlo sin fallar. */
@@ -148,8 +165,13 @@ const icon = sprites.iconNishixAI;
       gap: 0;
       min-width: 0;
     }
-    .header__tools .lang {
+    .header__tools :global(.lang) {
       display: none;
+    }
+    .header__nav :global(.lang--menu) {
+      display: flex;
+      align-self: flex-start;
+      margin-top: 8px;
     }
     .header__toggle {
       order: 3;
@@ -239,30 +261,6 @@ const icon = sprites.iconNishixAI;
       font-size: 24px;
     }
   }
-  .lang {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    overflow: hidden;
-    border: 1px solid rgba(168, 240, 200, 0.25);
-    border-radius: 8px;
-  }
-  .lang__btn {
-    min-width: 44px;
-    min-height: 44px;
-    border: 0;
-    background: transparent;
-    color: var(--color-mint);
-    font-weight: 800;
-    font-size: 13px;
-  }
-  .lang__btn--on {
-    background: var(--color-neon);
-    color: var(--color-bg);
-  }
-  .lang__btn[aria-disabled='true'] {
-    cursor: not-allowed;
-  }
 </style>
 
 <script>
@@ -275,7 +273,7 @@ const icon = sprites.iconNishixAI;
       bar.dataset.open = String(open);
       toggle.setAttribute('aria-expanded', String(open));
       const label = toggle.querySelector<HTMLElement>('.header__toggle-text');
-      if (label) label.textContent = open ? 'Close' : 'Menu';
+      if (label) label.textContent = (open ? label.dataset.open : label.dataset.closed) ?? '';
     };
     toggle.addEventListener('click', () => set(bar.dataset.open !== 'true'));
     bar.addEventListener('keydown', (event) => {

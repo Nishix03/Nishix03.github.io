@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-const pages = ['/', '/about', '/projects', '/stack', '/journey', '/contact'];
+const pages = ['/', '/about', '/projects', '/stack', '/journey', '/contact', '/es/', '/es/contact'];
 
 test('sprites reales: cargan todas las hojas y conservan el tamaño de cuadro', async ({ page }) => {
   test.setTimeout(90_000); // recorre seis páginas con hojas grandes
@@ -123,6 +123,22 @@ test('el avatar de cada página es decorativo y carga sus tiras', async ({ page 
 test('Contact muestra un icono pixel por cada medio de contacto', async ({ page }) => {
   await page.goto('/contact');
   await expect(page.locator('.contact__list .contact__ico')).toHaveCount(6);
+});
+
+test('el selector de idioma cambia a español en la misma página y conserva el idioma al navegar', async ({
+  page,
+}) => {
+  await page.goto('/stack');
+  await page.locator('.header__tools a[hreflang="es"]').click();
+  await expect(page).toHaveURL(/\/es\/stack/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+  await expect(page.locator('a.header__link[aria-current="page"]')).toHaveText('Stack');
+  await page.locator('a.header__link', { hasText: 'Proyectos' }).click();
+  await expect(page).toHaveURL(/\/es\/projects/);
+  await expect(page.locator('h1')).toHaveText('Proyectos');
+  await page.locator('.header__tools a[hreflang="en"]').click();
+  await expect(page).toHaveURL(/\/projects/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 });
 
 test('la cabecera marca la página actual con aria-current', async ({ page }) => {

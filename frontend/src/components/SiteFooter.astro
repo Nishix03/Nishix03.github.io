@@ -1,8 +1,9 @@
 ---
 /** Pie de Stack y Contact: crédito y contador de orbes. Va en el slot "after" de PageShell. */
-import { getContent } from '../content';
+import { getContent, localeFromUrl, localePath } from '../content';
 
-const { footer } = getContent();
+const locale = localeFromUrl(Astro.url);
+const { footer } = getContent(locale);
 ---
 
 <footer class="footer">

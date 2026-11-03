@@ -1,4 +1,4 @@
-export type Locale = 'en';
+export type Locale = 'en' | 'es';
 
 export type PageKey = 'projects' | 'stack' | 'journey' | 'about' | 'contact';
 

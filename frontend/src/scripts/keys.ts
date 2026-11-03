@@ -21,9 +21,11 @@ export const initKeys = () => {
       return;
     }
 
-    if (event.key === 'Escape' && location.pathname !== '/') {
+    // Esc vuelve al inicio del idioma actual (/ o /es/).
+    const home = location.pathname === '/es' || location.pathname.startsWith('/es/') ? '/es/' : '/';
+    if (event.key === 'Escape' && location.pathname !== home) {
       const typing = (event.target as HTMLElement).matches('input, textarea');
-      if (!typing) navigate('/');
+      if (!typing) navigate(home);
     }
   });
 };
