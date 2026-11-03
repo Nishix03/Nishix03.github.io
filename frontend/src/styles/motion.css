@@ -9,15 +9,19 @@
    Con fill-mode «backwards» la animación solo se aplica antes y durante: al terminar el elemento
    vuelve a su estilo normal. Con «both» se quedaban aplicados clip-path y filter en capas grandes
    y el navegador repintaba la página entera en cada fotograma (bajaba a ~15 fps). */
+/* La página aparece con opacidad (el compositor la anima sin repintar). Las franjas van fijas a la
+   pantalla: antes medían el alto de la sección (en About ~3500 px) y el navegador no llegaba a
+   dibujarlas, por eso la transición a veces ni se veía. */
 .page-enter {
-  animation: circle-in 0.42s var(--ease-p3r) backwards;
+  animation: page-in 0.32s var(--ease-p3r) backwards;
 }
 .sweep {
-  position: absolute;
-  top: -20%;
-  bottom: -20%;
+  position: fixed;
+  top: -20vh;
+  height: 140vh;
   left: 0;
-  width: 60%;
+  width: 60vw;
+  will-change: transform;
   background: var(--sel);
   transform: translateX(-140%) skewX(-20deg);
   animation:
@@ -29,7 +33,7 @@
 .sweep--white {
   background: var(--color-paper);
   animation-delay: 0.05s, 0.5s;
-  width: 40%;
+  width: 40vw;
 }
 .fx-flip {
   transform-origin: 50% 50%;
@@ -124,6 +128,11 @@
   }
 }
 /* Al acabar el barrido la franja se oculta: con la sección alta (About mide ~3500 px) el skew la dejaba tapando contenido. */
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+}
 @keyframes sweep-off {
   to {
     visibility: hidden;
