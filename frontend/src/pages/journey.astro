@@ -38,8 +38,8 @@ const page = ui.pages.journey;
     <div class="timeline">
       <!-- El personaje camina sobre la barra; LATEST marca el último hito alcanzado -->
       <div class="timeline__walker" aria-hidden="true" data-loop>
-        <!-- Mini Iván camina por el carril de hitos: la tira dibuja los pasos (8 cuadros, 800 ms) y
-             fx-trek lo desplaza de izquierda a derecha. -->
+        <!-- Mini Iván camina por el carril de hitos al ritmo del Iván grande: la tira dibuja dos pasos en
+             2,4 s (el balanceo del grande) y el carril lo desplaza de izquierda a derecha. -->
         <div class="fx-trek timeline__walker-track">
           <!-- Pisada neón, como la de Springtrap: un destello bajo los pies en cada paso (2 por ciclo de 800 ms). -->
           <span class="timeline__step"></span>
@@ -51,7 +51,7 @@ const page = ui.pages.journey;
               width="768"
               height="128"
               decoding="async"
-              style="--d:800ms;--n:8;--e:-87.5%"
+              style="--d:2400ms;--n:8;--e:-87.5%;--w:1.3s"
             />
           </span>
         </div>
@@ -130,11 +130,48 @@ const page = ui.pages.journey;
 </BaseLayout>
 
 <style>
-  /* Escritorio: arriba el contenido va a la izquierda; el avatar ocupa la derecha y no queda tapado. */
+  /* Escritorio: arriba los datos dejan libre la cara del avatar; la línea de tiempo y el resto, que
+     van por debajo de su fundido, ocupan todo el ancho (sin hueco a la derecha). */
   @media (min-width: 1024px) {
-    .journey__top,
-    .timeline {
+    .journey__top {
       max-width: 860px;
+    }
+    .journey__top + .timeline,
+    .timeline,
+    .journey__bottom {
+      position: relative;
+      z-index: 1;
+      max-width: none;
+    }
+    /* Los 9 hitos en una sola fila, alineados con los 9 segmentos de la barra (sin huérfanos). */
+    .timeline .timeline__cards {
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+    }
+  }
+  /* Pantallas medianas: tarjetas más estrechas, texto algo menor para que no toque el borde. */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .timeline .milestone {
+      padding: 10px 8px;
+    }
+    .timeline .milestone__label {
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+  }
+  @media (min-width: 1024px) {
+    /* LATEST y ゴゴゴ justo encima del sexto hito (el último alcanzado), a la altura de mini Iván,
+       en vez de flotar arriba sobre el avatar. 66,67 % = 6 de 9 segmentos. */
+    .timeline .latest {
+      left: auto;
+      right: calc(33.33% + 8px);
+      top: 96px;
+    }
+    .timeline .timeline__menace {
+      left: calc(66.67% + 10px);
+      top: 104px;
+    }
+    .timeline {
+      padding-top: 150px;
     }
   }
   .journey__top {
@@ -228,6 +265,7 @@ const page = ui.pages.journey;
     height: 152px; /* los pies (ancla de suelo) quedan sobre la barra */
   }
   .timeline__walker-track {
+    animation-duration: 33s; /* tres veces más lento que antes, como sus pasos */
     position: absolute;
     left: 0;
     bottom: 0;
@@ -261,13 +299,15 @@ const page = ui.pages.journey;
       0 0 12px var(--color-neon),
       0 0 24px rgba(57, 255, 136, 0.55);
     opacity: 0;
-    animation: walker-step 400ms var(--ease-p3r) infinite;
+    animation: walker-step 1200ms var(--ease-p3r) 1.3s infinite;
   }
+  /* Destello en el primer tercio del paso (cuando apoya el pie) y quieto el resto. */
   @keyframes walker-step {
     0% {
       opacity: 1;
       transform: scale(0.5);
     }
+    33%,
     100% {
       opacity: 0;
       transform: scale(1.6);
@@ -449,6 +489,7 @@ const page = ui.pages.journey;
     line-height: 1.55;
   }
   .diary__link {
+    margin-left: 6px;
     color: var(--color-neon);
     font-weight: 700;
     text-decoration: underline;
