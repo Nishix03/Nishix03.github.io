@@ -1,5 +1,19 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test as base, type Page } from '@playwright/test';
+
+// La página espera a que el avatar y las fuentes estén listos (scripts/ready.ts) antes de mostrarse.
+// Cada page.goto espera también a ese momento, como lo vería el visitante.
+const test = base.extend({
+  page: async ({ page }, use) => {
+    const goto = page.goto.bind(page);
+    page.goto = async (...args) => {
+      const res = await goto(...args);
+      await expect(page.locator('html')).not.toHaveAttribute('data-loading', { timeout: 5000 });
+      return res;
+    };
+    await use(page);
+  },
+});
 
 const pages = ['/', '/about', '/projects', '/stack', '/journey', '/contact', '/es/', '/es/contact'];
 
