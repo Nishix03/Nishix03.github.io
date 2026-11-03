@@ -4,6 +4,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "sprites:build": "node scripts/build-sprites.mjs",
+    "sprites:clips": "node scripts/sync-clips.mjs",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
@@ -31,6 +33,7 @@
     "@types/react-dom": "19.3.0",
     "prettier": "3.9.10",
     "prettier-plugin-astro": "1.1.2",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "sharp": "0.35.5"
   }
 }

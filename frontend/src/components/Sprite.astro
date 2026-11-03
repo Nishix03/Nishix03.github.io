@@ -5,6 +5,7 @@
  * del mismo tamaño para que el layout y los movimientos del boceto sigan funcionando.
  */
 import { sprites, type SpriteSlot } from '../sprites/manifest';
+import '../styles/sprite-keyframes.css';
 
 interface Props {
   sprite: SpriteSlot | keyof typeof sprites;
@@ -24,6 +25,7 @@ const duration = slot.frames > 1 ? slot.frames / slot.fps : 0;
   class:list={['sprite', className, { 'sprite--placeholder': !slot.ready }]}
   style={`width:${slot.width}px;height:${slot.height}px;${background ? `--sprite-bg:${background};` : ''}${color ? `--sprite-fg:${color};` : ''}`}
   data-sprite={slot.id}
+  data-loop
   aria-hidden="true"
 >
   {slot.ready ? (
@@ -36,7 +38,7 @@ const duration = slot.frames > 1 ? slot.frames / slot.fps : 0;
       decoding="async"
       style={
         slot.frames > 1
-          ? `width:${slot.width * slot.frames}px;animation:sprite-strip ${duration}s steps(${slot.frames}) infinite`
+          ? `width:${slot.width * slot.frames}px;animation:sprite-${slot.id} ${duration}s steps(${slot.frames}) infinite`
           : undefined
       }
     />
@@ -56,6 +58,7 @@ const duration = slot.frames > 1 ? slot.frames / slot.fps : 0;
     display: block;
     max-width: none;
     height: 100%;
+    image-rendering: pixelated;
   }
   .sprite--placeholder {
     display: grid;
@@ -78,12 +81,6 @@ const duration = slot.frames > 1 ? slot.frames / slot.fps : 0;
 </style>
 
 <style is:global>
-  /* La tira se desplaza su propio ancho: con steps(n) se ven exactamente n cuadros. */
-  @keyframes sprite-strip {
-    to {
-      transform: translateX(-100%);
-    }
-  }
   @media (prefers-reduced-motion: reduce) {
     .sprite__strip {
       animation: none !important;

@@ -1,0 +1,1289 @@
+{
+  "version": 2,
+  "status": "ready-for-implementation-not-installed",
+  "palette": [
+    "#0b111c",
+    "#171725",
+    "#303348",
+    "#50556d",
+    "#858b9b",
+    "#b3c2d4",
+    "#eef5ff",
+    "#ffffff",
+    "#092064",
+    "#1749ba",
+    "#238cdb",
+    "#49d4ff",
+    "#9feaff",
+    "#452a1b",
+    "#7a3e1d",
+    "#ba6224",
+    "#ef9c38",
+    "#ffd27a",
+    "#573b2a",
+    "#96694b",
+    "#dba174",
+    "#f3c58e",
+    "#ffe457",
+    "#778039",
+    "#a5ac54",
+    "#454b26",
+    "#c83345",
+    "#f34558",
+    "#813f9f",
+    "#b56ed2",
+    "#197e98",
+    "#07110c"
+  ],
+  "clips": {
+    "blue-eyes-idle": {
+      "fps": 6,
+      "loop": true,
+      "action": "Reposo sobre el expositor de Projects",
+      "id": "blue-eyes-idle",
+      "width": 80,
+      "height": 60,
+      "frames": 6,
+      "durationMs": 1000,
+      "anchor": {
+        "x": 40,
+        "y": 57,
+        "kind": "feet"
+      },
+      "source": "blue-eyes",
+      "sourceFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mirrored": false,
+      "file": "sheets/blue-eyes-idle.webp",
+      "png": "sheets/blue-eyes-idle.png",
+      "cssName": "kf-blue-eyes-idle",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/blue-eyes-idle/00.png"
+        },
+        {
+          "index": 1,
+          "x": 80,
+          "y": 0,
+          "file": "keyframes/blue-eyes-idle/01.png"
+        },
+        {
+          "index": 2,
+          "x": 160,
+          "y": 0,
+          "file": "keyframes/blue-eyes-idle/02.png"
+        },
+        {
+          "index": 3,
+          "x": 240,
+          "y": 0,
+          "file": "keyframes/blue-eyes-idle/03.png"
+        },
+        {
+          "index": 4,
+          "x": 320,
+          "y": 0,
+          "file": "keyframes/blue-eyes-idle/04.png"
+        },
+        {
+          "index": 5,
+          "x": 400,
+          "y": 0,
+          "file": "keyframes/blue-eyes-idle/05.png"
+        }
+      ]
+    },
+    "blue-eyes-hover": {
+      "fps": 10,
+      "loop": true,
+      "action": "Aleteo mientras flota junto a las cartas",
+      "id": "blue-eyes-hover",
+      "width": 80,
+      "height": 60,
+      "frames": 6,
+      "durationMs": 600,
+      "anchor": {
+        "x": 40,
+        "y": 57,
+        "kind": "feet"
+      },
+      "source": "blue-eyes",
+      "sourceFrames": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "mirrored": false,
+      "file": "sheets/blue-eyes-hover.webp",
+      "png": "sheets/blue-eyes-hover.png",
+      "cssName": "kf-blue-eyes-hover",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/blue-eyes-hover/00.png"
+        },
+        {
+          "index": 1,
+          "x": 80,
+          "y": 0,
+          "file": "keyframes/blue-eyes-hover/01.png"
+        },
+        {
+          "index": 2,
+          "x": 160,
+          "y": 0,
+          "file": "keyframes/blue-eyes-hover/02.png"
+        },
+        {
+          "index": 3,
+          "x": 240,
+          "y": 0,
+          "file": "keyframes/blue-eyes-hover/03.png"
+        },
+        {
+          "index": 4,
+          "x": 320,
+          "y": 0,
+          "file": "keyframes/blue-eyes-hover/04.png"
+        },
+        {
+          "index": 5,
+          "x": 400,
+          "y": 0,
+          "file": "keyframes/blue-eyes-hover/05.png"
+        }
+      ]
+    },
+    "boyfriend-idle": {
+      "fps": 10,
+      "loop": true,
+      "action": "Reposo a 100 BPM: un ciclo cada 600 ms",
+      "id": "boyfriend-idle",
+      "width": 96,
+      "height": 96,
+      "frames": 6,
+      "durationMs": 600,
+      "anchor": {
+        "x": 48,
+        "y": 93,
+        "kind": "feet"
+      },
+      "source": "boyfriend",
+      "sourceFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mirrored": false,
+      "file": "sheets/boyfriend-idle.webp",
+      "png": "sheets/boyfriend-idle.png",
+      "cssName": "kf-boyfriend-idle",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/boyfriend-idle/00.png"
+        },
+        {
+          "index": 1,
+          "x": 96,
+          "y": 0,
+          "file": "keyframes/boyfriend-idle/01.png"
+        },
+        {
+          "index": 2,
+          "x": 192,
+          "y": 0,
+          "file": "keyframes/boyfriend-idle/02.png"
+        },
+        {
+          "index": 3,
+          "x": 288,
+          "y": 0,
+          "file": "keyframes/boyfriend-idle/03.png"
+        },
+        {
+          "index": 4,
+          "x": 384,
+          "y": 0,
+          "file": "keyframes/boyfriend-idle/04.png"
+        },
+        {
+          "index": 5,
+          "x": 480,
+          "y": 0,
+          "file": "keyframes/boyfriend-idle/05.png"
+        }
+      ]
+    },
+    "boyfriend-up": {
+      "fps": 12,
+      "loop": false,
+      "action": "Flecha up",
+      "hitFrame": 1,
+      "sustainFrame": 2,
+      "releaseFrame": 3,
+      "id": "boyfriend-up",
+      "width": 96,
+      "height": 96,
+      "frames": 4,
+      "durationMs": 333,
+      "anchor": {
+        "x": 48,
+        "y": 93,
+        "kind": "feet"
+      },
+      "source": "boyfriend-arrows",
+      "sourceFrames": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "mirrored": false,
+      "file": "sheets/boyfriend-up.webp",
+      "png": "sheets/boyfriend-up.png",
+      "cssName": "kf-boyfriend-up",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/boyfriend-up/00.png"
+        },
+        {
+          "index": 1,
+          "x": 96,
+          "y": 0,
+          "file": "keyframes/boyfriend-up/01.png"
+        },
+        {
+          "index": 2,
+          "x": 192,
+          "y": 0,
+          "file": "keyframes/boyfriend-up/02.png"
+        },
+        {
+          "index": 3,
+          "x": 288,
+          "y": 0,
+          "file": "keyframes/boyfriend-up/03.png"
+        }
+      ]
+    },
+    "boyfriend-down": {
+      "fps": 12,
+      "loop": false,
+      "action": "Flecha down",
+      "hitFrame": 1,
+      "sustainFrame": 2,
+      "releaseFrame": 3,
+      "id": "boyfriend-down",
+      "width": 96,
+      "height": 96,
+      "frames": 4,
+      "durationMs": 333,
+      "anchor": {
+        "x": 48,
+        "y": 93,
+        "kind": "feet"
+      },
+      "source": "boyfriend-arrows",
+      "sourceFrames": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "mirrored": false,
+      "file": "sheets/boyfriend-down.webp",
+      "png": "sheets/boyfriend-down.png",
+      "cssName": "kf-boyfriend-down",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/boyfriend-down/00.png"
+        },
+        {
+          "index": 1,
+          "x": 96,
+          "y": 0,
+          "file": "keyframes/boyfriend-down/01.png"
+        },
+        {
+          "index": 2,
+          "x": 192,
+          "y": 0,
+          "file": "keyframes/boyfriend-down/02.png"
+        },
+        {
+          "index": 3,
+          "x": 288,
+          "y": 0,
+          "file": "keyframes/boyfriend-down/03.png"
+        }
+      ]
+    },
+    "boyfriend-left": {
+      "fps": 12,
+      "loop": false,
+      "action": "Flecha left",
+      "hitFrame": 1,
+      "sustainFrame": 2,
+      "releaseFrame": 3,
+      "id": "boyfriend-left",
+      "width": 96,
+      "height": 96,
+      "frames": 4,
+      "durationMs": 333,
+      "anchor": {
+        "x": 48,
+        "y": 93,
+        "kind": "feet"
+      },
+      "source": "boyfriend-arrows",
+      "sourceFrames": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "mirrored": false,
+      "file": "sheets/boyfriend-left.webp",
+      "png": "sheets/boyfriend-left.png",
+      "cssName": "kf-boyfriend-left",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/boyfriend-left/00.png"
+        },
+        {
+          "index": 1,
+          "x": 96,
+          "y": 0,
+          "file": "keyframes/boyfriend-left/01.png"
+        },
+        {
+          "index": 2,
+          "x": 192,
+          "y": 0,
+          "file": "keyframes/boyfriend-left/02.png"
+        },
+        {
+          "index": 3,
+          "x": 288,
+          "y": 0,
+          "file": "keyframes/boyfriend-left/03.png"
+        }
+      ]
+    },
+    "boyfriend-right": {
+      "fps": 12,
+      "loop": false,
+      "action": "Flecha right",
+      "hitFrame": 1,
+      "sustainFrame": 2,
+      "releaseFrame": 3,
+      "id": "boyfriend-right",
+      "width": 96,
+      "height": 96,
+      "frames": 4,
+      "durationMs": 333,
+      "anchor": {
+        "x": 48,
+        "y": 93,
+        "kind": "feet"
+      },
+      "source": "boyfriend-arrows",
+      "sourceFrames": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "mirrored": false,
+      "file": "sheets/boyfriend-right.webp",
+      "png": "sheets/boyfriend-right.png",
+      "cssName": "kf-boyfriend-right",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/boyfriend-right/00.png"
+        },
+        {
+          "index": 1,
+          "x": 96,
+          "y": 0,
+          "file": "keyframes/boyfriend-right/01.png"
+        },
+        {
+          "index": 2,
+          "x": 192,
+          "y": 0,
+          "file": "keyframes/boyfriend-right/02.png"
+        },
+        {
+          "index": 3,
+          "x": 288,
+          "y": 0,
+          "file": "keyframes/boyfriend-right/03.png"
+        }
+      ]
+    },
+    "springtrap-walk-right": {
+      "fps": 10,
+      "loop": true,
+      "action": "Patrulla hacia la derecha; traslación externa",
+      "id": "springtrap-walk-right",
+      "width": 64,
+      "height": 80,
+      "frames": 8,
+      "durationMs": 800,
+      "anchor": {
+        "x": 32,
+        "y": 77,
+        "kind": "feet"
+      },
+      "source": "springtrap",
+      "sourceFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "mirrored": false,
+      "file": "sheets/springtrap-walk-right.webp",
+      "png": "sheets/springtrap-walk-right.png",
+      "cssName": "kf-springtrap-walk-right",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-right/00.png"
+        },
+        {
+          "index": 1,
+          "x": 64,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-right/01.png"
+        },
+        {
+          "index": 2,
+          "x": 128,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-right/02.png"
+        },
+        {
+          "index": 3,
+          "x": 192,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-right/03.png"
+        },
+        {
+          "index": 4,
+          "x": 256,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-right/04.png"
+        },
+        {
+          "index": 5,
+          "x": 320,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-right/05.png"
+        },
+        {
+          "index": 6,
+          "x": 384,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-right/06.png"
+        },
+        {
+          "index": 7,
+          "x": 448,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-right/07.png"
+        }
+      ]
+    },
+    "springtrap-walk-left": {
+      "mirror": true,
+      "fps": 10,
+      "loop": true,
+      "action": "Patrulla hacia la izquierda; reflejo horizontal documentado",
+      "id": "springtrap-walk-left",
+      "width": 64,
+      "height": 80,
+      "frames": 8,
+      "durationMs": 800,
+      "anchor": {
+        "x": 32,
+        "y": 77,
+        "kind": "feet"
+      },
+      "source": "springtrap",
+      "sourceFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "mirrored": true,
+      "file": "sheets/springtrap-walk-left.webp",
+      "png": "sheets/springtrap-walk-left.png",
+      "cssName": "kf-springtrap-walk-left",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-left/00.png"
+        },
+        {
+          "index": 1,
+          "x": 64,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-left/01.png"
+        },
+        {
+          "index": 2,
+          "x": 128,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-left/02.png"
+        },
+        {
+          "index": 3,
+          "x": 192,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-left/03.png"
+        },
+        {
+          "index": 4,
+          "x": 256,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-left/04.png"
+        },
+        {
+          "index": 5,
+          "x": 320,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-left/05.png"
+        },
+        {
+          "index": 6,
+          "x": 384,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-left/06.png"
+        },
+        {
+          "index": 7,
+          "x": 448,
+          "y": 0,
+          "file": "keyframes/springtrap-walk-left/07.png"
+        }
+      ]
+    },
+    "springtrap-turn-left": {
+      "fps": 10,
+      "loop": false,
+      "action": "Giro de perfil derecho a izquierdo",
+      "id": "springtrap-turn-left",
+      "width": 64,
+      "height": 80,
+      "frames": 4,
+      "durationMs": 400,
+      "anchor": {
+        "x": 32,
+        "y": 77,
+        "kind": "feet"
+      },
+      "source": "springtrap",
+      "sourceFrames": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "mirrored": false,
+      "file": "sheets/springtrap-turn-left.webp",
+      "png": "sheets/springtrap-turn-left.png",
+      "cssName": "kf-springtrap-turn-left",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/springtrap-turn-left/00.png"
+        },
+        {
+          "index": 1,
+          "x": 64,
+          "y": 0,
+          "file": "keyframes/springtrap-turn-left/01.png"
+        },
+        {
+          "index": 2,
+          "x": 128,
+          "y": 0,
+          "file": "keyframes/springtrap-turn-left/02.png"
+        },
+        {
+          "index": 3,
+          "x": 192,
+          "y": 0,
+          "file": "keyframes/springtrap-turn-left/03.png"
+        }
+      ]
+    },
+    "springtrap-turn-right": {
+      "mirror": true,
+      "fps": 10,
+      "loop": false,
+      "action": "Giro de perfil izquierdo a derecho",
+      "id": "springtrap-turn-right",
+      "width": 64,
+      "height": 80,
+      "frames": 4,
+      "durationMs": 400,
+      "anchor": {
+        "x": 32,
+        "y": 77,
+        "kind": "feet"
+      },
+      "source": "springtrap",
+      "sourceFrames": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "mirrored": true,
+      "file": "sheets/springtrap-turn-right.webp",
+      "png": "sheets/springtrap-turn-right.png",
+      "cssName": "kf-springtrap-turn-right",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/springtrap-turn-right/00.png"
+        },
+        {
+          "index": 1,
+          "x": 64,
+          "y": 0,
+          "file": "keyframes/springtrap-turn-right/01.png"
+        },
+        {
+          "index": 2,
+          "x": 128,
+          "y": 0,
+          "file": "keyframes/springtrap-turn-right/02.png"
+        },
+        {
+          "index": 3,
+          "x": 192,
+          "y": 0,
+          "file": "keyframes/springtrap-turn-right/03.png"
+        }
+      ]
+    },
+    "springtrap-glitch-left": {
+      "fps": 10,
+      "loop": false,
+      "action": "Pausa y tirón ocasional mirando a la izquierda",
+      "id": "springtrap-glitch-left",
+      "width": 64,
+      "height": 80,
+      "frames": 4,
+      "durationMs": 400,
+      "anchor": {
+        "x": 32,
+        "y": 77,
+        "kind": "feet"
+      },
+      "source": "springtrap",
+      "sourceFrames": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "mirrored": false,
+      "file": "sheets/springtrap-glitch-left.webp",
+      "png": "sheets/springtrap-glitch-left.png",
+      "cssName": "kf-springtrap-glitch-left",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/springtrap-glitch-left/00.png"
+        },
+        {
+          "index": 1,
+          "x": 64,
+          "y": 0,
+          "file": "keyframes/springtrap-glitch-left/01.png"
+        },
+        {
+          "index": 2,
+          "x": 128,
+          "y": 0,
+          "file": "keyframes/springtrap-glitch-left/02.png"
+        },
+        {
+          "index": 3,
+          "x": 192,
+          "y": 0,
+          "file": "keyframes/springtrap-glitch-left/03.png"
+        }
+      ]
+    },
+    "springtrap-glitch-right": {
+      "mirror": true,
+      "fps": 10,
+      "loop": false,
+      "action": "Pausa y tirón ocasional mirando a la derecha",
+      "id": "springtrap-glitch-right",
+      "width": 64,
+      "height": 80,
+      "frames": 4,
+      "durationMs": 400,
+      "anchor": {
+        "x": 32,
+        "y": 77,
+        "kind": "feet"
+      },
+      "source": "springtrap",
+      "sourceFrames": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "mirrored": true,
+      "file": "sheets/springtrap-glitch-right.webp",
+      "png": "sheets/springtrap-glitch-right.png",
+      "cssName": "kf-springtrap-glitch-right",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/springtrap-glitch-right/00.png"
+        },
+        {
+          "index": 1,
+          "x": 64,
+          "y": 0,
+          "file": "keyframes/springtrap-glitch-right/01.png"
+        },
+        {
+          "index": 2,
+          "x": 128,
+          "y": 0,
+          "file": "keyframes/springtrap-glitch-right/02.png"
+        },
+        {
+          "index": 3,
+          "x": 192,
+          "y": 0,
+          "file": "keyframes/springtrap-glitch-right/03.png"
+        }
+      ]
+    },
+    "p3-butterfly-fly": {
+      "fps": 12,
+      "loop": true,
+      "action": "Vuelo por la ruta del hero; trayectoria externa",
+      "id": "p3-butterfly-fly",
+      "width": 45,
+      "height": 35,
+      "frames": 8,
+      "durationMs": 667,
+      "anchor": {
+        "x": 22.5,
+        "y": 17.5,
+        "kind": "body-center"
+      },
+      "source": "p3-butterfly",
+      "sourceFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "mirrored": false,
+      "file": "sheets/p3-butterfly-fly.webp",
+      "png": "sheets/p3-butterfly-fly.png",
+      "cssName": "kf-p3-butterfly-fly",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-fly/00.png"
+        },
+        {
+          "index": 1,
+          "x": 45,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-fly/01.png"
+        },
+        {
+          "index": 2,
+          "x": 90,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-fly/02.png"
+        },
+        {
+          "index": 3,
+          "x": 135,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-fly/03.png"
+        },
+        {
+          "index": 4,
+          "x": 180,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-fly/04.png"
+        },
+        {
+          "index": 5,
+          "x": 225,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-fly/05.png"
+        },
+        {
+          "index": 6,
+          "x": 270,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-fly/06.png"
+        },
+        {
+          "index": 7,
+          "x": 315,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-fly/07.png"
+        }
+      ]
+    },
+    "p3-butterfly-hover": {
+      "fps": 8,
+      "loop": true,
+      "action": "Aleteo corto al detenerse sobre la silueta",
+      "id": "p3-butterfly-hover",
+      "width": 45,
+      "height": 35,
+      "frames": 4,
+      "durationMs": 500,
+      "anchor": {
+        "x": 22.5,
+        "y": 17.5,
+        "kind": "body-center"
+      },
+      "source": "p3-butterfly",
+      "sourceFrames": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "mirrored": false,
+      "file": "sheets/p3-butterfly-hover.webp",
+      "png": "sheets/p3-butterfly-hover.png",
+      "cssName": "kf-p3-butterfly-hover",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-hover/00.png"
+        },
+        {
+          "index": 1,
+          "x": 45,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-hover/01.png"
+        },
+        {
+          "index": 2,
+          "x": 90,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-hover/02.png"
+        },
+        {
+          "index": 3,
+          "x": 135,
+          "y": 0,
+          "file": "keyframes/p3-butterfly-hover/03.png"
+        }
+      ]
+    },
+    "frisk-idle": {
+      "fps": 5,
+      "loop": true,
+      "action": "Reposo tranquilo en Contact",
+      "id": "frisk-idle",
+      "width": 60,
+      "height": 75,
+      "frames": 6,
+      "durationMs": 1200,
+      "anchor": {
+        "x": 30,
+        "y": 72,
+        "kind": "feet"
+      },
+      "source": "frisk",
+      "sourceFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mirrored": false,
+      "file": "sheets/frisk-idle.webp",
+      "png": "sheets/frisk-idle.png",
+      "cssName": "kf-frisk-idle",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/frisk-idle/00.png"
+        },
+        {
+          "index": 1,
+          "x": 60,
+          "y": 0,
+          "file": "keyframes/frisk-idle/01.png"
+        },
+        {
+          "index": 2,
+          "x": 120,
+          "y": 0,
+          "file": "keyframes/frisk-idle/02.png"
+        },
+        {
+          "index": 3,
+          "x": 180,
+          "y": 0,
+          "file": "keyframes/frisk-idle/03.png"
+        },
+        {
+          "index": 4,
+          "x": 240,
+          "y": 0,
+          "file": "keyframes/frisk-idle/04.png"
+        },
+        {
+          "index": 5,
+          "x": 300,
+          "y": 0,
+          "file": "keyframes/frisk-idle/05.png"
+        }
+      ]
+    },
+    "frisk-greet": {
+      "fps": 8,
+      "loop": false,
+      "action": "Saludo al entrar a Contact o al enfocar un enlace",
+      "id": "frisk-greet",
+      "width": 60,
+      "height": 75,
+      "frames": 6,
+      "durationMs": 750,
+      "anchor": {
+        "x": 30,
+        "y": 72,
+        "kind": "feet"
+      },
+      "source": "frisk",
+      "sourceFrames": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "mirrored": false,
+      "file": "sheets/frisk-greet.webp",
+      "png": "sheets/frisk-greet.png",
+      "cssName": "kf-frisk-greet",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/frisk-greet/00.png"
+        },
+        {
+          "index": 1,
+          "x": 60,
+          "y": 0,
+          "file": "keyframes/frisk-greet/01.png"
+        },
+        {
+          "index": 2,
+          "x": 120,
+          "y": 0,
+          "file": "keyframes/frisk-greet/02.png"
+        },
+        {
+          "index": 3,
+          "x": 180,
+          "y": 0,
+          "file": "keyframes/frisk-greet/03.png"
+        },
+        {
+          "index": 4,
+          "x": 240,
+          "y": 0,
+          "file": "keyframes/frisk-greet/04.png"
+        },
+        {
+          "index": 5,
+          "x": 300,
+          "y": 0,
+          "file": "keyframes/frisk-greet/05.png"
+        }
+      ]
+    },
+    "yugioh-card-back-still": {
+      "fps": 0,
+      "loop": false,
+      "action": "Reverso real de Yu-Gi-Oh: remolino marrón/naranja; reemplaza el arcano propio",
+      "id": "yugioh-card-back-still",
+      "width": 118,
+      "height": 172,
+      "frames": 1,
+      "durationMs": 0,
+      "anchor": {
+        "x": 59,
+        "y": 169,
+        "kind": "feet"
+      },
+      "source": "yugioh-card-back",
+      "sourceFrames": [
+        0
+      ],
+      "mirrored": false,
+      "file": "sheets/yugioh-card-back-still.webp",
+      "png": "sheets/yugioh-card-back-still.png",
+      "cssName": "kf-yugioh-card-back-still",
+      "reducedMotionFrame": 0,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/yugioh-card-back-still/00.png"
+        }
+      ]
+    },
+    "blue-eyes-emerge-summon": {
+      "fps": 12,
+      "loop": false,
+      "action": "Blue-Eyes sale de una carta de Yu-Gi-Oh al revelar un proyecto",
+      "terminalFrame": 11,
+      "id": "blue-eyes-emerge-summon",
+      "width": 256,
+      "height": 256,
+      "frames": 12,
+      "durationMs": 1000,
+      "anchor": {
+        "x": 128,
+        "y": 251,
+        "kind": "card-bottom"
+      },
+      "source": "blue-eyes-emerge",
+      "sourceFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "fixedCard": {
+        "x": 80,
+        "y": 111,
+        "width": 96,
+        "height": 140,
+        "source": "yugioh-card-back-still"
+      },
+      "overlayFile": "sheets/blue-eyes-emerge-summon-overlay.webp",
+      "mirrored": false,
+      "file": "sheets/blue-eyes-emerge-summon.webp",
+      "png": "sheets/blue-eyes-emerge-summon.png",
+      "cssName": "kf-blue-eyes-emerge-summon",
+      "reducedMotionFrame": 11,
+      "keyframes": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/00.png"
+        },
+        {
+          "index": 1,
+          "x": 256,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/01.png"
+        },
+        {
+          "index": 2,
+          "x": 512,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/02.png"
+        },
+        {
+          "index": 3,
+          "x": 768,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/03.png"
+        },
+        {
+          "index": 4,
+          "x": 1024,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/04.png"
+        },
+        {
+          "index": 5,
+          "x": 1280,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/05.png"
+        },
+        {
+          "index": 6,
+          "x": 1536,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/06.png"
+        },
+        {
+          "index": 7,
+          "x": 1792,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/07.png"
+        },
+        {
+          "index": 8,
+          "x": 2048,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/08.png"
+        },
+        {
+          "index": 9,
+          "x": 2304,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/09.png"
+        },
+        {
+          "index": 10,
+          "x": 2560,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/10.png"
+        },
+        {
+          "index": 11,
+          "x": 2816,
+          "y": 0,
+          "file": "keyframes/blue-eyes-emerge-summon/11.png"
+        }
+      ]
+    }
+  },
+  "actions": {
+    "hero": {
+      "idle": "boyfriend-idle",
+      "ArrowUp": "boyfriend-up",
+      "ArrowDown": "boyfriend-down",
+      "ArrowLeft": "boyfriend-left",
+      "ArrowRight": "boyfriend-right",
+      "butterflyFly": "p3-butterfly-fly",
+      "butterflyHover": "p3-butterfly-hover"
+    },
+    "projects": {
+      "card": "yugioh-card-back-still",
+      "idle": "blue-eyes-idle",
+      "hover": "blue-eyes-hover",
+      "reveal": "blue-eyes-emerge-summon"
+    },
+    "stack": {
+      "right": "springtrap-walk-right",
+      "left": "springtrap-walk-left",
+      "turnLeft": "springtrap-turn-left",
+      "turnRight": "springtrap-turn-right",
+      "glitchLeft": "springtrap-glitch-left",
+      "glitchRight": "springtrap-glitch-right"
+    },
+    "contact": {
+      "idle": "frisk-idle",
+      "enter": "frisk-greet"
+    }
+  }
+}

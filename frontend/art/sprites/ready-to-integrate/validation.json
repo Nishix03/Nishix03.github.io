@@ -1,0 +1,154 @@
+[
+  {
+    "id": "blue-eyes-idle",
+    "frames": 6,
+    "distinct": 6,
+    "width": 80,
+    "height": 60,
+    "lossless": true
+  },
+  {
+    "id": "blue-eyes-hover",
+    "frames": 6,
+    "distinct": 6,
+    "width": 80,
+    "height": 60,
+    "lossless": true
+  },
+  {
+    "id": "boyfriend-idle",
+    "frames": 6,
+    "distinct": 6,
+    "width": 96,
+    "height": 96,
+    "lossless": true
+  },
+  {
+    "id": "boyfriend-up",
+    "frames": 4,
+    "distinct": 4,
+    "width": 96,
+    "height": 96,
+    "lossless": true
+  },
+  {
+    "id": "boyfriend-down",
+    "frames": 4,
+    "distinct": 4,
+    "width": 96,
+    "height": 96,
+    "lossless": true
+  },
+  {
+    "id": "boyfriend-left",
+    "frames": 4,
+    "distinct": 4,
+    "width": 96,
+    "height": 96,
+    "lossless": true
+  },
+  {
+    "id": "boyfriend-right",
+    "frames": 4,
+    "distinct": 4,
+    "width": 96,
+    "height": 96,
+    "lossless": true
+  },
+  {
+    "id": "springtrap-walk-right",
+    "frames": 8,
+    "distinct": 8,
+    "width": 64,
+    "height": 80,
+    "lossless": true
+  },
+  {
+    "id": "springtrap-walk-left",
+    "frames": 8,
+    "distinct": 8,
+    "width": 64,
+    "height": 80,
+    "lossless": true
+  },
+  {
+    "id": "springtrap-turn-left",
+    "frames": 4,
+    "distinct": 4,
+    "width": 64,
+    "height": 80,
+    "lossless": true
+  },
+  {
+    "id": "springtrap-turn-right",
+    "frames": 4,
+    "distinct": 4,
+    "width": 64,
+    "height": 80,
+    "lossless": true
+  },
+  {
+    "id": "springtrap-glitch-left",
+    "frames": 4,
+    "distinct": 4,
+    "width": 64,
+    "height": 80,
+    "lossless": true
+  },
+  {
+    "id": "springtrap-glitch-right",
+    "frames": 4,
+    "distinct": 4,
+    "width": 64,
+    "height": 80,
+    "lossless": true
+  },
+  {
+    "id": "p3-butterfly-fly",
+    "frames": 8,
+    "distinct": 8,
+    "width": 45,
+    "height": 35,
+    "lossless": true
+  },
+  {
+    "id": "p3-butterfly-hover",
+    "frames": 4,
+    "distinct": 4,
+    "width": 45,
+    "height": 35,
+    "lossless": true
+  },
+  {
+    "id": "frisk-idle",
+    "frames": 6,
+    "distinct": 6,
+    "width": 60,
+    "height": 75,
+    "lossless": true
+  },
+  {
+    "id": "frisk-greet",
+    "frames": 6,
+    "distinct": 6,
+    "width": 60,
+    "height": 75,
+    "lossless": true
+  },
+  {
+    "id": "yugioh-card-back-still",
+    "frames": 1,
+    "distinct": 1,
+    "width": 118,
+    "height": 172,
+    "lossless": true
+  },
+  {
+    "id": "blue-eyes-emerge-summon",
+    "frames": 12,
+    "distinct": 12,
+    "width": 256,
+    "height": 256,
+    "lossless": true
+  }
+]

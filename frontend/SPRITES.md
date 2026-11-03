@@ -1,34 +1,20 @@
-# Encargo de sprites para Codex
+# Entrega de sprites lista para implementar
 
-El frontend ya espera cada sprite con un tamaño y una cantidad de cuadros fijos
-(`src/sprites/manifest.ts`). Diseño y personalidad de cada personaje: `../plan-diseno-frontend-portafolio.md` §14
-(reparto, adornos, tabla de tono y reglas de originalidad en §14.6).
+Estado: integrado en las páginas el 2 nov 2026 (`Clip.astro` + `src/scripts/actors.ts`; copia con `npm run sprites:clips`). La fuente de verdad es `art/sprites/ready-to-integrate/manifest.json`.
 
-## Formato de entrega
+Abre `art/sprites/ready-to-integrate/preview.html` directamente, sin servidor, para reproducir los ciclos, avanzar cuadro a cuadro y descargar las fuentes Piskel.
 
-- **Una tira horizontal por sprite**, cuadros uno al lado del otro, fondo transparente, WebP sin pérdida.
-- Tamaño de **un cuadro** = columna "Cuadro". Ancho total de la tira = ancho × cuadros.
-- Pixel art con borde de 1 pixel oscuro (`#0b1a12`), sin suavizado (`image-rendering: pixelated` no hace falta si se exporta ya al tamaño final).
-- Paleta base del sitio: verde oscuro `#07110c`, menta `#a8f0c8`, neón `#39ff88`, cian `#49e0f0`, ámbar `#ffb340`.
-- Guarda en `public/sprites/<archivo>` y pon `ready: true` en el manifiesto.
+| Personaje / recurso    | Acciones preparadas                                                           | Cuadro                    |
+| ---------------------- | ----------------------------------------------------------------------------- | ------------------------- |
+| Boyfriend              | Reposo a 100 BPM; arriba, abajo, izquierda y derecha independientes           | 96×96                     |
+| Blue-Eyes White Dragon | Reposo, aleteo y salida de una carta en 12 cuadros                            | 80×60; invocación 256×256 |
+| Springtrap             | Caminar a derecha/izquierda, girar a ambos lados y glitch en cada orientación | 64×80                     |
+| Mariposa de Persona 3  | Vuelo y aleteo de espera                                                      | 45×35                     |
+| Frisk de Undertale     | Reposo y saludo de Contact                                                    | 60×75                     |
+| Reverso de Yu-Gi-Oh    | Remolino naranja/marrón, sin arcano, numeral ni símbolo propio                | 118×172                   |
 
-## Lista
+Incluye 19 secuencias, PNG y WebP sin pérdida, cuadros individuales, metadatos de acciones/anclaje, CSS preparado, fuentes Piskel, originales de imagegen y los prompts exactos. Los archivos de Lumi se retiraron de los recursos fuente, de las exportaciones públicas y de las copias compiladas; el exportador antiguo ya no puede volver a generarlos.
 
-| Archivo                         | Qué es                                                                                                                        | Cuadro | Cuadros | fps |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------ | ------- | --- |
-| `eco.webp`                      | Eco, con micrófono; cuadro 2 con la boca abierta                                                                              | 70×80  | 2       | 3,3 |
-| `butterfly.webp`                | Mariposa del hero, alas abiertas / cerradas                                                                                   | 45×35  | 2       | 6   |
-| `argenta.webp`                  | Argenta, mascota que acompaña la carta; alas arriba / abajo                                                                   | 80×60  | 2       | 3,3 |
-| `tuerca.webp`                   | Tuerca, patrulla el Stack; cuadro 2 con ojos "glitch"                                                                         | 48×64  | 2       | 1   |
-| `lumi.webp`                     | Lumi con farol; cuadro 2 parpadeando                                                                                          | 60×75  | 2       | 1   |
-| `compass.webp`                  | Brújula del diario                                                                                                            | 36×36  | 1       | —   |
-| `menace.webp`                   | Flechas ゴゴゴ junto a LATEST                                                                                                 | 40×24  | 1       | —   |
-| `arrow-left/down/up/right.webp` | Flechas de ritmo, cada una ya orientada                                                                                       | 27×27  | 1       | —   |
-| `icon-nishixai.webp`            | Icono del chat NishixAI                                                                                                       | 36×28  | 1       | —   |
-| `icon-<id>.webp`                | Un icono por tecnología: `html css javascript git playwright java sql typescript astro react tailwind gsap claude-code codex` | 36×28  | 1       | —   |
+La guía concreta para el siguiente implementador está en `art/sprites/ready-to-integrate/IMPLEMENTATION.md`. Conserva los iconos y adornos anteriores como recursos de compatibilidad. Los consumidores ya siguen esa guía; `TarotBack.astro` se retiró y Frisk sustituye a Lumi.
 
-## Reglas
-
-- Los movimientos de cuerpo entero (flotar, vuelo, patrulla, latido) **los hace el CSS**; la tira solo trae el cambio de cuadro.
-- Originales: se inspiran en el tono de la tabla de §14.6, sin copiar siluetas, colores ni rasgos de personajes de otros autores.
-- Los iconos de tecnología son marcas de terceros: usa el color de marca y las dos letras, no el logotipo oficial.
+Para volver a exportar únicamente el paquete: `node scripts/prepare-sprite-handoff.mjs`. Escribe solo dentro de `art/sprites/ready-to-integrate/`.
