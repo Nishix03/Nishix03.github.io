@@ -40,7 +40,8 @@ const { title = ui.siteTitle, home = false } = Astro.props;
           <a class="option back__link" href="/">
             <span class="option__slash" aria-hidden="true" />
             <span class="option__plate" aria-hidden="true" />
-            <span class="option__label">{ui.back}</span>
+            <span class="option__label back__text">{ui.back}</span>
+            <span class="back__arrow" aria-hidden="true">←</span>
           </a>
         </nav>
       )}
@@ -72,6 +73,11 @@ const { title = ui.siteTitle, home = false } = Astro.props;
     background: var(--color-paper);
     color: var(--color-bg);
   }
+  @media (max-width: 767px) {
+    .app {
+      padding-bottom: 72px;
+    }
+  }
   .back {
     position: fixed;
     right: 20px;
@@ -79,6 +85,35 @@ const { title = ui.siteTitle, home = false } = Astro.props;
     z-index: 35;
     display: flex;
     gap: 10px;
+  }
+  .back__arrow {
+    display: none;
+    position: relative;
+  }
+  /* En móvil no hay tecla Esc: el botón es una flecha de 48 px con fondo sólido y sombra. */
+  @media (max-width: 767px) {
+    .back {
+      right: 12px;
+      bottom: 12px;
+    }
+    .back__text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .back__arrow {
+      display: inline;
+      font-size: 26px;
+    }
+    .back__link {
+      min-width: 48px;
+      min-height: 48px;
+      justify-content: center;
+      background: var(--color-bg);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    }
   }
   .back__link {
     font-size: 18px;

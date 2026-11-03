@@ -1,4 +1,20 @@
 /* Chat de NishixAI. BEM: chat / chat__elemento / chat__elemento--modificador. */
+@media (max-width: 767px) {
+  .chat__toggle {
+    margin-right: 0 !important;
+  }
+}
+/* Menos de 360 px: solo el icono (la palabra sigue para lectores de pantalla), así no se solapa con el menú. */
+@media (max-width: 359px) {
+  .chat__toggle .option__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
 .chat__toggle {
   margin-right: 34px;
   align-items: center;

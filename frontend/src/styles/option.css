@@ -141,17 +141,32 @@
   font-size: 24px;
   transition: transform var(--dur-fast) var(--ease-p3r);
 }
-.project-row:is(:hover, :focus-visible, [aria-pressed='true']) {
+.project-row:is(:focus-visible, [aria-pressed='true']) {
   transform: translateX(12px);
 }
-.project-row:is(:hover, :focus-visible, [aria-pressed='true']) .project-row__slash {
+.project-row:is(:focus-visible, [aria-pressed='true']) .project-row__slash {
   transform: scaleX(1);
 }
-.project-row:is(:hover, :focus-visible, [aria-pressed='true']) .project-row__plate {
+.project-row:is(:focus-visible, [aria-pressed='true']) .project-row__plate {
   opacity: 1;
 }
-.project-row:is(:hover, :focus-visible, [aria-pressed='true']) .project-row__in {
+.project-row:is(:focus-visible, [aria-pressed='true']) .project-row__in {
   color: var(--color-bg);
+}
+/* El resaltado por hover solo con ratón y pantalla ancha: en táctil queda «pegado» tras tocar y se verían dos filas resaltadas. */
+@media (hover: hover) and (min-width: 768px) {
+  .project-row:hover {
+    transform: translateX(12px);
+  }
+  .project-row:hover .project-row__slash {
+    transform: scaleX(1);
+  }
+  .project-row:hover .project-row__plate {
+    opacity: 1;
+  }
+  .project-row:hover .project-row__in {
+    color: var(--color-bg);
+  }
 }
 .project-row[aria-pressed='true'] .project-row__badge {
   transform: rotate(-8deg) scale(1.08);

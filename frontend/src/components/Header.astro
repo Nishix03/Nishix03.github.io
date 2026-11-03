@@ -14,7 +14,17 @@ const icon = sprites.iconNishixAI;
       IVÁN RODAS <span class="header__handle mono">{ui.handle}</span>
     </a>
 
-    <nav class="header__nav" aria-label="Main">
+    <button
+      class="header__toggle focus-ring"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-menu"
+    >
+      <span class="header__toggle-bars" aria-hidden="true"></span>
+      <span class="header__toggle-text" data-closed="Menu" data-open="Close">Menu</span>
+    </button>
+
+    <nav class="header__nav" id="site-menu" aria-label="Main">
       {ui.nav.map((item) => (
         <a
           class="option header__link"
@@ -99,7 +109,7 @@ const icon = sprites.iconNishixAI;
   .header__nav {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px 40px;
+    gap: 4px 28px;
   }
   .header__link {
     font-size: 20px;
@@ -109,6 +119,125 @@ const icon = sprites.iconNishixAI;
     display: flex;
     align-items: center;
     gap: 8px;
+  }
+  .header__toggle {
+    display: none;
+  }
+
+  /* Móvil (mobile first): barra de una fila (marca, NishixAI, Menu) y los apartados en un panel
+     que se abre con el botón. Cada enlace del panel mide 48 px de alto para tocarlo sin fallar. */
+  @media (max-width: 767px) {
+    .header__bar {
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      gap: 0 4px;
+      padding-block: 6px;
+    }
+    .header__brand {
+      order: 1;
+      flex: 0 0 auto;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .header__handle {
+      display: none;
+    }
+    .header__tools {
+      order: 2;
+      margin-left: auto;
+      gap: 0;
+      min-width: 0;
+    }
+    .header__tools .lang {
+      display: none;
+    }
+    .header__toggle {
+      order: 3;
+      flex: none;
+      margin-left: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0 12px;
+      border: 1px solid rgba(168, 240, 200, 0.35);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--color-ink);
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .header__toggle-bars,
+    .header__toggle-bars::before,
+    .header__toggle-bars::after {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: currentColor;
+    }
+    .header__toggle-bars {
+      position: relative;
+    }
+    .header__toggle-bars::before,
+    .header__toggle-bars::after {
+      content: '';
+      position: absolute;
+      left: 0;
+    }
+    .header__toggle-bars::before {
+      top: -6px;
+    }
+    .header__toggle-bars::after {
+      top: 6px;
+    }
+    /* En pantallas muy estrechas el botón queda solo con el icono; la palabra sigue para lectores de pantalla. */
+    @media (max-width: 479px) {
+      .header__toggle {
+        padding: 0 13px;
+      }
+      .header__toggle-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+    }
+    /* El panel flota bajo la barra (no empuja la página) con fondo sólido y sombra. */
+    .header__nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      padding: 4px var(--gutter) 12px;
+      background: var(--color-bg);
+      border-bottom: 1px solid rgba(168, 240, 200, 0.25);
+      box-shadow: 0 18px 30px rgba(0, 0, 0, 0.55);
+    }
+    .header__bar[data-open='true'] .header__nav {
+      display: flex;
+    }
+    /* Abierto: las tres barras pasan a ✕ y la etiqueta a «Close». */
+    .header__bar[data-open='true'] .header__toggle-bars {
+      background: transparent;
+    }
+    .header__bar[data-open='true'] .header__toggle-bars::before {
+      top: 0;
+      transform: rotate(45deg);
+    }
+    .header__bar[data-open='true'] .header__toggle-bars::after {
+      top: 0;
+      transform: rotate(-45deg);
+    }
+    .header__link {
+      min-height: 48px;
+      font-size: 24px;
+    }
   }
   .lang {
     position: relative;
@@ -135,3 +264,28 @@ const icon = sprites.iconNishixAI;
     cursor: not-allowed;
   }
 </style>
+
+<script>
+  /** Menú móvil: botón con aria-expanded; Esc lo cierra y devuelve el foco; al elegir un enlace se cierra. */
+  const setup = () => {
+    const bar = document.querySelector<HTMLElement>('.header__bar');
+    const toggle = document.querySelector<HTMLButtonElement>('.header__toggle');
+    if (!bar || !toggle) return;
+    const set = (open: boolean) => {
+      bar.dataset.open = String(open);
+      toggle.setAttribute('aria-expanded', String(open));
+      const label = toggle.querySelector<HTMLElement>('.header__toggle-text');
+      if (label) label.textContent = open ? 'Close' : 'Menu';
+    };
+    toggle.addEventListener('click', () => set(bar.dataset.open !== 'true'));
+    bar.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && bar.dataset.open === 'true') {
+        event.stopPropagation();
+        set(false);
+        toggle.focus();
+      }
+    });
+    bar.querySelectorAll('.header__nav a').forEach((link) => link.addEventListener('click', () => set(false)));
+  };
+  document.addEventListener('astro:page-load', setup);
+</script>

@@ -17,13 +17,15 @@
   width: 60%;
   background: var(--sel);
   transform: translateX(-140%) skewX(-20deg);
-  animation: sweep 0.55s var(--ease-p3r) both;
+  animation:
+    sweep 0.55s var(--ease-p3r) both,
+    sweep-off 1ms linear 0.7s forwards;
   pointer-events: none;
   z-index: 30;
 }
 .sweep--white {
   background: var(--color-paper);
-  animation-delay: 0.06s;
+  animation-delay: 0.06s, 0.7s;
   width: 40%;
 }
 .fx-flip {
@@ -116,6 +118,12 @@
   }
   to {
     clip-path: circle(150% at 92% 4%);
+  }
+}
+/* Al acabar el barrido la franja se oculta: con la sección alta (About mide ~3500 px) el skew la dejaba tapando contenido. */
+@keyframes sweep-off {
+  to {
+    visibility: hidden;
   }
 }
 @keyframes sweep {
