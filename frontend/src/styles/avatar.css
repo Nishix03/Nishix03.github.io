@@ -9,6 +9,8 @@
   position: absolute;
   z-index: 0;
   pointer-events: none;
+  isolation: isolate;
+  backface-visibility: hidden;
   top: var(--cx-top, var(--box-top, auto));
   right: var(--cx-right, var(--box-right, auto));
   bottom: var(--cx-bottom, var(--box-bottom, auto));
@@ -239,6 +241,7 @@
   .cutin[data-page='stack'],
   .cutin[data-page='journey'],
   .cutin[data-page='projects'],
+  .cutin[data-page='contact'],
   .cutin[data-page='about'] {
     opacity: 1;
     --cx-width: 300px;
@@ -251,7 +254,8 @@
   /* El fundido termina en ~290 px: el título queda sobre el borde y el párrafo ya va sobre fondo liso. */
   .cutin[data-page='stack'],
   .cutin[data-page='journey'],
-  .cutin[data-page='projects'] {
+  .cutin[data-page='projects'],
+  .cutin[data-page='contact'] {
     --cx-right: max(-24px, calc(50% - 230px));
     --fade-from: 40%;
     --fade-to: 74%;
@@ -264,8 +268,49 @@
   }
   .page:has(> .cutin[data-page='stack']) > .page__inner,
   .page:has(> .cutin[data-page='journey']) > .page__inner,
-  .page:has(> .cutin[data-page='projects']) > .page__inner {
+  .page:has(> .cutin[data-page='projects']) > .page__inner,
+  .page:has(> .cutin[data-page='contact']) > .page__inner {
     padding-top: 250px;
+  }
+  /* Inicio: el avatar (boca abajo, al estilo P3R) es una franja arriba a opacidad completa; el nombre y el
+     menú van debajo sobre el fondo, sin nada detrás que los recargue. 390×507 = escala ×0,65 exacta de 600×780. */
+  .cutin[data-page='hero'] {
+    opacity: 1;
+    --cx-width: 390px;
+    --cx-height: 507px;
+    --cx-top: -60px;
+    --cx-right: calc(50% - 230px);
+    --fade-from: 34%;
+    --fade-to: 62%;
+  }
+}
+
+/* Tableta vertical (768–1023 px): la misma franja, a escala real (600×780) y recortada por el fundido a cabeza
+   y hombros; el contenido empieza debajo. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .cutin[data-page='stack'],
+  .cutin[data-page='journey'],
+  .cutin[data-page='projects'],
+  .cutin[data-page='contact'],
+  .cutin[data-page='about'] {
+    opacity: 1;
+    --cx-width: 600px;
+    --cx-height: 780px;
+    --cx-top: -40px;
+    --cx-bottom: auto;
+    --cx-right: -40px;
+    --fade-from: 36%;
+    --fade-to: 58%;
+  }
+  .cutin[data-page='about'] {
+    --cx-right: auto;
+    --cx-left: calc(50% - 300px);
+  }
+  .page:has(> .cutin[data-page='stack']) > .page__inner,
+  .page:has(> .cutin[data-page='journey']) > .page__inner,
+  .page:has(> .cutin[data-page='projects']) > .page__inner,
+  .page:has(> .cutin[data-page='contact']) > .page__inner {
+    padding-top: 340px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -298,4 +343,15 @@ html[data-loading] .page-enter *,
 html[data-loading] .page-enter *::before,
 html[data-loading] .page-enter *::after {
   animation-play-state: paused !important;
+}
+
+/* Móvil apaisado: el avatar del inicio va detrás, a la derecha y más tenue (la franja no cabe en 375 px de alto). */
+@media (orientation: landscape) and (max-height: 500px) {
+  .cutin[data-page='hero'] {
+    opacity: 0.45;
+    --cx-top: -20px;
+    --cx-right: -80px;
+    --fade-from: 70%;
+    --fade-to: 100%;
+  }
 }

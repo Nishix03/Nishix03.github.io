@@ -158,8 +158,12 @@ const bubbles = [
     }
     .hero .hero__options {
       display: grid;
-      grid-template-columns: repeat(3, max-content);
-      gap: 0 28px;
+      grid-template-rows: repeat(3, auto);
+      grid-auto-flow: column;
+      gap: 0 40px;
+    }
+    .hero .hero__stack {
+      transform: rotate(-4deg);
     }
     .hero .hero__options :global(.option) {
       font-size: min(var(--opt-size), 8vh);
@@ -168,7 +172,7 @@ const bubbles = [
   /* «↑↓ Move / Enter Confirm» solo sirve con teclado. */
   @media (pointer: coarse) {
     /* Con el dedo no hay teclado: las pistas de teclas no sirven. */
-    .hero__hint {
+    .hero .hero__hint {
       display: none;
     }
   }
@@ -177,15 +181,33 @@ const bubbles = [
       min-height: 0;
     }
     /* Contorno oscuro: el menú se lee sobre el avatar, que en móvil ahora se ve más. */
-    .hero__options :global(.option__label),
     .hero__pitch {
-      text-shadow:
-        0 2px 0 var(--color-bg),
-        0 0 10px var(--color-bg),
-        0 0 18px var(--color-bg);
+      text-shadow: 0 0 12px var(--color-bg);
     }
     .hero .hero__inner {
+      padding-top: 230px;
       padding-bottom: 24px;
+    }
+    /* Menos capas: sin la franja menta lateral ni las burbujas; el menú apenas inclinado y con todas las
+       opciones del mismo tamaño, separadas, en vez de cinco tamaños distintos. */
+    .hero .hero__side,
+    .hero .hero__bubble,
+    .hero .hero__ray {
+      display: none;
+    }
+    .hero .hero__stack {
+      transform: rotate(-4deg);
+    }
+    .hero .hero__name {
+      font-size: min(48px, 12vw);
+    }
+    .hero .hero__options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .hero .hero__options :global(.option) {
+      font-size: clamp(24px, 7vw, 30px);
     }
     /* El escenario de 520 px (de cuando el avatar iba en la columna) no tiene contenido en móvil:
        sin altura, la mariposa sigue volando sobre el texto y no queda un hueco. */
@@ -200,6 +222,22 @@ const bubbles = [
       bottom: auto;
       margin: 0 0 40px clamp(28px, 10vw, 96px);
       flex-wrap: wrap;
+    }
+  }
+  /* Móvil apaisado (poca altura): la franja de arriba dejaría el menú fuera de la pantalla, así que el avatar
+     vuelve detrás, a la derecha, y el menú empieza arriba. Va después de las reglas de móvil para ganarles. */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .hero .hero__inner {
+      padding-top: 72px;
+    }
+    .hero .hero__name {
+      font-size: min(44px, 9vh);
+    }
+    .hero .hero__options {
+      display: grid;
+      grid-template-rows: repeat(3, auto);
+      grid-auto-flow: column;
+      gap: 0 40px;
     }
   }
   .hero {
