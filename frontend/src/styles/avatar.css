@@ -273,15 +273,19 @@
     padding-top: 250px;
   }
   /* Inicio: el avatar (boca abajo, al estilo P3R) es una franja arriba a opacidad completa; el nombre y el
-     menú van debajo sobre el fondo, sin nada detrás que los recargue. 390×507 = escala ×0,65 exacta de 600×780. */
+     menú van debajo sobre el fondo, sin nada detrás que los recargue. Al ir boca abajo, la cabeza queda en la
+     parte BAJA del cuadro (cara y peinado entre el 36 % y el 95 % de la altura) y el torso arriba: se sube el
+     cuadro para recortar el torso, se centra la cara y el fundido empieza donde acaba el peinado. 340×442 =
+     escala ×0,57 de 600×780. */
   .cutin[data-page='hero'] {
     opacity: 1;
-    --cx-width: 390px;
-    --cx-height: 507px;
-    --cx-top: 0;
-    --cx-right: calc(50% - 230px);
-    --fade-from: 34%;
-    --fade-to: 62%;
+    --cx-width: 340px;
+    --cx-height: 442px;
+    --cx-top: -100px;
+    --cx-right: auto;
+    --cx-left: calc(50% - 150px);
+    --fade-from: 90%;
+    --fade-to: 100%;
   }
 }
 
