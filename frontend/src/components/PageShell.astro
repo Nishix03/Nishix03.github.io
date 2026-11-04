@@ -3,20 +3,36 @@
  * Marco de cada página (plan §16.1-16.2): la página entra con un círculo desde arriba a la derecha
  * y dos barridos (color de selección y blanco) la cruzan. Palabra gigante y número grande de fondo,
  * ambos aria-hidden. Con ClientRouter el contenido nuevo se inserta y la animación CSS arranca sola.
+ *
+ * ── Explicación para Iván ──────────────────────────────────────────────────────────────────────
+ * ¿Qué es? El "marco" común de todas las páginas: pone la animación de entrada, la palabra
+ * gigante de fondo y el número grande, y deja huecos donde cada página mete su contenido.
+ * ¿Dónde se usa? Cada página de src/pages envuelve su contenido con <PageShell>...</PageShell>.
+ *
+ * Concepto nuevo: SLOTS. Un <slot /> es un hueco: lo que escribes entre las etiquetas del
+ * componente se coloca ahí. Hay tres:
+ *   - <slot />            (sin nombre) -> el contenido principal de la página.
+ *   - <slot name="bg" />  -> elementos de fondo (p. ej. el avatar); se usan con `slot="bg"`.
+ *   - <slot name="after"/> -> lo que va debajo del contenido (p. ej. el SiteFooter).
+ *
+ * Concepto nuevo: CLIENTROUTER. Es la pieza de Astro que cambia de página sin recargar todo el
+ * navegador (se activa en BaseLayout.astro). Por eso la animación debe poder arrancar sola.
  */
+// Todas las props son opcionales (llevan `?`) y tienen un valor por defecto abajo.
 interface Props {
-  word?: string;
-  num?: string;
-  wordSize?: number;
-  wordTop?: number;
-  wordRight?: number;
-  wordRotate?: number;
-  padTop?: number;
+  word?: string; // Palabra gigante decorativa del fondo.
+  num?: string; // Número grande decorativo (esquina inferior izquierda).
+  wordSize?: number; // Tamaño de la palabra en px.
+  wordTop?: number; // Separación de la palabra al borde superior (px).
+  wordRight?: number; // Separación al borde derecho (px; negativo = se sale un poco).
+  wordRotate?: number; // Giro de la palabra en grados.
+  padTop?: number; // Espacio superior del contenido (px).
   /** Alto mínimo de la sección en px (Stack y Contact necesitan 900 para que quepan avatar y footer). */
   minHeight?: number;
   class?: string;
 }
 
+// Se leen las props y se aplican los valores por defecto (`wordSize = 240`: si no llega, vale 240).
 const {
   word,
   num,
@@ -29,7 +45,12 @@ const {
 } = Astro.props;
 ---
 
+<!--
+  La sección de la página. `page-enter` activa la animación de entrada (círculo + barridos, definida
+  en los estilos globales). `--page-min` pasa el alto mínimo al CSS como variable.
+-->
 <section class:list={['page', 'page-enter', Astro.props.class]} style={`--page-min:${minHeight}px`}>
+  <!-- `word && (...)`: solo se dibuja si se pasó la prop. aria-hidden: es decoración, no se lee en voz alta. -->
   {word && (
     <div
       class="page__word"
@@ -39,20 +60,26 @@ const {
       {word}
     </div>
   )}
+  <!-- Número grande de fondo (también decorativo). -->
   {num && (
     <div class="page__num" aria-hidden="true">
       {num}
     </div>
   )}
+  <!-- Hueco para fondos (avatar, etc.) -->
   <slot name="bg" />
+  <!-- Contenedor centrado del contenido principal; limita el ancho y deja márgenes laterales. -->
   <div class="page__inner" style={`--pad-top:${padTop}px`}>
     <slot />
   </div>
+  <!-- Hueco para lo que va al final (el pie). -->
   <slot name="after" />
+  <!-- Los dos "barridos" de la animación de entrada: una franja de color y otra blanca cruzan la página. -->
   <div class="sweep" aria-hidden="true"></div>
   <div class="sweep sweep--white" aria-hidden="true"></div>
 </section>
 
+<!-- Estilos con BEM (page / page__word / page__num / page__inner) y variables CSS (--page-max, --gutter). -->
 <style>
   /* En columna para que el footer (slot "after") quede siempre pegado al fondo de la sección. */
   .page {
@@ -62,12 +89,13 @@ const {
     overflow: hidden;
     min-height: var(--page-min, 800px);
   }
-  /* Móvil: la sección mide lo que su contenido (como mínimo la pantalla); sin relleno vacío al final. */
+  /* (Mobile first: lo anterior vale para todos; este bloque ajusta pantallas de hasta 767 px.) Móvil: la sección mide lo que su contenido (como mínimo la pantalla); sin relleno vacío al final. */
   @media (max-width: 767px) {
     .page {
       min-height: calc(100svh - var(--header-h));
     }
   }
+  /* Palabra gigante: posición absoluta dentro de .page y muy transparente (5%) para que sea solo ambiente. */
   .page__word {
     position: absolute;
     font-weight: 900;
@@ -85,6 +113,7 @@ const {
     color: rgba(255, 62, 95, 0.07);
     line-height: 0.8;
   }
+  /* z-index: 1 pone el contenido por encima de las decoraciones del fondo. */
   .page__inner {
     position: relative;
     z-index: 1;

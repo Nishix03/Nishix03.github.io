@@ -1,21 +1,44 @@
 ---
+/**
+ * Cabecera fija del sitio: marca (IVÁN RODAS), menú de navegación, botón del chat NishixAI y
+ * selector de idioma. Se usa una sola vez, dentro de src/layouts/BaseLayout.astro, así que
+ * aparece en todas las páginas. No recibe props: todo lo saca de la URL y del contenido.
+ *
+ * Concepto nuevo: ISLA DE REACT. Astro genera HTML sin JavaScript. Cuando necesitamos algo
+ * interactivo de React (el chat), lo incrustamos como "isla" y le ponemos una directiva
+ * `client:*` para que se cargue solo ese trozo en el navegador.
+ */
 import NishixChat from './NishixChat';
 import LangSwitch from './LangSwitch.astro';
 import { getContent, localeFromUrl, localePath } from '../content';
 import { sprites } from '../sprites/manifest';
 
+// 1) ¿En qué idioma estamos? Se deduce de la URL (/en/..., /es/...).
 const locale = localeFromUrl(Astro.url);
+// 2) Textos de ese idioma: `ui` (menú, etiquetas), `chat` (textos del chat) y las preguntas rápidas.
 const { ui, chat, chatQuestions } = getContent(locale);
+// 3) Ruta actual sin la barra final ("/es/stack/" -> "/es/stack"); si queda vacía, es "/".
+//    Sirve para saber qué enlace del menú es la página actual (aria-current).
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+// 4) Icono pixel del chat. Si todavía no está listo (`ready`), el chat muestra las letras NX.
 const icon = sprites.iconNishixAI;
 ---
 
+<!-- <header> es una "landmark" (zona con significado) para lectores de pantalla. BEM: header__elemento. -->
 <header class="header">
   <div class="header__bar">
+    <!-- Marca: enlaza al inicio del idioma actual. `focus-ring` es una clase global para el foco con teclado. -->
     <a class="header__brand focus-ring" href={localePath(locale)}>
       IVÁN RODAS <span class="header__handle mono">{ui.handle}</span>
     </a>
 
+    <!--
+      Botón de menú (solo se ve en móvil). Atributos ARIA (accesibilidad):
+      - aria-expanded: dice si el menú está abierto (true) o cerrado (false); el script de abajo lo actualiza.
+      - aria-controls: indica qué elemento controla (el <nav id="site-menu">).
+      Las tres barras del icono se dibujan solo con CSS (aria-hidden: son decoración).
+      El texto cambia entre data-closed ("Menú") y data-open ("Cerrar").
+    -->
     <button
       class="header__toggle focus-ring"
       type="button"
@@ -26,7 +49,9 @@ const icon = sprites.iconNishixAI;
       <span class="header__toggle-text" data-closed={ui.menu} data-open={ui.close}>{ui.menu}</span>
     </button>
 
+    <!-- Navegación principal. aria-label le pone nombre a la zona para lectores de pantalla. -->
     <nav class="header__nav" id="site-menu" aria-label={ui.mainNav}>
+      <!-- Un enlace por apartado; .map() repite el bloque para cada elemento de ui.nav. -->
       {ui.nav.map((item) => (
         <a
           class="option header__link"
@@ -42,6 +67,13 @@ const icon = sprites.iconNishixAI;
       <LangSwitch extra="lang--menu" />
     </nav>
 
+    <!--
+      Herramientas: chat y idioma (en escritorio). Directivas del chat:
+      - client:idle -> hidrata (activa) la isla de React cuando el navegador está libre, sin frenar la carga.
+      - transition:persist -> con ClientRouter, el chat NO se destruye al cambiar de página y conserva la
+        conversación; el nombre incluye el idioma para que cada idioma tenga su propio chat.
+      Todo lo demás son props con textos ya traducidos.
+    -->
     <div class="header__tools">
       <NishixChat
         client:idle
@@ -60,7 +92,15 @@ const icon = sprites.iconNishixAI;
   </div>
 </header>
 
+<!--
+  Estilos con BEM y mobile first: lo de arriba vale para móvil y los @media (min-width) lo adaptan a
+  pantallas grandes. Aquí hay además un bloque (max-width: 1023px) con los ajustes específicos del
+  menú desplegable móvil. Variables CSS (--color-*, --gutter) vienen de src/styles/global.css.
+  En el bloque de estilos de Astro el CSS es "scoped" (solo afecta a este componente); por eso se usa :global()
+  para llegar a clases de otro componente (.lang de LangSwitch).
+-->
 <style>
+  /* Cabecera pegajosa (sticky): se queda arriba al hacer scroll, por encima del contenido (z-index). */
   .header {
     position: sticky;
     top: 0;
@@ -111,6 +151,7 @@ const icon = sprites.iconNishixAI;
     align-items: center;
     gap: 8px;
   }
+  /* El botón de menú está oculto por defecto; solo se muestra en el bloque móvil de más abajo. */
   .header__toggle {
     display: none;
   }
@@ -263,19 +304,29 @@ const icon = sprites.iconNishixAI;
   }
 </style>
 
+<!--
+  Este bloque de script corre en el NAVEGADOR (a diferencia del frontmatter, que corre al construir la web).
+  Astro lo empaqueta como módulo. Menú móvil: el estado (abierto/cerrado) se guarda en un atributo
+  data-open de la barra y el CSS lo usa para mostrar el panel.
+-->
 <script>
   /** Menú móvil: botón con aria-expanded; Esc lo cierra y devuelve el foco; al elegir un enlace se cierra. */
   const setup = () => {
+    // Buscamos los elementos; si no existen (otra página sin cabecera) no hacemos nada.
     const bar = document.querySelector<HTMLElement>('.header__bar');
     const toggle = document.querySelector<HTMLButtonElement>('.header__toggle');
     if (!bar || !toggle) return;
+    // `set(open)`: único sitio que cambia el estado; mantiene sincronizados el atributo data-open
+    // (para el CSS), aria-expanded (para lectores de pantalla) y el texto del botón.
     const set = (open: boolean) => {
       bar.dataset.open = String(open);
       toggle.setAttribute('aria-expanded', String(open));
       const label = toggle.querySelector<HTMLElement>('.header__toggle-text');
       if (label) label.textContent = (open ? label.dataset.open : label.dataset.closed) ?? '';
     };
+    // Clic en el botón: alterna entre abierto y cerrado.
     toggle.addEventListener('click', () => set(bar.dataset.open !== 'true'));
+    // Tecla Escape con el menú abierto: lo cierra y devuelve el foco al botón (buena práctica de accesibilidad).
     bar.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && bar.dataset.open === 'true') {
         event.stopPropagation();
@@ -283,7 +334,10 @@ const icon = sprites.iconNishixAI;
         toggle.focus();
       }
     });
+    // Al pulsar cualquier enlace del menú, se cierra.
     bar.querySelectorAll('.header__nav a').forEach((link) => link.addEventListener('click', () => set(false)));
   };
+  // Con ClientRouter la página no se recarga del todo al navegar; el evento `astro:page-load` salta en
+  // la primera carga y en cada navegación, así el menú se vuelve a preparar siempre.
   document.addEventListener('astro:page-load', setup);
 </script>

@@ -3,6 +3,17 @@
  * Boceto animado de la pose de cada apartado (plan §15.3a). Mismo marco y mismos tiempos que el
  * prototipo; cuando Codex/Blender entreguen la tira WebP del personaje 3D, solo cambia el <svg>.
  * La figura es decorativa (aria-hidden): el texto de la pantalla ya lo dice todo.
+ *
+ * ── Explicación para Iván ──────────────────────────────────────────────────────────────────────
+ * ¿Qué es? Un dibujo de líneas (SVG) del personaje en una pose distinta según el apartado, con
+ * una pequeña ficha de texto debajo (etiqueta, descripción y línea de tiempo de la animación).
+ * Es un "boceto" provisional hasta que llegue el arte final.
+ * Props: `variant` (obligatoria; cuál de las 4 poses), `arcanaNumerals` (lista de numerales para la
+ * tableta de Projects), `class` y `style` (extras opcionales).
+ *
+ * Concepto nuevo: SVG. Es un formato de imagen basado en texto/etiquetas (círculos, rectángulos,
+ * trazos `path`...). Se escala sin perder calidad y se puede animar con CSS (clases `sk-*`).
+ * El `viewBox="0 0 240 320"` define el sistema de coordenadas interno; width/height solo lo escalan.
  */
 interface Props {
   variant: 'projects' | 'stack' | 'journey' | 'contact';
@@ -12,8 +23,11 @@ interface Props {
   style?: string;
 }
 
+// `class` se renombra a `className` (palabra reservada) y `arcanaNumerals` por defecto es lista vacía.
 const { variant, arcanaNumerals = [], class: className, style } = Astro.props;
 
+// Textos de la ficha. Es un objeto con una entrada por variante y `[variant]` al final elige la
+// que toca (acceso por clave). Quedan en inglés porque son notas de diseño, no contenido del sitio.
 const copy = {
   projects: {
     tag: 'VERSION · PROJECTS',
@@ -40,9 +54,16 @@ const copy = {
   },
 }[variant];
 
+// Tamaño en pantalla del SVG: Journey es un poco más pequeño (operador ternario: condición ? si : no).
 const size = variant === 'journey' ? { w: 180, h: 236 } : { w: 190, h: 250 };
 ---
 
+<!--
+  <figure> agrupa la imagen con su texto. aria-hidden: decorativa. `fx-cascade` y `data-loop` son
+  ganchos de los estilos/scripts globales de animación. Colores del trazo en el <svg>: menta (#a8f0c8).
+  Dentro del SVG cada variante dibuja el cuerpo con formas simples: cabeza (circle), torso y piernas
+  (path) y objetos (rect). Las clases `sk-*` (glance, breathe, present...) son animaciones CSS globales.
+-->
 <figure
   class:list={['pose-fig', 'fx-cascade', className]}
   style={style}
@@ -60,6 +81,8 @@ const size = variant === 'journey' ? { w: 180, h: 236 } : { w: 190, h: 250 };
       stroke-linecap="round"
       stroke-linejoin="round"
     >
+      <!-- Cada bloque `{variant === 'x' && (...)}` solo se dibuja si la variante coincide. -->
+      <!-- Pose PROJECTS: sostiene una tableta con el numeral del proyecto elegido. -->
       {variant === 'projects' && (
         <>
           <g class="sk-glance" style="transform-origin: 120px 86px">
@@ -86,6 +109,7 @@ const size = variant === 'journey' ? { w: 180, h: 236 } : { w: 190, h: 250 };
               fill="rgba(232,198,106,.18)"
               stroke="#e8c66a"
             />
+            <!-- Un <text> por numeral; solo el primero es visible, un script muestra el elegido. -->
             <g id="project-numerals">
               {arcanaNumerals.map((numeral, i) => (
                 <text
@@ -106,6 +130,7 @@ const size = variant === 'journey' ? { w: 180, h: 236 } : { w: 190, h: 250 };
           </g>
         </>
       )}
+      <!-- Pose STACK: trabaja en un portátil con piezas (tiles) de tecnologías flotando. -->
       {variant === 'stack' && (
         <>
           <g class="sk-lookup" style="transform-origin: 120px 86px">
@@ -166,6 +191,7 @@ const size = variant === 'journey' ? { w: 180, h: 236 } : { w: 190, h: 250 };
           />
         </>
       )}
+      <!-- Pose JOURNEY: camina con mochila y cuaderno; dos grupos de piernas (a y b) se alternan. -->
       {variant === 'journey' && (
         <>
           <g class="sk-walk">
@@ -198,6 +224,7 @@ const size = variant === 'journey' ? { w: 180, h: 236 } : { w: 190, h: 250 };
           <path d="M14 314 L226 314" stroke="#39ff88" stroke-dasharray="10 8" />
         </>
       )}
+      <!-- Pose CONTACT: móvil en la mano, gesto de invitación y un icono de correo. -->
       {variant === 'contact' && (
         <>
           <g class="sk-nod" style="transform-origin: 120px 86px">
@@ -231,6 +258,7 @@ const size = variant === 'journey' ? { w: 180, h: 236 } : { w: 190, h: 250 };
         </>
       )}
     </svg>
+    <!-- Ficha de texto bajo el dibujo: etiqueta, descripción y línea de tiempo. -->
     <div class="pose-fig__tag">{copy.tag}</div>
     <div>{copy.text}</div>
     <div class="pose-fig__timeline">{copy.timeline}</div>

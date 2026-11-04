@@ -3,11 +3,21 @@
  * Un sprite del reparto. Si Codex ya entregó la tira (`ready`), anima los cuadros con steps()
  * moviendo la tira con transform (compositor, plan §14.2). Si no, muestra una caja de marcador
  * del mismo tamaño para que el layout y los movimientos del boceto sigan funcionando.
+ *
+ * ── Explicación para Iván ──────────────────────────────────────────────────────────────────────
+ * ¿Qué es? Un sprite = un dibujo pixel art pequeño (icono, logo de tecnología...) que puede tener
+ * varios cuadros. Es parecido a Clip.astro pero más simple: una sola animación en bucle.
+ * Props: `sprite` (el nombre en el manifiesto o el objeto ya resuelto), `class`, `fallback` (texto
+ * del marcador si la imagen aún no existe), `background` y `color` (colores del marcador).
+ * Un "marcador" (placeholder) es una cajita provisional que ocupa el mismo espacio que tendrá el
+ * sprite final, para no romper el diseño mientras llega el arte.
  */
 import { sprites, type SpriteSlot } from '../sprites/manifest';
+// Importar un .css en el frontmatter hace que Astro lo incluya en la página (los @keyframes de cada sprite).
 import '../styles/sprite-keyframes.css';
 
 interface Props {
+  // Acepta el objeto completo o solo su nombre (`keyof typeof sprites` = cualquier clave del manifiesto).
   sprite: SpriteSlot | keyof typeof sprites;
   class?: string;
   /** Texto corto del marcador (por ejemplo las dos letras de una tecnología). */
@@ -17,10 +27,17 @@ interface Props {
 }
 
 const { sprite: spriteProp, class: className, fallback, background, color } = Astro.props;
+// Si nos pasaron un texto, buscamos su ficha en el manifiesto; si ya era el objeto, lo usamos tal cual.
 const slot = typeof spriteProp === 'string' ? sprites[spriteProp] : spriteProp;
+// Duración del ciclo = cuadros / cuadros por segundo. Con un solo cuadro no hay animación (0).
 const duration = slot.frames > 1 ? slot.frames / slot.fps : 0;
 ---
 
+<!--
+  Ventana del sprite: tamaño exacto de un cuadro. La clase `sprite--placeholder` (modificador BEM)
+  se añade si el arte todavía no está listo (`!slot.ready`). Las variables --sprite-bg y --sprite-fg
+  permiten personalizar los colores del marcador. Decorativo: aria-hidden.
+-->
 <span
   class:list={['sprite', className, { 'sprite--placeholder': !slot.ready }]}
   style={`width:${slot.width}px;height:${slot.height}px;${background ? `--sprite-bg:${background};` : ''}${color ? `--sprite-fg:${color};` : ''}`}
@@ -28,6 +45,7 @@ const duration = slot.frames > 1 ? slot.frames / slot.fps : 0;
   data-loop
   aria-hidden="true"
 >
+  <!-- Si el arte existe: la tira de cuadros, animada con steps() (saltos secos, sin interpolar). Si no: el marcador. -->
   {slot.ready ? (
     <img
       class="sprite__strip"
@@ -47,7 +65,9 @@ const duration = slot.frames > 1 ? slot.frames / slot.fps : 0;
   )}
 </span>
 
+<!-- BEM: sprite / sprite__strip / sprite__marker / sprite--placeholder. Este bloque es "scoped" (solo este componente). -->
 <style>
+  /* Ventana que recorta la tira para enseñar un solo cuadro. */
   .sprite {
     position: relative;
     display: block;
@@ -60,6 +80,7 @@ const duration = slot.frames > 1 ? slot.frames / slot.fps : 0;
     height: 100%;
     image-rendering: pixelated;
   }
+  /* Marcador provisional: caja con borde discontinuo; usa variables CSS con valor de reserva. */
   .sprite--placeholder {
     display: grid;
     place-items: center;
@@ -80,7 +101,9 @@ const duration = slot.frames > 1 ? slot.frames / slot.fps : 0;
   }
 </style>
 
+<!-- Global (`is:global`) porque la animación se escribe en el atributo style de la <img>; así el !important la anula. -->
 <style is:global>
+  /* Accesibilidad: si el usuario pidió "reducir movimiento" en su sistema, se apaga la animación. */
   @media (prefers-reduced-motion: reduce) {
     .sprite__strip {
       animation: none !important;

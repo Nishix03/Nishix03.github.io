@@ -1,17 +1,29 @@
 ---
-/** Selector de idioma: dos enlaces a la misma página en inglés y en español. */
+/**
+ * Selector de idioma: dos enlaces a la misma página en inglés y en español.
+ *
+ * ── Explicación para Iván ──────────────────────────────────────────────────────────────────────
+ * ¿Dónde se usa? Dos veces dentro de Header.astro: una en la barra (escritorio) y otra dentro del
+ * menú desplegable (móvil). Por eso recibe la prop opcional `extra`: una clase CSS adicional
+ * (`lang--bar` o `lang--menu`) para que Header decida cuál se muestra en cada tamaño de pantalla.
+ * Son enlaces normales (<a>), no botones: cambiar de idioma es ir a otra URL.
+ */
 import { getContent, localeFromUrl, locales, switchLocale } from '../content';
 
+// Props: `extra` es opcional (el `?`), una clase CSS extra para el contenedor.
 interface Props {
   extra?: string;
 }
 
 const { extra } = Astro.props;
+// Idioma actual, deducido de la URL, y los textos de interfaz (`ui`) en ese idioma.
 const locale = localeFromUrl(Astro.url);
 const { ui } = getContent(locale);
 ---
 
+<!-- `class:list` es una ayuda de Astro: junta clases y descarta las vacías/undefined (aquí `extra` puede faltar). -->
 <nav class:list={['lang', extra]} aria-label={ui.language}>
+  <!-- Un enlace por idioma disponible (EN y ES). -->
   {locales.map((l) => (
     <a
       class:list={['lang__btn', { 'lang__btn--on': l === locale }]}
@@ -26,7 +38,16 @@ const { ui } = getContent(locale);
   ))}
 </nav>
 
+<!--
+  Notas de los atributos del enlace de arriba:
+  - class:list con objeto: `lang__btn--on` (modificador BEM) solo se añade si ese idioma es el actual.
+  - href: switchLocale calcula la misma página en el otro idioma.
+  - hreflang / lang: indican a buscadores y lectores de pantalla el idioma del destino.
+  - title: tooltip con el nombre completo del idioma.
+  - aria-current: marca para lectores de pantalla cuál es el idioma activo (undefined = no se escribe).
+-->
 <style>
+  /* Contenedor: caja con borde redondeado que agrupa los botones EN / ES. */
   .lang {
     position: relative;
     z-index: 2;
@@ -35,6 +56,7 @@ const { ui } = getContent(locale);
     border: 1px solid rgba(168, 240, 200, 0.25);
     border-radius: 8px;
   }
+  /* Cada botón mide mínimo 44x44 px: tamaño cómodo para tocar con el dedo (accesibilidad táctil). */
   .lang__btn {
     display: inline-flex;
     align-items: center;
@@ -47,10 +69,12 @@ const { ui } = getContent(locale);
     font-size: 13px;
     text-decoration: none;
   }
+  /* :focus-visible solo dibuja el contorno cuando se navega con teclado, no al hacer clic con el ratón. */
   .lang__btn:focus-visible {
     outline: 2px solid var(--color-neon);
     outline-offset: -2px;
   }
+  /* Modificador BEM: el idioma activo se resalta con el color neón de fondo. */
   .lang__btn--on {
     background: var(--color-neon);
     color: var(--color-bg);

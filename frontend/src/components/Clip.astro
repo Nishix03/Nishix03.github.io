@@ -6,9 +6,18 @@
  *
  * La animación mueve la tira con transform y steps(n, jump-none): n cuadros con la misma duración,
  * y un clip de una sola pasada se queda en su último cuadro (forwards) sin mostrar un cuadro vacío.
+ *
+ * ── Explicación para Iván ──────────────────────────────────────────────────────────────────────
+ * ¿Qué es? Un personaje de pixel art que puede tener varias animaciones ("clips"). Cada clip es
+ * una imagen larga (tira) con sus cuadros en fila. Dentro de la ventana solo se ve un cuadro.
+ * ¿Dónde se usa? En las páginas donde aparece un personaje que cambia de animación según lo que
+ * hace el usuario; el script src/scripts/clips.ts es quien cambia de clip.
+ * Props: `clips` (lista de ids de animación), `name` (nombre del actor), `scale` (zoom entero, por
+ * defecto 1) y `class` (clase extra opcional).
  */
 import { clip, type ClipId } from '../sprites/clips';
 
+// Props que acepta el componente. Los que llevan `?` son opcionales.
 interface Props {
   clips: ClipId[];
   /** Nombre del actor para los scripts: data-actor="boyfriend". */
@@ -18,11 +27,20 @@ interface Props {
   class?: string;
 }
 
+// `class` es palabra reservada en JS, por eso se renombra a `className` al desestructurar.
+// `scale = 1` es un valor por defecto: si no se pasa la prop, vale 1.
 const { clips: ids, name, scale = 1, class: className } = Astro.props;
+// Convertimos cada id (texto) en su ficha completa (archivo, tamaño, cuadros, duración...).
 const list = ids.map(clip);
+// El primer clip es el que se ve al principio (desestructuración de array).
 const [first] = list;
 ---
 
+<!--
+  Ventana del personaje: mide lo que un solo cuadro del primer clip (× escala) y `overflow: hidden`
+  (en el <style> de abajo) recorta el resto de la tira. aria-hidden porque es decoración.
+  Los data-* los leen los scripts: data-actor identifica al personaje y data-clip el clip activo.
+-->
 <span
   class:list={['clip', className]}
   style={`width:${first.width * scale}px;height:${first.height * scale}px`}
@@ -30,7 +48,9 @@ const [first] = list;
   data-clip={first.id}
   aria-hidden="true"
 >
+  <!-- Una <img> por clip, todas apiladas; solo la del primer clip está visible (las demás, `hidden`). -->
   {list.map((c) => {
+    // Ancho de UN cuadro ya escalado; la tira completa mide w × número de cuadros.
     const w = c.width * scale;
     // Cuadro de reposo con movimiento reducido: el final para la invocación, el inicial para el resto.
     const rest = c.terminalFrame ?? c.reducedMotionFrame ?? 0;
@@ -45,6 +65,8 @@ const [first] = list;
         data-clip-name={c.id}
         hidden={c.id !== first.id}
         style={[
+          // Variables CSS por clip: ancho de cuadro, desplazamiento final, nº de pasos, duración,
+          // repeticiones (infinite o 1) y el cuadro fijo para "movimiento reducido".
           `--clip-w:${w}px`,
           `--clip-end:${-(c.frames - 1) * w}px`,
           `--clip-steps:${c.frames}`,
@@ -57,7 +79,13 @@ const [first] = list;
   })}
 </span>
 
+<!--
+  `is:global`: por defecto Astro encierra el CSS de un componente solo en ese componente (scoped).
+  Con `is:global` las reglas valen para toda la web; hace falta porque src/scripts/clips.ts
+  cambia atributos y variables desde fuera. Nombres con BEM: clip / clip__strip / clip__strip--still.
+-->
 <style is:global>
+  /* La ventana: recorta la tira para que solo se vea un cuadro. */
   .clip {
     position: relative;
     display: block;
@@ -73,12 +101,15 @@ const [first] = list;
       steps(var(--play-steps, var(--clip-steps)), jump-none) var(--play-iter, var(--clip-iter))
       forwards;
   }
+  /* Modificador BEM: clip de un solo cuadro, no hay nada que animar. */
   .clip__strip--still {
     animation: none;
   }
+  /* El atributo `hidden` oculta los clips que no están activos. */
   .clip__strip[hidden] {
     display: none;
   }
+  /* Desliza la tira hacia la izquierda; `var(--x, valor)` usa el valor de reserva si --x no existe. */
   @keyframes clip-play {
     from {
       transform: translateX(var(--play-from, 0px));

@@ -1,6 +1,23 @@
 ---
+/**
+ * Layout base: el esqueleto HTML completo (<html>, <head>, <body>) que comparten TODAS las páginas.
+ * Lo usa cada archivo de src/pages envolviendo su contenido: <BaseLayout title="..."> ... </BaseLayout>.
+ *
+ * ── Explicación para Iván ──────────────────────────────────────────────────────────────────────
+ * Concepto nuevo: LAYOUT. Es un componente de Astro que contiene lo común (cabecera, <head>,
+ * scripts globales) para no repetirlo en cada página. El contenido de cada página entra por el
+ * <slot />, el hueco que aparece dentro de <main>.
+ *
+ * Props: `title` (opcional; título de la pestaña, por defecto el del sitio) y `home` (opcional;
+ * true solo en el inicio, donde no se muestra el botón de volver).
+ *
+ * Concepto nuevo: CLIENTROUTER (transiciones de Astro). Convierte el sitio en una "app de una
+ * página": al navegar solo se cambia el contenido y no se recarga todo, lo que permite animar la
+ * entrada y mantener vivo el chat (transition:persist en Header).
+ */
 import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
+// Estilos globales de todo el sitio (variables CSS, tipografías, animaciones de entrada...).
 import '../styles/global.css';
 import { getContent, localeFromUrl, localePath, locales, switchLocale } from '../content';
 
@@ -10,13 +27,19 @@ interface Props {
   home?: boolean;
 }
 
+// Idioma por la URL y textos de interfaz. Luego las props con valores por defecto
+// (`title = ui.siteTitle`: si la página no pasa título, se usa el del sitio).
 const locale = localeFromUrl(Astro.url);
 const { ui } = getContent(locale);
 const { title = ui.siteTitle, home = false } = Astro.props;
 
+// ── Precarga de imágenes del avatar ──
+// Idea: averiguar qué avatar toca en esta página para pedir sus imágenes cuanto antes (<link preload>).
 // El avatar es lo primero que se ve: su tira de entrada se pide antes que el CSS de las páginas y las fuentes.
 const avatarPages = ['about', 'projects', 'stack', 'journey', 'contact'];
+// Última parte de la ruta: "/es/stack/" -> ["es","stack"] -> "stack" (`.at(-1)` = último elemento).
 const section = Astro.url.pathname.split('/').filter(Boolean).at(-1) ?? '';
+// En el inicio -> 'hero'; si la sección tiene avatar -> su nombre; si no -> undefined (sin precarga).
 const avatar = home ? 'hero' : avatarPages.includes(section) ? section : undefined;
 // Todas las tiras de la página (entrada y reposo) a la vez: así no aparece una antes que otra.
 const avatarFiles = !avatar
@@ -29,16 +52,23 @@ const avatarFiles = !avatar
 ---
 
 <!doctype html>
+<!-- lang={locale}: declara el idioma del documento (accesibilidad y buscadores). data-loading lo usa el CSS/JS de la animación de entrada. -->
 <html lang={locale} data-loading>
   <head>
+    <!-- Codificación de caracteres (tildes, ñ...). -->
     <meta charset="utf-8" />
+    <!-- Hace que el diseño se adapte al ancho del móvil (base del enfoque mobile first). -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Descripción que pueden mostrar los buscadores. -->
     <meta name="description" content={ui.description} />
+    <!-- Color de la barra del navegador en móvil. -->
     <meta name="theme-color" content="#07110c" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Enlaces "alternate": le dicen a Google que esta página existe en otros idiomas (uno por idioma). -->
     {locales.map((l) => (
       <link rel="alternate" hreflang={l} href={new URL(switchLocale(Astro.url, l), Astro.site ?? Astro.url).href} />
     ))}
+    <!-- Precarga las imágenes del avatar con prioridad alta (ver cálculo en el frontmatter). -->
     {avatarFiles.map((file) => (
       <link rel="preload" as="image" href={`/avatar/${file}.webp`} fetchpriority="high" />
     ))}
@@ -49,14 +79,19 @@ const avatarFiles = !avatar
     <ClientRouter fallback="swap" />
   </head>
   <body>
+    <!-- Enlace "saltar al contenido": invisible hasta recibir foco con Tab; ayuda a quien navega con teclado. -->
     <a class="skip sr-only" href="#main">
       {ui.skip}
     </a>
     <div class="app">
+      <!-- Cabecera común a todas las páginas. -->
       <Header />
+      <!-- Zona principal. transition:animate="none" apaga la animación por defecto de Astro (usamos la nuestra). -->
       <main id="main" transition:animate="none">
+        <!-- SLOT: aquí se inserta el contenido de cada página. -->
         <slot />
       </main>
+      <!-- Botón "volver" fijo (en todas las páginas menos el inicio). En móvil es una flecha; en escritorio, la tecla Esc. -->
       {!home && (
         <nav class="back" aria-label={ui.backLabel}>
           <a class="option back__link" href={localePath(locale)}>
@@ -68,13 +103,16 @@ const avatarFiles = !avatar
         </nav>
       )}
     </div>
+    <!-- Script del navegador: carga src/scripts/init (comportamientos globales como animaciones y tecla Esc). -->
     <script>
       import '../scripts/init';
     </script>
   </body>
 </html>
 
+<!-- Estilos del layout con BEM (app / skip / back / back__elemento) y variables CSS (--color-*, --font-sans). -->
 <style>
+  /* Contenedor general: ocupa mínimo toda la pantalla y recorta lo que se salga (overflow: hidden). */
   .app {
     position: relative;
     min-height: 100vh;
@@ -83,6 +121,7 @@ const avatarFiles = !avatar
     color: var(--color-ink);
     font-family: var(--font-sans);
   }
+  /* El enlace de saltar solo se hace visible al recibir foco (Tab). */
   .skip:focus {
     position: fixed;
     left: 12px;
@@ -100,6 +139,7 @@ const avatarFiles = !avatar
       padding-bottom: 72px;
     }
   }
+  /* Botón volver: position fixed lo deja siempre visible en la esquina inferior derecha. */
   .back {
     position: fixed;
     right: 20px;

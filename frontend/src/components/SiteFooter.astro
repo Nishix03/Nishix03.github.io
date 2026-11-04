@@ -1,17 +1,29 @@
 ---
-/** Pie de Stack y Contact: crédito y contador de orbes. Va en el slot "after" de PageShell. */
+/**
+ * Pie de Stack y Contact: crédito y contador de orbes. Va en el slot "after" de PageShell.
+ *
+ * ── Explicación para Iván ──────────────────────────────────────────────────────────────────────
+ * ¿Qué hace? Muestra dos textos (crédito y contador de orbes) que vienen del archivo de contenido
+ * según el idioma. No recibe props: el idioma lo saca de la URL.
+ * Uso: `<SiteFooter slot="after" />` dentro de <PageShell>; así queda pegado al fondo de la sección.
+ * (Importa `localePath` pero no lo usa; se deja tal cual para no cambiar código.)
+ */
 import { getContent, localeFromUrl, localePath } from '../content';
 
+// Idioma actual (por la URL) y el bloque `footer` con sus textos traducidos.
 const locale = localeFromUrl(Astro.url);
 const { footer } = getContent(locale);
 ---
 
+<!-- <footer> es la zona de pie de página (landmark para lectores de pantalla). BEM: footer__elemento. -->
 <footer class="footer">
   <span class="footer__credit">{footer.credit}</span>
+  <!-- `mono` es una clase global con tipografía monoespaciada. -->
   <span class="footer__orbs mono">{footer.orbs}</span>
 </footer>
 
 <style>
+  /* margin: auto auto 0 -> centra horizontalmente y, dentro de la columna de PageShell, empuja el pie al fondo. */
   .footer {
     position: relative;
     z-index: 1;

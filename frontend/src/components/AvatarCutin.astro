@@ -5,13 +5,34 @@
  *
  * Cada vista tiene su posición, su inclinación y su difuminado; las tiras (public/avatar) miden
  * 600×780 por cuadro. Ver src/styles/avatar.css para las capas y las animaciones.
+ *
+ * ── Explicación para Iván ──────────────────────────────────────────────────────────────────────
+ * ¿Qué es? Un componente de Astro que dibuja la imagen animada de tu avatar. Cada página del
+ * portafolio (inicio, proyectos, stack...) lo usa con una posición y una inclinación distintas.
+ * ¿Dónde se usa? Dentro de las páginas de src/pages, normalmente en el slot "bg" de PageShell.
+ *
+ * Concepto nuevo: FRONTMATTER. Lo que está entre las dos líneas `---` es código que corre SOLO al
+ * construir la web (en el servidor / al hacer el build), no en el navegador del visitante. Aquí
+ * calculamos cadenas de texto; el HTML de abajo las usa para escribir el resultado final.
+ *
+ * Concepto nuevo: PROPS. Son los datos que le pasas al componente al usarlo, p. ej.
+ * `<AvatarCutin page="hero" />`. Se leen con `Astro.props`.
+ *
+ * Concepto nuevo: SPRITE SHEET / TIRA. Una "tira" es una imagen larga con todos los cuadros de
+ * la animación puestos en fila; el CSS la desliza para que se vea un cuadro distinto cada vez
+ * (igual que un carrete de película).
  */
+
+// Las seis páginas posibles. Es un "tipo unión" de TypeScript: `page` solo puede valer una de
+// estas palabras, y si escribes otra el editor te avisa del error.
 type Page = 'hero' | 'projects' | 'stack' | 'journey' | 'about' | 'contact';
 
+// `interface Props` le dice a Astro qué props acepta este componente. Aquí solo hay una: `page`.
 interface Props {
   page: Page;
 }
 
+// "Vista" = la configuración visual del avatar para una página concreta.
 type View = {
   /** Posición y tamaño de la caja, en CSS. */
   box: string;
@@ -30,10 +51,14 @@ type View = {
   walk?: boolean;
 };
 
+// Recorta (clip-path) lo que se sale por arriba y los lados pero no por abajo; solo lo usa "contact".
 const bottomEdge = 'clip-path:inset(-999px -999px 0 -999px)';
 // Fundido inferior: de a% a b% de la caja el avatar se funde con el fondo (ver .cutin[data-fade]::after).
+// Devuelve dos variables CSS (--nombre) que luego lee avatar.css.
 const maskTo = (a: number, b: number) => `--box-fade-from:${a}%;--box-fade-to:${b}%`;
 
+// Tabla con la configuración de cada página. `Record<Page, View>` significa: "un objeto que tiene
+// una entrada por cada página y cada entrada cumple el tipo View". Así no se nos olvida ninguna.
 const views: Record<Page, View> = {
   hero: {
     box: `right:-150px;top:-130px;width:780px;height:1014px;${maskTo(88, 100)}`,
@@ -79,17 +104,28 @@ const views: Record<Page, View> = {
   },
 };
 
+// Leemos la prop `page` y buscamos su configuración en la tabla de arriba.
 const { page } = Astro.props;
 const view = views[page];
 // La caja va en variables --box-* (valores de escritorio). avatar.css usa --cx-* cuando una pantalla los
 // cambia y si no cae en --box-*: una variable escrita en style ganaría a la de la hoja de estilos.
+// (La expresión regular busca "right:", "top:"... y los convierte en "--box-right:", "--box-top:"...)
 const box = view.box.replace(/\b(right|top|left|bottom|width|height):/g, '--box-$1:');
+// Carpeta/prefijo de las imágenes: /avatar/hero, /avatar/projects, etc. (están en public/avatar).
 const base = `/avatar/${page}`;
+// Duración de la entrada en segundos para el CSS (800 ms -> "0.8s").
 const seconds = `${view.entryMs / 1000}s`;
+// Ancho de la tira = 100% por cada cuadro (24 cuadros -> 2400%); `--n` es el nº de cuadros.
 const strip = (frames: number) => `width:${frames * 100}%;--n:${frames}`;
+// `--e` = hasta dónde se desliza la tira (en %) para terminar justo en el último cuadro.
 const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
 ---
 
+<!--
+  Caja principal del avatar. Es decorativa, por eso aria-hidden="true": los lectores de pantalla
+  la ignoran. `style={box}` mete las variables --box-* calculadas arriba. Los atributos data-*
+  sirven para que el CSS y los scripts reconozcan la página y si lleva fundido.
+-->
 <div
   class="cutin"
   aria-hidden="true"
@@ -98,11 +134,15 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
   data-fade={view.box.includes('--box-fade-from') ? '' : undefined}
   data-loop
 >
+  <!-- BEM: bloque "cutin" y sus elementos "cutin__algo". Cada capa hace una cosa (ver avatar.css). -->
+  <!-- body: aplica la inclinación (rotate) y el difuminado lateral -->
   <div class="cutin__body" style={`transform:rotate(${view.tilt}deg);${view.feather ?? ''}`}>
+    <!-- fall: la caída de entrada; wash y band: capas de color de fondo; drift: pequeño balanceo -->
     <div class="cutin__fall">
       <div class="cutin__wash"></div>
       <div class="cutin__band"></div>
       <div class="cutin__drift">
+        <!-- art: aquí van las imágenes. El inicio usa 3 tiras (entrada + 2 de reposo); el resto, 2. -->
         <div class="cutin__art">
           {page === 'hero' ? (
             <>
@@ -163,8 +203,10 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
           )}
         </div>
       </div>
+      <!-- lines: líneas de velocidad decorativas -->
       <div class="cutin__lines"></div>
     </div>
   </div>
 </div>
+<!-- Difuminado extra en el borde inferior de la sección; solo si la vista tiene `fade: true`. -->
 {view.fade && <div class="cutin-fade" aria-hidden="true"></div>}

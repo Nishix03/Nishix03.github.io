@@ -1,4 +1,17 @@
-/* Chat de NishixAI. BEM: chat / chat__elemento / chat__elemento--modificador. */
+/*
+ * Chat de NishixAI. BEM: chat / chat__elemento / chat__elemento--modificador.
+ *
+ * ¿Qué es? Los estilos del componente React NishixChat.tsx (que los importa con `import './NishixChat.css'`).
+ * Conceptos:
+ * - BEM: bloque `chat`; elementos `chat__head`, `chat__list`...; modificadores `chat__bubble--you`.
+ *   Los dos guiones bajos separan bloque de elemento y los dos guiones separan el modificador.
+ * - Variables CSS: `var(--color-neon)`, `var(--color-surface)`... se definen en los estilos globales
+ *   del sitio (src/styles) y aquí solo se usan. Así cambiar la paleta es tocar un solo sitio.
+ * - Aquí el CSS es global (no "scoped" como el de los .astro), por eso todo cuelga de clases con prefijo `chat`.
+ * Orden del archivo: botón de apertura -> panel -> cabecera -> lista de mensajes -> chips -> formulario.
+ */
+
+/* Móvil/tablet: se quita el margen derecho del botón (en escritorio lleva 34 px, ver .chat__toggle). `!important` fuerza la regla sobre estilos globales. */
 @media (max-width: 1023px) {
   .chat__toggle {
     margin-right: 0 !important;
@@ -15,12 +28,14 @@
     white-space: nowrap;
   }
 }
+/* Botón que abre el chat (cabecera). Reutiliza la clase global `option` más estas reglas propias. */
 .chat__toggle {
   margin-right: 34px;
   align-items: center;
   font-size: 18px;
   color: var(--color-neon);
 }
+/* Icono (imagen pixel o letras NX) centrado con grid sobre fondo neón. */
 .chat__icon {
   display: grid;
   place-items: center;
@@ -35,6 +50,7 @@
   width: 100%;
   height: 100%;
 }
+/* Modificador: el icono de la cabecera del panel, con tamaño fijo. */
 .chat__icon--head {
   position: relative;
   flex: none;
@@ -43,6 +59,7 @@
   outline: 2px solid var(--color-surface);
 }
 
+/* El panel: flota (position absolute) justo bajo la cabecera, anclado a la derecha, y aparece con la animación `chat-in`. */
 .chat {
   position: absolute;
   z-index: 45;
@@ -60,11 +77,13 @@
   transform-origin: top right;
   animation: chat-in 0.3s var(--ease-p3r) both;
 }
+/* Mobile first: lo anterior es para móvil; desde 768 px de ancho se separa más del borde. */
 @media (min-width: 768px) {
   .chat {
     right: 20px;
   }
 }
+/* Cabecera del panel (fila con flex: icono, títulos, botón cerrar). `.chat__ribbon` es la cinta decorativa inferior. */
 .chat__head {
   position: relative;
   display: flex;
@@ -108,6 +127,7 @@
   border-radius: 6px;
 }
 
+/* Lista de mensajes: columna con scroll vertical cuando supera los 340 px. */
 .chat__list {
   list-style: none;
   margin: 0;
@@ -124,6 +144,7 @@
   font-size: 14px;
   line-height: 1.5;
 }
+/* Burbuja de mensaje. Modificadores: `--ai` (izquierda, tono suave) y `--you` (derecha, color papel). */
 .chat__bubble--ai {
   align-self: flex-start;
   background: rgba(168, 240, 200, 0.08);
@@ -143,6 +164,7 @@
   margin-bottom: 2px;
 }
 
+/* Preguntas rápidas: botones en forma de píldora que saltan de línea (flex-wrap) si no caben. */
 .chat__chips {
   padding: 0 16px 12px;
   display: flex;
@@ -158,6 +180,7 @@
   border-radius: 999px;
   font-size: 13px;
 }
+/* Formulario: input que ocupa el espacio libre (flex: 1) y botón de enviar de 44x44 px (cómodo al tacto). */
 .chat__form {
   display: flex;
   gap: 8px;
