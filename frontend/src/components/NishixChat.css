@@ -1,5 +1,5 @@
 /* Chat de NishixAI. BEM: chat / chat__elemento / chat__elemento--modificador. */
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .chat__toggle {
     margin-right: 0 !important;
   }

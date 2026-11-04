@@ -38,12 +38,17 @@ export const initSelectGroups = () => {
       const pick = () => select(group, index);
       // Al pasar el cursor se selecciona, pero no con el dedo (un toque al empezar un scroll no debe elegir)
       // ni mientras la página se desplaza sola (el cursor queda quieto sobre otra fila).
+      // Al pasar el ratón muy rápido por varias opciones no se cambia la selección en cada una (eso reiniciaba
+      // los paneles y parpadeaba): solo cuando el cursor se queda 60 ms sobre la opción.
+      let rest: number | undefined;
+      item.addEventListener('pointerleave', () => window.clearTimeout(rest));
       item.addEventListener('pointerenter', (event) => {
         // En pantallas estrechas o sin hover solo seleccionan el clic y el foco: el cursor puede quedar quieto
         // sobre otra fila al terminar un scroll y no debe cambiar la selección.
         if (event.pointerType === 'touch' || narrow.matches || noHover.matches) return;
         if (document.documentElement.dataset.autoScroll === 'true') return;
-        pick();
+        window.clearTimeout(rest);
+        rest = window.setTimeout(pick, 60);
       });
       item.addEventListener('focus', pick);
       item.addEventListener('click', pick);

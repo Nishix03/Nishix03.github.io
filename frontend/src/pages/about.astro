@@ -97,9 +97,8 @@ const page = ui.pages.about;
             ))}
           </dl>
         </section>
-      </div>
-
-      <nav class="about__cta" aria-label={ui.nextSteps}>
+        <div class="about__next">
+        <nav class="about__cta" aria-label={ui.nextSteps}>
         <a class="option" href={localePath(locale, about.talk.href)} style="font-size:34px;color:var(--color-ink)">
           <span class="option__slash" aria-hidden="true" />
           <span class="option__plate" aria-hidden="true" />
@@ -107,7 +106,10 @@ const page = ui.pages.about;
           <span class="option__sub">{about.talk.sub}</span>
         </a>
       </nav>
-      <p class="about__cv-soon">{about.cv.label} — {ui.cvSoon}</p>
+        <p class="about__cv-soon">{about.cv.label} — {ui.cvSoon}</p>
+        </div>
+      </div>
+
     </div>
   </PageShell>
 </BaseLayout>
@@ -165,6 +167,7 @@ const page = ui.pages.about;
     clip-path: polygon(0 10%, 100% 0, 96% 100%, 2% 92%);
     transform: rotate(-4deg);
     transform-origin: left top;
+    margin-top: clamp(26px, 4vw, 44px);
   }
   .about__place {
     margin: 8px 0 18px;
@@ -220,14 +223,26 @@ const page = ui.pages.about;
     line-height: 1.5;
     color: var(--color-mint);
   }
+  /* Móvil: Now, Off the keyboard y «Let's talk» uno bajo otro. Escritorio: «Let's talk» va bajo Now,
+     en el hueco que dejaba el recuadro de gustos (más alto) a la derecha. */
   .about__cols {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-areas: 'now' 'off' 'next';
     gap: 28px;
   }
   .about__now {
-    flex: 2 1 420px;
+    grid-area: now;
     min-width: 0;
+  }
+  .about__next {
+    grid-area: next;
+    align-self: end;
+  }
+  @media (min-width: 768px) {
+    .about__cols {
+      grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+      grid-template-areas: 'now off' 'next off';
+    }
   }
   .about__now-head {
     display: flex;
@@ -260,7 +275,8 @@ const page = ui.pages.about;
     margin: 0;
   }
   .about__off {
-    flex: 1 1 260px;
+    grid-area: off;
+    align-self: start;
     padding: 18px 20px;
     border: 1px dashed rgba(232, 198, 106, 0.5);
     border-radius: 12px;
@@ -290,8 +306,10 @@ const page = ui.pages.about;
     margin: 0;
     color: var(--color-mint);
   }
+  /* Alineada con el texto de «Let's talk» (la opción tiene 14 px de margen interior). */
   .about__cv-soon {
-    margin: -24px 0 0;
+    margin: 6px 0 0;
+    padding-left: 14px;
     font-size: 14px;
     color: var(--color-mint);
     opacity: 0.7;
