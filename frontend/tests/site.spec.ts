@@ -127,6 +127,23 @@ test('el selector de idioma cambia a español en la misma página y conserva el 
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 });
 
+test('las flechas entran al menú sin hacer clic y Enter abre el apartado', async ({ page }) => {
+  await page.goto('/');
+  const options = page.locator('.hero__options a');
+  await page.keyboard.press('ArrowDown');
+  await expect(options.first()).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await expect(options.nth(1)).toBeFocused();
+  await expect(options.nth(1)).toHaveAttribute('data-sel', 'true');
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/\/projects/);
+  await expect(page.locator('html')).not.toHaveAttribute('data-loading', { timeout: 5000 });
+  // En Projects las flechas recorren los proyectos y cambian el detalle.
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  await expect(page.locator('#project-details > [data-panel]:not([hidden]) h2')).toHaveText('LeeContigo IA');
+});
+
 test('la cabecera marca la página actual con aria-current', async ({ page }) => {
   await page.goto('/stack');
   await expect(page.locator('a.header__link[aria-current="page"]')).toHaveText('Stack');
