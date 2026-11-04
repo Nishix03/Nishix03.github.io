@@ -1,18 +1,29 @@
 ---
+// PÁGINA PROJECTS (/projects) - lista de mis proyectos a la izquierda y el detalle del elegido a la derecha.
+// RUTAS POR ARCHIVO EN ASTRO: projects.astro = URL /projects; la versión /es/projects está en pages/es/projects.astro.
+// FRONTMATTER: este código corre al construir la página (no en el navegador) y prepara los datos del HTML.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
 import { clip } from '../sprites/clips';
 import { getContent, localeFromUrl, localePath } from '../content';
 
+// localeFromUrl lee la URL y dice si estamos en inglés o español (/es/). Aquí no se usa más abajo.
 const locale = localeFromUrl(Astro.url);
+// getContent(locale) devuelve los textos en ese idioma. projects = lista de proyectos (name, tag, rank, stack, href...),
+// ui = textos generales.
 const { projects, ui } = getContent(locale);
+// Título, pista, palabra grande de fondo y número de sección de esta página.
 const page = ui.pages.projects;
+// clip(nombre) busca en el manifiesto de sprites la imagen del reverso de la carta (archivo, ancho, alto).
 const card = clip('yugioh-card-back-still');
+// Convierte el nivel (1 a 5) en estrellas: rank llenas y el resto vacías. Ej.: 3 da ★★★☆☆.
 const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
 ---
 
+<!-- BaseLayout = marco común (head, menú, fuentes). El título usa plantilla de texto con ${...}. -->
 <BaseLayout title={`${page.title} — ${ui.siteTitle}`}>
+  <!-- PageShell = carcasa de páginas interiores (palabra gigante de fondo + número de sección). Las props ajustan tamaño, posición y giro. -->
   <PageShell
     word={page.word}
     num={page.num}
@@ -21,6 +32,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     wordRight={-40}
     wordRotate={-12}
   >
+    <!-- El avatar va en el slot "bg" (fondo) de PageShell: un slot es un hueco con nombre. -->
     <AvatarCutin slot="bg" page="projects" />
     <div class="projects__head fx-cascade">
       <h1 class="projects__title display">{page.title}</h1>
@@ -30,6 +42,12 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     </p>
 
     <div class="projects__layout">
+      <!--
+        LISTA DE PROYECTOS (ol = lista ordenada). Atributos data-* que lee el script global de selección (select-group.ts):
+        data-select-group = grupo seleccionable; data-arrow-nav = flechas del teclado;
+        data-select-attr="aria-pressed" = la selección se marca en ese atributo; data-select-targets = ids de los paneles que
+        cambian a la vez (cartas, detalles y números), mostrando solo el panel del mismo índice. La primera fila empieza elegida.
+      -->
       <ol
         id="project-list"
         class="projects__list"
@@ -65,6 +83,10 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
         ))}
       </ol>
 
+      <!--
+        Zona de DETALLE: el mazo de cartas de fondo y la ficha del proyecto elegido. Cada panel usa el atributo hidden:
+        solo el de la fila elegida se ve (el script global lo cambia).
+      -->
       <div class="projects__display">
         <!-- El mazo: reverso real de Yu-Gi-Oh a escala 3, inclinado detrás del detalle. Gira al cambiar. -->
         <div class="projects__card-back" id="project-cards" aria-hidden="true">
@@ -82,6 +104,10 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
           ))}
         </div>
 
+        <!--
+          aria-live="polite" avisa a lectores de pantalla cuando cambia el detalle. Un article por proyecto, todos ocultos menos el primero.
+          Se pintan nombre, estado, estrellas, tipo, descripción, stack y enlace. Si el href es "#" aún no hay enlace y sale "pronto".
+        -->
         <div class="projects__details" id="project-details" aria-live="polite">
           {projects.map((project, i) => (
             <article class="detail fx-flip" data-panel hidden={i !== 0}>
@@ -136,8 +162,11 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
 </BaseLayout>
 
 <script>
+  // SCRIPT DEL CLIENTE: a diferencia del frontmatter, esto SÍ corre en el navegador. Astro lo empaqueta y lo inyecta en la página.
+  // Función: en móvil convierte la lista en ACORDEÓN (el detalle se mueve justo bajo la fila elegida).
   // Móvil: acordeón. El detalle se mueve justo debajo de la fila elegida (dentro de un <li> propio, porque
   // en un <ol> solo puede haber <li>) y la fila sube a la vista. En escritorio vuelve a su columna.
+  // astro:page-load es un evento de Astro que se dispara en cada carga de página (también al navegar sin recargar).
   document.addEventListener('astro:page-load', () => {
     const list = document.querySelector<HTMLElement>('#project-list');
     const details = document.querySelector<HTMLElement>('.projects__display');
@@ -145,7 +174,9 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     const home = details.parentElement;
     const slot = document.createElement('li');
     slot.className = 'projects__slot';
+    // matchMedia evalúa una media query desde JS: narrow.matches es true si la pantalla es de móvil.
     const narrow = window.matchMedia('(max-width: 767px)');
+    // place() coloca el detalle: en móvil bajo la fila elegida (row.after / slot.append); en escritorio de vuelta en su columna.
     const place = () => {
       const row = list.querySelector('.project-row[aria-pressed="true"]')?.closest('li');
       if (narrow.matches && row) {
@@ -159,6 +190,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     // Al elegir otra fila en móvil: el detalle se mueve bajo ella y la página sube hasta la fila.
     // Se hace al cambiar la selección (llega con el foco del toque), no en el clic: al moverse el detalle
     // la fila cambia de sitio y el clic caería en el hueco.
+    // 'select:change' es un evento propio que lanza el script global de selección cuando cambia la fila elegida.
     list.addEventListener('select:change', () => {
       place();
       const row = list.querySelector<HTMLElement>('.project-row[aria-pressed="true"]');
@@ -176,12 +208,18 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
         window.scrollTo({ top, behavior: calm ? 'auto' : 'smooth' });
       });
     });
+    // Si el tamaño de pantalla cruza el límite (por ejemplo al girar el móvil), se recoloca el detalle.
     narrow.addEventListener('change', place);
     place();
   });
 </script>
 
 <style>
+  /*
+   ESTILOS DE ESTA PÁGINA (scoped: solo afectan a este archivo; :global(...) para elementos que vienen del script o de otros componentes).
+   BEM: projects__ (página), project-row__ (fila) y detail__ (ficha). Colores y fuentes salen de variables CSS.
+   Mobile first: base para móvil y @media (min-width: ...) para escritorio; el bloque max-width: 767px aplica solo a móvil.
+   */
   .projects__list :global(.projects__slot) {
     list-style: none;
     margin: 4px 0 8px;
@@ -195,9 +233,11 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
   .projects__list :global(.project-row) {
     scroll-margin-top: 72px; /* al volver, la cabecera fija no tapa «PROJECTS» ni la primera fila */
   }
+  /* Columna del detalle. calc(560px + var(--summon-room)) suma una altura fija con una variable CSS. */
   .projects__display {
     scroll-margin-top: 72px; /* deja libre la cabecera fija de 57 px al llegar */
   }
+  /* Móvil: sin el mazo de fondo; las filas pasan a fondo casi opaco y se oculta el recuadro de captura. */
   @media (max-width: 767px) {
     /* Sin el mazo de fondo ni el hueco reservado: debajo del detalle no queda un espacio vacío. */
     .projects__layout .projects__display {
@@ -217,6 +257,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     gap: 20px;
     margin-bottom: 6px;
   }
+  /* clamp(44px, 7vw, 84px): la fuente crece con la pantalla entre un mínimo y un máximo. */
   .projects__title {
     margin: 0;
     font-size: clamp(44px, 7vw, 84px);
@@ -227,8 +268,10 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     color: var(--color-mint);
     font-size: 15px;
   }
+  /* Mobile first: este media query de min-width solo actúa desde 1024 px. */
   /* En escritorio el contenido ocupa la izquierda y deja visible la cara del avatar a la derecha. */
   @media (min-width: 1024px) {
+    /* flex + flex-wrap: lista y detalle van en dos columnas si caben; si no, se apilan. */
     .projects__layout {
       max-width: 940px;
     }
@@ -316,6 +359,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     margin-top: var(--summon-room);
   }
 
+  /* Ficha de detalle: borde de degradado simulado con padding + fondo degradado y un interior de otro color. */
   .detail {
     position: relative;
     z-index: 1;

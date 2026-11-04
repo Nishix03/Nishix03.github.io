@@ -1,18 +1,29 @@
 ---
+// PÁGINA JOURNEY (/journey) - mi trayectoria: estudios, datos clave, línea de tiempo de hitos, diario y certificados.
+// RUTAS POR ARCHIVO EN ASTRO: journey.astro = URL /journey; la versión /es/journey está en pages/es/journey.astro.
+// FRONTMATTER: este código corre al construir la página (no en el navegador) y prepara los datos del HTML.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
 import Sprite from '../components/Sprite.astro';
 import { getContent, localeFromUrl, localePath } from '../content';
 
+// localeFromUrl lee la URL y dice si estamos en inglés o español (/es/). Aquí solo se calcula; no se usa más abajo.
 const locale = localeFromUrl(Astro.url);
+// getContent(locale) devuelve los textos en ese idioma: education = estudios, facts = datos con número,
+// milestones = hitos de la línea de tiempo (algunos locked = aún no alcanzados), diary = entrada de diario, platzi = cursos/certificados.
 const { ui, journeyIntro, education, facts, milestones, diary, platzi } = getContent(locale);
+// Título, palabra grande de fondo y número de sección de esta página.
 const page = ui.pages.journey;
 ---
 
+<!-- BaseLayout = marco común (head, menú, fuentes). El título usa plantilla de texto con ${...}. -->
 <BaseLayout title={`${page.title} — ${ui.siteTitle}`}>
+  <!-- PageShell = carcasa de páginas interiores (palabra gigante de fondo + número de sección). -->
   <PageShell word={page.word} num={page.num} wordSize={240} wordTop={40} wordRight={-60}>
+    <!-- El avatar va en el slot "bg" (fondo) de PageShell. -->
     <AvatarCutin slot="bg" page="journey" />
+    <!-- PARTE SUPERIOR: título, frase de introducción, estudios (education) y datos clave (facts). BEM: journey__ y education__ / fact__. -->
     <div class="journey__top">
       <div class="journey__intro">
         <h1 class="journey__title display fx-cascade">{page.title}</h1>
@@ -35,8 +46,10 @@ const page = ui.pages.journey;
       </div>
     </div>
 
+    <!-- LÍNEA DE TIEMPO: personaje que camina, marca LATEST, barra de 9 segmentos y tarjetas de hitos. -->
     <div class="timeline">
       <!-- El personaje camina sobre la barra; LATEST marca el último hito alcanzado -->
+      <!-- Adorno animado (aria-hidden). data-loop es un data-attribute que el JS global usa como marca de animación infinita. -->
       <div class="timeline__walker" aria-hidden="true" data-loop>
         <!-- Mini Iván camina por el carril de hitos al ritmo del Iván grande: la tira dibuja dos pasos en
              2,4 s (el balanceo del grande) y el carril lo desplaza de izquierda a derecha. -->
@@ -59,6 +72,7 @@ const page = ui.pages.journey;
       <div class="latest" aria-hidden="true">
         <div class="latest__inner">LATEST</div>
       </div>
+      <!-- Tres sprites que se repiten con map. Cada uno cambia su retraso (i * 0.3 s) para que no vayan a la vez. -->
       <div class="timeline__menace" aria-hidden="true" data-loop>
         {[0, 1, 2].map((i) => (
           <div
@@ -70,7 +84,12 @@ const page = ui.pages.journey;
         ))}
       </div>
 
+      <!-- Leyenda: cuenta los hitos NO bloqueados (filter) sobre el total. Ej.: 6 / 9. -->
       <p class="timeline__legend mono" aria-hidden="true">{milestones.filter((m) => !m.locked).length} / {milestones.length} {ui.milestones}</p>
+      <!--
+        Barra: un segmento por hito; los bloqueados (locked) salen apagados con el modificador BEM timeline__seg--locked.
+        class:list es una utilidad de Astro para clases condicionales.
+      -->
       <div class="timeline__bar">
         {milestones.map((milestone, i) => (
           <div
@@ -79,6 +98,10 @@ const page = ui.pages.journey;
           />
         ))}
       </div>
+      <!--
+        Tarjetas de hitos (lista ordenada ol, porque el orden importa). La primera bloqueada lleva una clase extra: en móvil
+        muestra el rótulo "Next" leído de data-label con content: attr(data-label) en CSS. aria-disabled marca los hitos bloqueados.
+      -->
       <ol class="timeline__cards">
         {milestones.map((milestone, i) => (
           <li
@@ -97,7 +120,9 @@ const page = ui.pages.journey;
       </ol>
     </div>
 
+    <!-- PARTE INFERIOR: diario (article) y certificados (aside = contenido complementario). -->
     <div class="journey__bottom">
+      <!-- Entrada de diario: brújula animada + texto + enlace externo (target="_blank" con rel="noopener noreferrer" por seguridad). -->
       <article class="diary">
         <div class="diary__compass" aria-hidden="true" data-loop>
           <div class="fx-needle" style="position:absolute;inset:0;transform-origin:18px 18px">
@@ -114,6 +139,7 @@ const page = ui.pages.journey;
           <p class="diary__learned">{diary.learned}</p>
         </div>
       </article>
+      <!-- Certificados de Platzi: lista de cursos y botón al perfil. -->
       <aside class="certs">
         <p class="certs__kicker mono">{platzi.kicker}</p>
         <ul class="certs__list">
@@ -130,8 +156,15 @@ const page = ui.pages.journey;
 </BaseLayout>
 
 <style>
+  /*
+   ESTILOS DE ESTA PÁGINA (scoped: solo afectan a este archivo; :global solo si hiciera falta).
+   BEM: journey__, timeline__, milestone__, diary__, certs__. Colores y fuentes salen de variables CSS (var(--color-...)).
+   Mobile first: la base es para móvil y @media (min-width: 1024px) añade el diseño de escritorio;
+   el bloque de max-width: 767px aplica solo a móvil (línea de tiempo vertical).
+   */
   /* Escritorio: arriba los datos dejan libre la cara del avatar; la línea de tiempo y el resto, que
      van por debajo de su fundido, ocupan todo el ancho (sin hueco a la derecha). */
+  /* Escritorio: la parte superior limita su ancho (deja ver la cara del avatar) y los 9 hitos van en una fila de 9 columnas. */
   @media (min-width: 1024px) {
     .journey__top {
       max-width: 860px;
@@ -149,6 +182,7 @@ const page = ui.pages.journey;
     }
   }
   /* Pantallas medianas: tarjetas más estrechas, texto algo menor para que no toque el borde. */
+  /* Rango intermedio (1024-1279 px): tarjetas más estrechas, texto algo menor. */
   @media (min-width: 1024px) and (max-width: 1279px) {
     .timeline .milestone {
       padding: 10px 8px;
@@ -184,6 +218,7 @@ const page = ui.pages.journey;
     flex: 1 1 520px;
     min-width: 0;
   }
+  /* clamp(44px, 7vw, 84px): la fuente crece con la pantalla pero con mínimo y máximo. */
   .journey__title {
     margin: 0 0 6px;
     font-size: clamp(44px, 7vw, 84px);
@@ -264,6 +299,7 @@ const page = ui.pages.journey;
     width: 66%;
     height: 152px; /* los pies (ancla de suelo) quedan sobre la barra */
   }
+  /* Carril por el que avanza mini Iván; la animación (fx-trek) viene de los estilos globales. */
   .timeline__walker-track {
     animation-duration: 33s; /* tres veces más lento que antes, como sus pasos */
     position: absolute;
@@ -285,6 +321,7 @@ const page = ui.pages.journey;
     width: 800%;
     height: 100%;
   }
+  /* Animación propia: @keyframes walker-step define los pasos (0 % a 100 %) que luego se usan en la propiedad animation. */
   /* Solo transform y opacity: la sombra es fija y el compositor anima el destello sin repintar. */
   .timeline__step {
     position: absolute;
@@ -313,6 +350,7 @@ const page = ui.pages.journey;
       transform: scale(1.6);
     }
   }
+  /* Accesibilidad: si el usuario pidió menos movimiento en su sistema, se oculta el destello animado. */
   @media (prefers-reduced-motion: reduce) {
     .timeline__step {
       display: none;
@@ -355,6 +393,7 @@ const page = ui.pages.journey;
     font-size: 12px;
     color: var(--color-mint);
   }
+  /* grid con repeat(9, minmax(0, 1fr)): 9 columnas iguales, una por hito. */
   .timeline__bar {
     display: grid;
     grid-template-columns: repeat(9, minmax(0, 1fr));
@@ -367,6 +406,7 @@ const page = ui.pages.journey;
   .timeline__seg--locked {
     background: rgba(168, 240, 200, 0.12);
   }
+  /* Los pseudo-elementos ::before y ::after dibujan los cuadritos de la línea y el rótulo sin añadir HTML. */
   /* Móvil: línea de tiempo vertical (una columna, cronológica); los bloqueados se agrupan bajo «Next». */
   @media (max-width: 767px) {
     .timeline .timeline__cards {
@@ -416,6 +456,7 @@ const page = ui.pages.journey;
       padding: 10px 0;
     }
   }
+  /* Base: auto-fit con minmax(118px, 1fr) = tantas columnas como quepan. En móvil se pasa a 1 columna; en escritorio a 9. */
   .timeline__cards {
     list-style: none;
     margin: 18px 0 0;
@@ -433,6 +474,7 @@ const page = ui.pages.journey;
     border: 1px solid rgba(57, 255, 136, 0.45);
     border-radius: 10px;
   }
+  /* Modificador BEM: hito aún no alcanzado, con colores apagados. */
   .milestone--locked {
     background: var(--color-bg);
     color: #8fb3a0;

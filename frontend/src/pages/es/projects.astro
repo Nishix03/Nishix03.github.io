@@ -1,4 +1,7 @@
 ---
+// Versión en español de la página (URL /es/projects). No duplica nada: importa la página inglesa y la dibuja tal cual.
+// El idioma lo decide la URL: localeFromUrl(Astro.url) detecta /es/ y getContent devuelve los textos en español.
+// En Astro cada archivo de pages/ es una ruta, por eso existe este archivo: sin él, /es/projects daría 404.
 /** Versión en español: la misma página; el idioma lo decide la URL (/es/...). */
 import Page from '../projects.astro';
 ---

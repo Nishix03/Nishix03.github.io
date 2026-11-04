@@ -1,17 +1,30 @@
 ---
+// PÁGINA CONTACT (/contact) - lista de formas de contactar (correo, GitHub, LinkedIn, CV...).
+// RUTAS POR ARCHIVO EN ASTRO: contact.astro = URL /contact; la versión /es/contact está en pages/es/contact.astro.
+// FRONTMATTER: este código corre al construir la página (no en el navegador) y prepara los datos para el HTML.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { getContent, localeFromUrl, localePath } from '../content';
 
+// localeFromUrl lee la URL y dice si estamos en inglés o español (/es/).
 const locale = localeFromUrl(Astro.url);
+// getContent(locale) devuelve los textos en ese idioma. Aquí usamos:
+// contactIntro = líneas de introducción, contacts = lista de contactos (id, label, href...),
+// contactGlyphs = dibujos de pixel-art de cada icono como filas de texto, ui = textos generales.
 const { ui, contactIntro, contactGlyphs, contacts } = getContent(locale);
+// Datos de la página: título, acento, palabra grande de fondo y número de sección.
 const page = ui.pages.contact;
+// Función flecha: true si el enlace va fuera del sitio (empieza por http). Se usa para abrir en pestaña nueva.
 const isExternal = (href: string) => href.startsWith('http');
 // LinkedIn y el CV aún no tienen destino real: se muestran apagados, no como enlaces muertos.
+// Función flecha: true si el enlace es solo un marcador "#" (aún sin destino).
 const isPending = (href: string) => href.startsWith('#');
 
+// TRUCO DE PIXEL-ART: cada icono es una rejilla de texto donde '#' = píxel encendido. glyph() convierte esa rejilla
+// en una lista de sombras (box-shadow), una por píxel, que se dibujan desde UN solo elemento pequeño de 3x3 px.
+// flatMap recorre filas (y) y caracteres (x) y devuelve solo las posiciones de los '#'. Devuelve también la altura total.
 // Cada '#' de la rejilla es una celda de 3 px; box-shadow las dibuja todas desde un solo elemento.
 const CELL = 3;
 const glyph = (id: string) => {
@@ -25,7 +38,12 @@ const glyph = (id: string) => {
 };
 ---
 
+<!-- BaseLayout = marco común (head, menú, fuentes). El título usa una plantilla de texto con ${...}. -->
 <BaseLayout title={`Contact — ${ui.siteTitle}`}>
+  <!--
+    PageShell = carcasa de páginas interiores: palabra gigante de fondo y número de sección. Las props ajustan su tamaño y posición.
+    padTop y minHeight regulan el espacio superior y la altura mínima.
+  -->
   <PageShell
     word={page.word}
     num={page.num}
@@ -35,15 +53,19 @@ const glyph = (id: string) => {
     padTop={90}
     minHeight={900}
   >
+    <!-- El avatar va en el slot "bg" (fondo) de PageShell: un slot es un hueco con nombre donde se inserta contenido. -->
     <AvatarCutin slot="bg" page="contact" />
 
+    <!-- BLOQUE contact (BEM): contact__layout > contact__main > título, intro y lista. -->
     <div class="contact__layout">
       <div class="contact__main">
+        <!-- Título con un acento de color en la segunda línea. fx-cascade = animación de entrada escalonada (CSS global). -->
         <h1 class="contact__title display fx-cascade">
           {page.title}
           <br />
           <span class="contact__accent">{page.accent}</span>
         </h1>
+        <!-- Introducción: cada línea de contactIntro puede tener un fragmento resaltado (lead) y el texto. El <> es un fragmento (sin etiqueta extra). -->
         <p class="contact__intro fx-cascade" style="animation-delay: .06s">
           {contactIntro.map((line) => (
             <>
@@ -52,6 +74,12 @@ const glyph = (id: string) => {
             </>
           ))}
         </p>
+        <!--
+          LISTA DE CONTACTOS. Atributos data-* que lee el script global de selección:
+          data-select-group = grupo de elementos seleccionables; data-arrow-nav = navegación con flechas del teclado.
+          Cada contacto se pinta con .map(). Si el enlace es "pendiente" (isPending) se muestra apagado como span (sin enlace roto);
+          si no, es un enlace con data-select-item. Los externos llevan target="_blank" y rel="noopener" por seguridad.
+        -->
         <ul class="contact__list" data-select-group data-arrow-nav>
           {contacts.map((contact, i) => {
             const g = glyph(contact.id);
@@ -91,12 +119,19 @@ const glyph = (id: string) => {
       </div>
     </div>
 
+    <!-- Pie de página en el slot "after" de PageShell (después del contenido principal). -->
     <SiteFooter slot="after" />
   </PageShell>
 </BaseLayout>
 
 <style>
+  /*
+   ESTILOS DE ESTA PÁGINA (scoped: solo afectan a este archivo; :global(...) para clases de otros componentes como .option).
+   BEM: contact__elemento. Los colores salen de variables CSS (var(--color-...)).
+   */
+  /* Mobile first: desde 1024 px el contenido se limita a 820 px para dejar ver la cara del avatar. */
   @media (min-width: 1024px) {
+    /* flex + flex-wrap: en pantallas estrechas los elementos se apilan. */
     .contact__layout {
       max-width: 820px;
     }
@@ -111,6 +146,7 @@ const glyph = (id: string) => {
     flex: 999 1 480px;
     min-width: 0;
   }
+  /* clamp(48px, 8vw, 104px): tamaño que crece con la pantalla entre un mínimo y un máximo. */
   .contact__title {
     margin: 0 0 16px;
     font-size: clamp(48px, 8vw, 104px);
@@ -128,6 +164,7 @@ const glyph = (id: string) => {
   .contact__lead {
     color: var(--color-ink);
   }
+  /* --opt-size es una variable CSS que se pasa desde el HTML (style) con el tamaño propio de cada contacto. */
   /* El tamaño sigue al ancho de la pantalla: el correo largo no se corta en 360 px. */
   .contact__list :global(.option) {
     max-width: 100%;
@@ -137,6 +174,7 @@ const glyph = (id: string) => {
     overflow-wrap: normal;
   }
   /* El correo es el dato clave: en móvil se reduce lo justo para que quepa en una sola línea. */
+  /* Ajuste solo para móvil: el primer contacto (el correo) se mantiene en una línea y oculta su subtítulo. */
   @media (max-width: 767px) {
     .contact__list li:first-child :global(.option) {
       flex-wrap: nowrap;
@@ -146,6 +184,7 @@ const glyph = (id: string) => {
       display: none;
     }
   }
+  /* Estilo de los contactos "pronto": apagados (opacity), sin cursor de enlace. */
   .contact__soon {
     white-space: nowrap;
     font-size: clamp(18px, 5.2vw, var(--opt-size));
@@ -169,6 +208,7 @@ const glyph = (id: string) => {
     flex-direction: column;
     gap: 4px;
   }
+  /* currentColor en las sombras del icono (ver glyph arriba) hace que los píxeles tomen el color del texto. */
   /* Icono pixel: 12 columnas de 3 px. Toma el color del texto y lo cambia con la selección. */
   .contact__ico {
     position: relative;
@@ -185,6 +225,7 @@ const glyph = (id: string) => {
     width: 3px;
     height: 3px;
   }
+  /* Selector con :is(): al pasar el ratón, enfocar con teclado o estar seleccionado (data-attribute data-sel="true"), el icono cambia de color. */
   .option:is(:hover, :focus-visible, [data-sel='true']) .contact__ico {
     color: var(--color-bg);
   }

@@ -1,16 +1,33 @@
 ---
+// PÁGINA ABOUT (/about) - quién soy: presentación, cómo trabajo, qué hago ahora y fuera del teclado.
+// RUTAS POR ARCHIVO EN ASTRO: el nombre del archivo (about.astro) es la URL (/about). La versión /es/about está en pages/es/about.astro.
+// FRONTMATTER: el código entre las líneas --- se ejecuta al construir la página, no en el navegador.
+// Aquí se importan componentes y se preparan los datos que pinta el HTML.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../components/PageShell.astro';
 import AvatarCutin from '../components/AvatarCutin.astro';
 import Sprite from '../components/Sprite.astro';
 import { getContent, localeFromUrl, localePath } from '../content';
 
+// localeFromUrl lee la URL (Astro.url) y devuelve el idioma ('en' o 'es' si empieza por /es/).
 const locale = localeFromUrl(Astro.url);
+// getContent(locale) trae todos los textos del sitio en ese idioma. Desestructuramos lo necesario:
+// about = textos de esta página (eyebrow, lead, body, how, now, off, talk, cv) y ui = textos generales de la interfaz.
 const { about, ui } = getContent(locale);
+// Datos comunes de la página: título, palabra grande de fondo (word) y número de sección (num).
 const page = ui.pages.about;
 ---
 
+<!--
+  BaseLayout = marco común (head, menú, fuentes). El title usa una plantilla de texto con comillas invertidas
+  y ${...} para mezclar variables, por ejemplo "About — Nombre del sitio".
+-->
 <BaseLayout title={`${page.title} — ${ui.siteTitle}`}>
+  <!--
+    PageShell = carcasa de las páginas interiores: pone la palabra gigante de fondo y el número de sección.
+    Sus props (word, wordSize, wordTop, wordRight, wordRotate) solo ajustan tamaño, posición y giro de esa palabra.
+    La clase about-page permite cambiar el color de selección solo en esta página (ver el style).
+  -->
   <PageShell
     word={page.word}
     num={page.num}
@@ -20,11 +37,18 @@ const page = ui.pages.about;
     wordRotate={-8}
     class="about-page"
   >
+    <!-- BLOQUE about (BEM). Sus elementos son about__intro, about__text, about__how... En una columna con separación entre secciones. -->
     <div class="about">
+      <!-- PRESENTACIÓN: retrato a un lado y texto al otro (se apilan en móvil gracias a flex-wrap). -->
       <section class="about__intro">
+        <!-- Retrato: AvatarCutin dibuja al personaje. aria-hidden porque es decorativo. -->
         <div class="about__portrait" aria-hidden="true">
           <AvatarCutin page="about" />
         </div>
+        <!--
+          Textos de about (eyebrow, título, lugar, lead). Las clases fx-cascade hacen que cada línea entre una tras otra;
+          el retraso se pone en style con animation-delay, creciendo línea a línea.
+        -->
         <div class="about__text">
           <p class="about__eyebrow mono fx-cascade">{about.eyebrow}</p>
           <h1 class="about__title display fx-cascade" style="animation-delay: .06s">
@@ -32,6 +56,7 @@ const page = ui.pages.about;
           </h1>
           <p class="about__place mono fx-cascade" style="animation-delay: .12s">{about.place}</p>
           <p class="about__lead fx-cascade" style="animation-delay: .18s">{about.lead}</p>
+          <!-- Un párrafo por cada elemento de about.body. toFixed(2) deja el retraso con 2 decimales. -->
           {about.body.map((paragraph, i) => (
             <p
               class="about__body fx-cascade"
@@ -43,6 +68,7 @@ const page = ui.pages.about;
         </div>
       </section>
 
+      <!-- CÓMO TRABAJO: lista de tarjetas. aria-labelledby apunta al id del h2 para que los lectores de pantalla nombren la sección. -->
       <section aria-labelledby="about-how">
         <h2 id="about-how" class="about__h fx-cascade">{about.howTitle}</h2>
         <ul class="about__how">
@@ -58,10 +84,16 @@ const page = ui.pages.about;
         </ul>
       </section>
 
+      <!-- Dos columnas en escritorio (Now y Off the keyboard) y la zona de contacto/CV. En móvil todo queda en una columna (CSS grid con areas). -->
       <div class="about__cols">
+        <!-- AHORA: qué hago en este momento. Usa una lista de definición (dl > dt/dd): etiqueta + valor. -->
         <section class="about__now" aria-labelledby="about-now">
           <div class="about__now-head">
             <h2 id="about-now" class="about__h about__h--inline fx-cascade">{about.nowTitle}</h2>
+            <!--
+              Adorno animado: tres sprites que se repiten con map. data-loop es un data-attribute que el JS global usa
+              como marca de animación infinita. Sprite pone una imagen o, si no existe, el texto de respaldo (fallback).
+            -->
             <span class="about__menace" aria-hidden="true" data-loop>
               {[0, 1, 2].map((i) => (
                 <span
@@ -86,6 +118,7 @@ const page = ui.pages.about;
           </dl>
         </section>
 
+        <!-- FUERA DEL TECLADO: gustos y aficiones, en un recuadro punteado. -->
         <section class="about__off" aria-labelledby="about-off">
           <h2 id="about-off" class="about__off-title">{about.offTitle}</h2>
           <dl class="about__off-list">
@@ -97,6 +130,11 @@ const page = ui.pages.about;
             ))}
           </dl>
         </section>
+        <!--
+          Zona final: enlace a Contact (con el estilo de opción del menú) y aviso de que el CV llegará pronto.
+          localePath mantiene el idioma en el enlace (añade /es si hace falta). Esa clase option y sus partes (slash, plate, label, sub)
+          vienen del CSS global option.css.
+        -->
         <div class="about__next">
         <nav class="about__cta" aria-label={ui.nextSteps}>
         <a class="option" href={localePath(locale, about.talk.href)} style="font-size:34px;color:var(--color-ink)">
@@ -115,27 +153,38 @@ const page = ui.pages.about;
 </BaseLayout>
 
 <style>
+  /*
+   ESTILOS DE ESTA PÁGINA. En Astro un style es "con alcance" (scoped): solo afecta a este archivo.
+   Para estilar algo de fuera (el body, o clases de otros componentes) se usa :global(...).
+   Convención del proyecto: BEM (about__elemento) y mobile first: reglas base pensadas para móvil y
+   @media (min-width: ...) para pantallas mayores. Los colores salen de variables CSS (var(--color-...)).
+   */
+  /* Sobrescribe la variable --sel solo en la página con la clase about-page: así toda la página usa el dorado. */
   /* About usa el dorado como color de selección (la banda del avatar y los tajos). */
   :global(.about-page) {
     --sel: var(--color-gold);
   }
+  /* Contenedor: flex en columna con 48 px entre secciones. */
   .about {
     display: flex;
     flex-direction: column;
     gap: 48px;
   }
+  /* flex-wrap: wrap deja que retrato y texto se apilen cuando no caben en una fila. */
   .about__intro {
     display: flex;
     flex-wrap: wrap;
     gap: 40px;
     align-items: flex-end;
   }
+  /* flex: 0 1 300px = no crece, puede encoger, base de 300 px. */
   .about__portrait {
     position: relative;
     flex: 0 1 300px;
     min-width: 240px;
     height: 380px;
   }
+  /* Regla de móvil (max-width): el retrato ocupa todo el ancho y se hace más bajo. */
   @media (max-width: 767px) {
     .about__portrait {
       flex-basis: 100%;
@@ -143,6 +192,7 @@ const page = ui.pages.about;
     }
   }
   /* Por encima del retrato: el fundido de su borde inferior no debe tapar la primera línea. */
+  /* flex: 999 1 460px: el texto se lleva casi todo el espacio libre. min-width: 0 evita que se desborde. */
   .about__text {
     position: relative;
     z-index: 1;
@@ -156,6 +206,10 @@ const page = ui.pages.about;
     color: var(--color-gold);
   }
   /* El título es una placa blanca inclinada, como las de P3R. */
+  /*
+   clamp(48px, 7vw, 92px): tamaño que crece con el ancho de pantalla pero nunca baja de 48 ni pasa de 92.
+   clip-path recorta la placa con esquinas torcidas y rotate la inclina.
+   */
   .about__title {
     display: inline-block;
     margin: 0 0 14px;
@@ -198,6 +252,7 @@ const page = ui.pages.about;
   .about__h--inline {
     margin: 0;
   }
+  /* Cuadrícula responsive sin media queries: repeat(auto-fit, minmax(260px, 1fr)) mete tantas columnas de al menos 260 px como quepan. */
   .about__how {
     list-style: none;
     margin: 0;
@@ -225,6 +280,7 @@ const page = ui.pages.about;
   }
   /* Móvil: Now, Off the keyboard y «Let's talk» uno bajo otro. Escritorio: «Let's talk» va bajo Now,
      en el hueco que dejaba el recuadro de gustos (más alto) a la derecha. */
+  /* grid-template-areas nombra las zonas. Móvil: now, off y next una bajo otra. En escritorio cambia con el media query de abajo. */
   .about__cols {
     display: grid;
     grid-template-areas: 'now' 'off' 'next';
@@ -238,6 +294,7 @@ const page = ui.pages.about;
     grid-area: next;
     align-self: end;
   }
+  /* Mobile first en acción: desde 768 px de ancho se pasa a dos columnas (2fr y 1fr) y a otra distribución de áreas. */
   @media (min-width: 768px) {
     .about__cols {
       grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
@@ -265,6 +322,7 @@ const page = ui.pages.about;
     display: flex;
     gap: 14px;
   }
+  /* dt = etiqueta fija de 92 px a la izquierda; dd (siguiente regla) es el valor. */
   .about__now-row dt {
     flex: none;
     width: 92px;
@@ -274,6 +332,7 @@ const page = ui.pages.about;
   .about__now-row dd {
     margin: 0;
   }
+  /* Recuadro de borde punteado (dashed) con esquinas redondeadas. */
   .about__off {
     grid-area: off;
     align-self: start;
@@ -307,6 +366,7 @@ const page = ui.pages.about;
     color: var(--color-mint);
   }
   /* Alineada con el texto de «Let's talk» (la opción tiene 14 px de margen interior). */
+  /* Texto del CV aún no disponible: más tenue (opacity) y alineado con el texto del enlace de arriba. */
   .about__cv-soon {
     margin: 6px 0 0;
     padding-left: 14px;
