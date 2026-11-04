@@ -278,7 +278,7 @@
     opacity: 1;
     --cx-width: 390px;
     --cx-height: 507px;
-    --cx-top: -60px;
+    --cx-top: 0;
     --cx-right: calc(50% - 230px);
     --fade-from: 34%;
     --fade-to: 62%;
