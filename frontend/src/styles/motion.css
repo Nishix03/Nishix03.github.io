@@ -1,4 +1,16 @@
 /*
+  motion.css — todas las animaciones del sitio: entradas de página, movimiento continuo de sprites y fotogramas clave.
+  Conceptos:
+  - @keyframes nombre { ... }: define una animación (qué estilos hay en cada punto del recorrido).
+  - animation: nombre duración función-de-tiempo [retraso] repeticiones fill-mode;
+  - infinite = se repite siempre.
+  - fill-mode: backwards aplica el primer fotograma durante el retraso; forwards deja el último al terminar.
+  - Clases fx-*: "efectos" listos para añadir al HTML (class="fx-bob"). Cada una enlaza con un @keyframes de abajo.
+  - prefers-reduced-motion: desactiva todo para quien lo pide en su sistema (accesibilidad).
+  - Rendimiento: solo se animan propiedades baratas (transform, opacity...) que no obligan a recalcular la maqueta.
+  - Las variables (--dur, --ease-p3r, ...) vienen de tokens.css.
+*/
+/*
   Animaciones del boceto, sin cambios de tiempos ni curvas.
   Regla del plan §11.1: solo transform, opacity, filter y clip-path (compositor, sin tocar el layout).
   Dos capas en los sprites: la tira WebP cambia de cuadro con steps() (ver <Sprite />);
@@ -12,9 +24,16 @@
 /* La página aparece con opacidad (el compositor la anima sin repintar). Las franjas van fijas a la
    pantalla: antes medían el alto de la sección (en About ~3500 px) y el navegador no llegaba a
    dibujarlas, por eso la transición a veces ni se veía. */
+/* .page-enter: animación de entrada de la página (page-in). "backwards" evita parpadeos antes de empezar. */
 .page-enter {
   animation: page-in 0.32s var(--ease-p3r) backwards;
 }
+/*
+  .sweep: franja de color que barre la pantalla en la transición.
+  position: fixed la ancla a la ventana. vw/vh son porcentajes del ancho/alto de la ventana.
+  skewX(-20deg) la inclina. will-change: transform avisa al navegador de que se va a animar (usa la GPU).
+  Dos animaciones separadas por coma: primero el barrido (sweep) y luego sweep-off la oculta. pointer-events: none la hace "transparente" a los clics.
+*/
 .sweep {
   position: fixed;
   top: -20vh;
@@ -30,27 +49,33 @@
   pointer-events: none;
   z-index: 30;
 }
+/* Modificador BEM: variante blanca y más estrecha de la franja, con un pequeño desfase de tiempo (animation-delay). */
 .sweep--white {
   background: var(--color-paper);
   animation-delay: 0.05s, 0.5s;
   width: 40vw;
 }
+/* fx-flip: giro 3D de entrada (rotateY con perspective). transform-origin define el punto de giro. */
 .fx-flip {
   transform-origin: 50% 50%;
   animation: flip-in 0.45s var(--ease-p3r) backwards;
 }
+/* fx-cascade: entra deslizándose y apareciendo, con inclinación (skewX). */
 .fx-cascade {
   animation: cascade 0.35s var(--ease-p3r) backwards;
 }
+/* fx-seg: un segmento que crece de izquierda a derecha (scaleX). */
 .fx-seg {
   transform-origin: left center;
   animation: seg-in 0.25s var(--ease-p3r) backwards;
 }
+/* fx-fade: aparición simple (fade = desvanecer). */
 .fx-fade {
   animation: fade-in 0.15s var(--ease-p3r) backwards;
 }
 
 /* ---------- Sprites: movimiento continuo ---------- */
+/* Cada clase fx-* combina un @keyframes con una duración, una función de tiempo y infinite. Duraciones largas (8s, 18s) dan movimientos lentos; cortas (0.6s) dan latidos rápidos. ease-in-out = empieza y termina suave. */
 .fx-bob {
   animation: bob 1.6s var(--ease-breathe) infinite;
 }
@@ -63,6 +88,7 @@
 .fx-fly {
   animation: fly 8s var(--ease-breathe) infinite;
 }
+/* patrol / trek: desplazamientos horizontales largos (ida y vuelta, o de un lado a otro con aparición y desvanecimiento). linear = velocidad constante. */
 .fx-patrol {
   animation: patrol 18s ease-in-out infinite;
 }
@@ -84,6 +110,7 @@
 .fx-needle {
   animation: needle 2.8s var(--ease-breathe) infinite;
 }
+/* eco-beat / beat-key: efecto de "latido" sincronizado (0,6 s) para el personaje Eco y su tecla. */
 .fx-eco-beat {
   transform-origin: 50% 100%;
   animation: eco-beat 0.6s var(--ease-p3r) infinite;
@@ -93,11 +120,16 @@
 }
 
 /* ---------- Sprites: sacudida ocasional ---------- */
+/* steps(1): saltos bruscos, sin interpolar. El glitch es casi todo quieto y una sacudida breve al 90-95% del ciclo. */
 .fx-glitch {
   animation: glitch 5s steps(1) infinite;
 }
 
 /* ---------- Pausa fuera de pantalla o con la pestaña oculta (A14) ---------- */
+/*
+  Pausa: [data-paused='true'] y data-hidden los pone JavaScript (elemento fuera de pantalla o pestaña oculta).
+  "animation-play-state: paused" congela la animación y !important asegura que gane a cualquier otra regla. Ahorra batería y CPU.
+*/
 [data-paused='true'],
 [data-paused='true'] *,
 :root[data-hidden='true'] * {
@@ -105,6 +137,10 @@
 }
 
 /* ---------- Movimiento reducido: estado final, sin recorrido ---------- */
+/*
+  Accesibilidad: * selecciona todo; ::before/::after son pseudo-elementos. Se quitan animaciones y transiciones.
+  Se ocultan los elementos que dependen del movimiento para existir (burbuja del hero y franja de transición).
+*/
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -119,6 +155,7 @@
 }
 
 /* ---------- Keyframes ---------- */
+/* circle-in: revela con un círculo que crece (clip-path: circle(radio at x y)). */
 @keyframes circle-in {
   from {
     clip-path: circle(0% at 92% 4%);
@@ -128,16 +165,19 @@
   }
 }
 /* Al acabar el barrido la franja se oculta: con la sección alta (About mide ~3500 px) el skew la dejaba tapando contenido. */
+/* page-in: solo tiene "from": el final es el estado normal del elemento, así que no hace falta "to". */
 @keyframes page-in {
   from {
     opacity: 0;
   }
 }
+/* sweep-off: oculta la franja al terminar (visibility: hidden). */
 @keyframes sweep-off {
   to {
     visibility: hidden;
   }
 }
+/* sweep: la franja cruza la pantalla de izquierda a derecha. */
 @keyframes sweep {
   from {
     transform: translateX(-140%) skewX(-20deg);
@@ -146,6 +186,7 @@
     transform: translateX(260%) skewX(-20deg);
   }
 }
+/* flip-in: gira desde -90° hasta 0° mientras aparece. */
 @keyframes flip-in {
   from {
     transform: perspective(900px) rotateY(-90deg);
@@ -156,6 +197,7 @@
     opacity: 1;
   }
 }
+/* cascade: viene desplazado y sesgado y se coloca en su sitio ("transform: none" = sin transformación). */
 @keyframes cascade {
   from {
     opacity: 0;
@@ -166,6 +208,7 @@
     transform: none;
   }
 }
+/* seg-in: crece desde ancho cero. */
 @keyframes seg-in {
   from {
     transform: scaleX(0);
@@ -174,6 +217,7 @@
     transform: scaleX(1);
   }
 }
+/* fade-in: aparece (opacity de 0 a 1). */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -182,6 +226,7 @@
     opacity: 1;
   }
 }
+/* slide-up: sube desde abajo (100% de su propia altura). */
 @keyframes slide-up {
   from {
     transform: translateY(100%);
@@ -190,6 +235,7 @@
     transform: translateY(0);
   }
 }
+/* throb: "late" ligeramente (escala un poco). Se usa en el tajo de .option. */
 @keyframes throb {
   0%,
   100% {
@@ -199,6 +245,7 @@
     transform: scaleX(1.02) scaleY(1.08);
   }
 }
+/* chat-in: la burbuja de chat aparece bajando; clip-path: inset(...) recorta desde los bordes y se va abriendo. */
 @keyframes chat-in {
   from {
     opacity: 0;
@@ -211,6 +258,7 @@
     clip-path: inset(0 0 0 0);
   }
 }
+/* bob: sube y baja suave 3 px. "0%, 100%" comparten estilo para que el bucle sea continuo. */
 @keyframes bob {
   0%,
   100% {
@@ -220,6 +268,7 @@
     transform: translateY(-3px);
   }
 }
+/* frame-a / frame-b: alternan opacidad para simular dos cuadros de animación. */
 @keyframes frame-a {
   0% {
     opacity: 1;
@@ -236,6 +285,7 @@
     opacity: 1;
   }
 }
+/* float: flotar, subiendo 6 px y volviendo. */
 @keyframes float {
   0%,
   100% {
@@ -245,6 +295,7 @@
     transform: translateY(-6px);
   }
 }
+/* fly: trayectoria de varios puntos (vuelo). */
 @keyframes fly {
   0%,
   100% {
@@ -260,6 +311,7 @@
     transform: translate(50px, 50px);
   }
 }
+/* patrol: va y vuelve de forma horizontal (100% = su propio ancho). */
 @keyframes patrol {
   0%,
   100% {
@@ -269,6 +321,7 @@
     transform: translateX(100%);
   }
 }
+/* glitch: breves sacudidas laterales hacia el final del ciclo. */
 @keyframes glitch {
   0%,
   90% {
@@ -285,6 +338,7 @@
     transform: translateX(0);
   }
 }
+/* breathe: respirar (escala y opacidad suben y bajan). */
 @keyframes breathe {
   0%,
   100% {
@@ -296,6 +350,7 @@
     opacity: 1;
   }
 }
+/* orbit: movimiento circular aproximado (luciérnaga). */
 @keyframes orbit {
   0%,
   100% {
@@ -311,11 +366,13 @@
     transform: translate(-12px, -10px);
   }
 }
+/* spin: giro continuo de 360°. */
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
+/* menace: oscilación con cambio de opacidad. */
 @keyframes menace {
   0%,
   100% {
@@ -327,6 +384,7 @@
     opacity: 1;
   }
 }
+/* needle: aguja de brújula que oscila entre -8° y 8°. */
 @keyframes needle {
   0%,
   100% {
@@ -336,6 +394,7 @@
     transform: rotate(8deg);
   }
 }
+/* trek: recorrido largo con aparición al inicio y desvanecimiento al final. */
 @keyframes trek {
   0% {
     transform: translateX(0);
@@ -352,6 +411,7 @@
     opacity: 0;
   }
 }
+/* eco-beat: salto con aplastamiento (scale distinto en X e Y) como un rebote. */
 @keyframes eco-beat {
   0% {
     transform: translateY(0) scale(1.05, 0.94);
@@ -364,6 +424,7 @@
     transform: translateY(0) scale(1, 1);
   }
 }
+/* beat-key: pulso rápido de escala. */
 @keyframes beat-key {
   0% {
     transform: scale(1);
@@ -377,6 +438,7 @@
   }
 }
 /* Hero (plan §10.6) */
+/* drift: desplazamiento lateral lento con inclinación. */
 @keyframes drift {
   from {
     transform: translateX(-40px) skewX(-20deg);
@@ -385,6 +447,7 @@
     transform: translateX(40px) skewX(-20deg);
   }
 }
+/* rise: sube 640 px mientras aparece y se desvanece (partículas). */
 @keyframes rise {
   0% {
     transform: translateY(0);
@@ -398,6 +461,7 @@
     opacity: 0;
   }
 }
+/* sil-drop: la silueta cae desde arriba girando. */
 @keyframes sil-drop {
   from {
     transform: translate(-260px, -520px) rotate(-75deg);
@@ -408,6 +472,7 @@
     opacity: 1;
   }
 }
+/* sway: balanceo mínimo (1,5°). */
 @keyframes sway {
   0%,
   100% {

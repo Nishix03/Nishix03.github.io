@@ -1,10 +1,26 @@
 /*
+  option.css — efecto de selección de opciones y filas de proyecto (estilo menú del juego Persona 3 Reload).
+  Conceptos que aparecen aquí:
+  - BEM (bloque__elemento--modificador): .option es el bloque, .option__slash un elemento hijo suyo.
+  Así cada clase dice a qué componente pertenece y no se pisan entre sí.
+  - clip-path: polygon(...): recorta el elemento con una forma de puntos (x y). Usamos polígonos
+  ligeramente torcidos para dar el aspecto de "tajo" dibujado a mano.
+  - transform: translateX / scaleX / scale: mueven o escalan sin alterar la maqueta (barato para el navegador).
+  - :is(a, b, c): agrupa selectores para no repetirlos (se aplica si se cumple cualquiera).
+  - Atributos como [aria-current='page'] o [data-sel='true']: el estilo cambia según el atributo HTML,
+  sin necesidad de JavaScript.
+*/
+/*
   Selección P3R (A21, A22): tajo del color de selección + placa blanca + desplazamiento x.
   Dos bloques que comparten la idea:
     .option      → opciones grandes (cabecera, hero, contacto)
     .project-row → filas de proyecto
   El estado seleccionado llega por [data-sel="true"], [aria-current="page"] o [aria-pressed="true"],
   de modo que el CSS no depende de ningún script.
+*/
+/*
+  .option (bloque): botón o enlace grande del menú. inline-flex pone sus hijos en fila;
+  min-height: 44px asegura un área táctil cómoda en móvil. El texto va en cursiva y mayúsculas.
 */
 .option {
   position: relative;
@@ -24,6 +40,10 @@
   line-height: 0.95;
   transition: transform var(--dur-fast) var(--ease-p3r);
 }
+/*
+  .option__slash: el "tajo" de color (--sel). Está oculto con scaleX(0) (ancho cero) y crece desde la izquierda
+  (transform-origin: left center) cuando la opción se activa.
+*/
 .option__slash {
   position: absolute;
   left: -10px;
@@ -36,6 +56,7 @@
   transform-origin: left center;
   transition: transform var(--dur-fast) var(--ease-p3r);
 }
+/* .option__plate: la "placa" blanca detrás del texto. Empieza transparente (opacity: 0) y aparece al activarse. */
 .option__plate {
   position: absolute;
   inset: 0;
@@ -44,6 +65,7 @@
   opacity: 0;
   transition: opacity var(--dur-fast) var(--ease-p3r);
 }
+/* El texto va con position: relative para quedar POR ENCIMA del tajo y la placa (que son absolute). */
 .option__label,
 .option__sub {
   position: relative;
@@ -56,12 +78,17 @@
   text-transform: none;
   color: var(--color-mint);
 }
+/* Espacio reservado para un icono opcional dentro de la opción. */
 .option__icon {
   position: relative;
   width: 36px;
   height: 28px;
   margin-right: 2px;
 }
+/*
+  Estados activos de la opción: ratón encima, foco de teclado o atributos de "seleccionado".
+  Todos hacen lo mismo, por eso se agrupan con :is(). La opción se desplaza 12 px a la derecha.
+*/
 .option:is(
   :hover,
   :focus-visible,
@@ -71,24 +98,35 @@
 ) {
   transform: translateX(12px);
 }
+/*
+  Cuando está activa, el tajo se estira a su tamaño completo y "late" con la animación throb (ver motion.css).
+  La animación tiene un pequeño retraso (--dur-fast) para que primero termine de crecer.
+*/
 .option:is(:hover, :focus-visible, [data-sel='true'], [aria-current='page'], [aria-expanded='true'])
   .option__slash {
   transform: scaleX(1);
   animation: throb 1.2s var(--ease-breathe) var(--dur-fast) infinite;
 }
+/* La placa blanca se hace visible... */
 .option:is(:hover, :focus-visible, [data-sel='true'], [aria-current='page'], [aria-expanded='true'])
   .option__plate {
   opacity: 1;
 }
+/* ...y el texto cambia a color oscuro para leerse bien sobre la placa blanca. */
 .option:is(:hover, :focus-visible, [data-sel='true'], [aria-current='page'], [aria-expanded='true'])
   :is(.option__label, .option__sub) {
   color: var(--color-bg);
 }
+/* :active = mientras se mantiene pulsado. Se encoge un poco (scale 0.96) para dar sensación de pulsación. */
 .option:active {
   transform: translateX(12px) scale(0.96);
 }
 
 /* ---------- Fila de proyecto ---------- */
+/*
+  .project-row (bloque): fila de proyecto. Funciona igual que .option (tajo + placa + desplazamiento),
+  pero con forma de fila ancha, borde y fondo tenue (--line y --tint de tokens.css).
+*/
 .project-row {
   position: relative;
   width: 100%;
@@ -102,6 +140,7 @@
   text-align: left;
   transition: transform var(--dur-fast) var(--ease-p3r);
 }
+/* Tajo de color de la fila: oculto con scaleX(0) hasta que la fila se activa. */
 .project-row__slash {
   position: absolute;
   left: -8px;
@@ -114,6 +153,7 @@
   transform-origin: left center;
   transition: transform var(--dur-fast) var(--ease-p3r);
 }
+/* Placa blanca de la fila (invisible hasta activarse). */
 .project-row__plate {
   position: absolute;
   inset: 0;
@@ -122,6 +162,7 @@
   opacity: 0;
   transition: opacity var(--dur-fast) var(--ease-p3r);
 }
+/* Contenedor interno con el contenido real. position: relative lo deja por encima del tajo y la placa. */
 .project-row__in {
   position: relative;
   display: flex;
@@ -129,6 +170,11 @@
   gap: 18px;
   width: 100%;
 }
+/*
+  Insignia cuadrada con la inicial/número del proyecto. flex: none evita que se encoja;
+  display: grid + place-items: center centra su contenido en horizontal y vertical.
+  border con currentColor usa el mismo color del texto, así cambia junto con él.
+*/
 .project-row__badge {
   width: 54px;
   height: 54px;
@@ -141,6 +187,10 @@
   font-size: 24px;
   transition: transform var(--dur-fast) var(--ease-p3r);
 }
+/*
+  Estado activo de la fila por teclado (foco) o cuando está seleccionada (aria-pressed): se desplaza,
+  muestra el tajo y la placa, y el texto pasa a oscuro. El hover se trata aparte, más abajo.
+*/
 .project-row:is(:focus-visible, [aria-pressed='true']) {
   transform: translateX(12px);
 }
@@ -154,6 +204,10 @@
   color: var(--color-bg);
 }
 /* El resaltado por hover solo con ratón y pantalla ancha: en táctil queda «pegado» tras tocar y se verían dos filas resaltadas. */
+/*
+  (hover: hover) = el dispositivo tiene un puntero que puede "pasar por encima" (ratón).
+  Se combina con min-width: 768px (mobile first: el comportamiento de escritorio va dentro de este bloque).
+*/
 @media (hover: hover) and (min-width: 768px) {
   .project-row:hover {
     transform: translateX(12px);
@@ -168,9 +222,11 @@
     color: var(--color-bg);
   }
 }
+/* La insignia de la fila seleccionada se inclina y crece un poco como acento visual. */
 .project-row[aria-pressed='true'] .project-row__badge {
   transform: rotate(-8deg) scale(1.08);
 }
+/* Efecto de pulsación, igual que en .option. */
 .project-row:active {
   transform: translateX(12px) scale(0.96);
 }

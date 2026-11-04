@@ -1,5 +1,20 @@
+/*
+  tokens.css — "tokens de diseño": un token es un valor con nombre (un color, una fuente, un tiempo)
+  que se define UNA sola vez aquí y se reutiliza en todo el sitio.
+  Conceptos:
+  - Variable CSS (custom property): se declara con --nombre: valor; y se usa con var(--nombre).
+  Si cambias el valor aquí, cambia en todos los sitios que la usan (como una constante en Java).
+  - @theme: directiva de Tailwind v4. Lo que se declara dentro se convierte en variable CSS y además
+  Tailwind genera clases de utilidad (por ejemplo --color-neon permite usar bg-neon o text-neon).
+  Cómo se usa: global.css importa este archivo; el resto de CSS lee los valores con var(--...).
+*/
 /* Tokens del diseño (plan §4, §10.3, §11.1). Todo color, fuente y tiempo sale de aquí. */
+/*
+  @theme: tokens que Tailwind también "entiende". El prefijo del nombre (--color-, --font-, --ease-)
+  le dice a Tailwind de qué tipo de utilidad se trata.
+*/
 @theme {
+  /* Paleta de colores: fondos oscuros verdosos, texto claro y colores de acento (neón, cian, ámbar...). */
   --color-bg: #07110c;
   --color-surface: #0b1a12;
   --color-ink: #e9fff2;
@@ -11,31 +26,48 @@
   --color-gold: #e8c66a;
   --color-coral: #ff3e5f;
 
+  /*
+    Tipografías: una variable para el texto normal y otra tipo "pixel" para el estilo retro.
+    Después de la fuente va una lista de respaldo por si la primera no carga.
+  */
   --font-sans: 'Figtree Variable', system-ui, sans-serif;
   --font-pixel: 'Pixelify Sans Variable', monospace;
 
   /* Curvas del plan: la de P3R (entrada rápida, frenada suave) y la de "respirar". */
+  /*
+    cubic-bezier(x1, y1, x2, y2) describe cómo cambia la velocidad de una animación a lo largo del tiempo
+    (empieza rápido, frena suave, etc.). Se usa en transition y animation como "función de tiempo".
+    --ease-drop es una caída que acelera al inicio y se asienta al final.
+  */
   --ease-p3r: cubic-bezier(0.2, 0, 0, 1);
   --ease-breathe: cubic-bezier(0.45, 0, 0.55, 1);
   --ease-drop: cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
+/*
+  :root es el elemento raíz (<html>). Las variables declaradas aquí están disponibles en toda la página.
+  Se separan de @theme porque no son utilidades de Tailwind: son valores propios del sitio.
+*/
 :root {
   /* Color de selección P3R. Cambia aquí para probar otro (coral por defecto). */
   --sel: var(--color-coral);
 
+  /* Líneas y fondos translúcidos: rgba(rojo, verde, azul, opacidad) con opacidad de 0 a 1. */
   --line: rgba(168, 240, 200, 0.16);
   --line-strong: rgba(168, 240, 200, 0.55);
   --tint: rgba(168, 240, 200, 0.05);
 
+  /* Duraciones de animación (ms = milisegundos): rápida, normal y la del "barrido" de página. */
   --dur-fast: 150ms;
   --dur: 300ms;
   --dur-wipe: 600ms;
 
+  /* Medidas de la maqueta: ancho máximo del contenido, separación lateral y alto de la cabecera. */
   --page-max: 1240px;
   --gutter: 16px;
   --header-h: 64px;
 }
+/* Móvil: la cabecera es más baja. Esto REDEFINE la variable, y todo lo que use var(--header-h) se adapta solo. */
 @media (max-width: 767px) {
   :root {
     --header-h: 57px;
@@ -43,6 +75,7 @@
 }
 
 /* Mobile first: la separación lateral crece en pantallas grandes. */
+/* @media (min-width: 768px) = "solo si la pantalla mide 768 px o más de ancho". */
 @media (min-width: 768px) {
   :root {
     --gutter: 24px;

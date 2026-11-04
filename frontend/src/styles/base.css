@@ -1,8 +1,15 @@
+/*
+  base.css — estilos base del sitio: reglas generales sobre etiquetas HTML (html, body, a, button)
+  y unas pocas clases de utilidad (.sr-only, .mono, .display). No es de ningún componente en particular.
+  Cómo se usa: global.css lo importa; las clases de utilidad se escriben en el HTML (class="mono").
+  Todos los colores y fuentes vienen de las variables de tokens.css mediante var(--...).
+*/
 html {
   background: var(--color-bg);
   scroll-behavior: smooth;
 }
 
+/* body: quitamos el margen por defecto del navegador y fijamos color de fondo, color de texto y fuente. */
 body {
   margin: 0;
   background: var(--color-bg);
@@ -10,6 +17,7 @@ body {
   font-family: var(--font-sans);
 }
 
+/* Enlaces con el color menta; al pasar el ratón (.link:hover) cambian a neón. */
 a {
   color: var(--color-mint);
 }
@@ -18,18 +26,28 @@ a {
   color: var(--color-neon);
 }
 
+/* Los botones no heredan la fuente por defecto, por eso se fuerza con "inherit"; cursor de mano para indicar que se puede pulsar. */
 button {
   font-family: inherit;
   cursor: pointer;
 }
 
 /* Foco visible: contorno neón de 2 px (A19). */
+/*
+  :focus-visible = el elemento tiene el foco SOLO cuando se navega con teclado (Tab), no al hacer clic.
+  :where(...) agrupa selectores con especificidad 0, así es fácil sobrescribir este estilo luego.
+  outline-offset separa el contorno del elemento 3 px; la transition lo anima al aparecer.
+*/
 :where(a, button, input, [tabindex]):focus-visible {
   outline: 2px solid var(--color-neon);
   outline-offset: 3px;
   transition: outline-offset 100ms var(--ease-p3r);
 }
 
+/*
+  .sr-only ("solo lector de pantalla"): oculta el elemento visualmente (1 px, recortado con clip-path)
+  pero lo deja disponible para lectores de pantalla. Útil para textos que ayudan a la accesibilidad.
+*/
 .sr-only {
   position: absolute;
   width: 1px;
@@ -39,16 +57,22 @@ button {
   white-space: nowrap;
 }
 
+/* .mono: aplica la fuente pixel. Nombre histórico, no es realmente monoespaciada. */
 .mono {
   font-family: var(--font-pixel);
 }
 
+/* .display: estilo de titulares grandes (negrita extrema, cursiva y mayúsculas). */
 .display {
   font-weight: 900;
   font-style: italic;
   text-transform: uppercase;
 }
 
+/*
+  prefers-reduced-motion: reduce = la persona pidió al sistema menos animaciones (accesibilidad, mareos).
+  Aquí desactivamos el desplazamiento suave del scroll para respetarlo.
+*/
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

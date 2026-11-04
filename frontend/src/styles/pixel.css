@@ -1,8 +1,18 @@
+/*
+  pixel.css — capa "actor" para los sprites (personajes e iconos en pixel art).
+  Conceptos:
+  - position: absolute saca el elemento del flujo normal y lo coloca respecto a su contenedor
+  posicionado (el que tenga position: relative/absolute/fixed).
+  - inset: 0 es atajo de top, right, bottom y left a 0, es decir, rellenar todo el contenedor.
+*/
 /* Los sprites los pinta <Sprite />. Aquí solo la capa de "actor": contenedor posicionado donde se mueve el sprite. */
 .actor {
+  /* Se coloca libremente dentro de su contenedor (los valores top/left llegan desde fuera). */
   position: absolute;
+  /* El actor no recibe clics: deja pasar el ratón a lo que haya debajo (es decoración). */
   pointer-events: none;
 }
+/* Selector hijo directo (">"): el sprite dentro del actor se estira para ocupar todo el actor. */
 .actor > .sprite {
   position: absolute;
   inset: 0;

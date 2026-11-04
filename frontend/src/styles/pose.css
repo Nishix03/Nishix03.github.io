@@ -1,7 +1,20 @@
 /*
+  pose.css — figura de pose (boceto SVG animado) que acompaña a cada apartado.
+  Conceptos:
+  - Clases .sk-*: cada una asigna una animación a una parte del boceto (respirar, teclear, saludar...).
+  - @keyframes: define los "fotogramas clave" de una animación (qué estilos tiene en cada porcentaje
+  del recorrido). Luego una clase la activa con la propiedad animation.
+  - Mobile first: los estilos base son para móvil y el @media (min-width: 1024px) los ajusta en pantallas grandes.
+  - Algunas animaciones (float, bob, frame-a, frame-b, fade-in) NO se definen aquí: están en motion.css.
+*/
+/*
   Figura de pose por apartado (plan §15.3). Hoy es el boceto SVG animado; cuando existan los renders
   3D se sustituye el <svg> por la tira WebP con steps() sin tocar este marco ni los tiempos.
   Mobile first: debajo del contenido, hasta 280 px. Desde 1024 px se coloca al lado, a tamaño mediano.
+*/
+/*
+  .pose-fig (bloque): marco de la figura. display: grid + place-items: center centra el contenido.
+  box-sizing: border-box hace que el padding y el borde cuenten dentro del width/max-width.
 */
 .pose-fig {
   display: grid;
@@ -12,33 +25,43 @@
   margin: 0 auto;
   padding: 22px;
   border: 2px dashed var(--line-strong);
+  /* Fondo con degradado diagonal (160deg) de cian translúcido a verde casi transparente. */
   background: linear-gradient(
     160deg,
     rgba(73, 224, 240, 0.14),
     rgba(57, 255, 136, 0.05) 70%,
     rgba(7, 17, 12, 0)
   );
+  /* Recorte en polígono ligeramente torcido para dar un aspecto de recorte de papel. */
   clip-path: polygon(8% 0, 100% 3%, 92% 100%, 0 97%);
   text-align: center;
   font-size: 13px;
   line-height: 1.45;
   color: var(--color-mint);
 }
+/* Pantallas de 1024 px o más: la figura pasa a estar al lado del contenido, con tamaño fijo. */
 @media (min-width: 1024px) {
   .pose-fig {
+    /*
+      var(--pose-w, 240px): usa la variable --pose-w si alguien la definió; si no, usa 240px por defecto.
+      Así cada página puede cambiar el tamaño sin tocar este archivo.
+    */
     flex: 0 0 var(--pose-w, 240px);
     height: var(--pose-h, 330px);
     max-width: none;
     margin: 0;
   }
+  /* Modificador BEM (--sticky): la figura se queda "pegada" al hacer scroll (position: sticky + top). */
   .pose-fig--sticky {
     position: sticky;
     top: 90px;
   }
+  /* Modificador BEM (--end): alinea la figura al final del eje cruzado del contenedor flex. */
   .pose-fig--end {
     align-self: flex-end;
   }
 }
+/* Elementos BEM de la figura: etiqueta (tag) con fuente pixel y línea de tiempo (timeline) con texto pequeño. */
 .pose-fig__tag {
   margin-top: 6px;
   font-family: var(--font-pixel);
@@ -53,6 +76,10 @@
 }
 
 /* Animaciones del boceto (2,5 s, 12 fps de guion). Cada una mueve solo una parte del cuerpo. */
+/*
+  Sintaxis de animation: nombre duración función-de-tiempo [retraso] repeticiones.
+  infinite = se repite sin parar. steps(n) hace saltos discretos en vez de movimiento continuo (estilo pixel art).
+*/
 .sk-breathe {
   animation: sk-breathe 2.5s var(--ease-breathe) infinite;
 }
@@ -62,6 +89,7 @@
 .sk-glance {
   animation: sk-glance 2.5s var(--ease-breathe) infinite;
 }
+/* steps(2): solo dos posiciones, salta de una a otra; da el efecto de teclear. */
 .sk-type {
   animation: sk-type 0.17s steps(2) infinite;
 }
@@ -71,6 +99,7 @@
 .sk-tile {
   animation: float 2.5s var(--ease-breathe) infinite;
 }
+/* Pierna A y pierna B alternan su visibilidad (frame-a / frame-b) para simular pasos. steps(1) = cambio brusco. */
 .sk-leg-a {
   animation: frame-a 0.5s steps(1) infinite;
 }
@@ -78,6 +107,7 @@
   opacity: 0;
   animation: frame-b 0.5s steps(1) infinite;
 }
+/* Caminar: pequeño rebote vertical con la animación bob (de motion.css). */
 .sk-walk {
   animation: bob 0.25s var(--ease-breathe) infinite;
 }
@@ -96,16 +126,26 @@
 .sk-mail {
   animation: sk-mail 2.5s var(--ease-breathe) infinite;
 }
+/* Entrada suave de la pose. "backwards" aplica el estado inicial durante el retraso, antes de empezar. */
 .sk-pose-in {
   animation: fade-in 0.15s var(--ease-p3r) backwards;
 }
 
+/*
+  Con movimiento reducido: la pierna B se queda oculta, así no hay parpadeo de pasos alternados.
+  (motion.css ya desactiva el resto de animaciones para quien pide menos movimiento).
+*/
 @media (prefers-reduced-motion: reduce) {
   .sk-leg-b {
     opacity: 0;
   }
 }
 
+/*
+  ---------- Fotogramas clave del boceto ----------
+  Cada @keyframes usa solo transform u opacity (baratos de animar). "0%, 100%" significa que el primer y el último
+  fotograma son iguales, así el bucle no da salto al reiniciarse.
+*/
 @keyframes sk-breathe {
   0%,
   100% {

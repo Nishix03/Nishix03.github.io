@@ -1,10 +1,27 @@
 /*
+  avatar.css — avatar de Iván con efecto "cut-in" (recorte de personaje, al estilo de los juegos).
+  Conceptos:
+  - Sprite sheet / tira de cuadros: una imagen larga con todos los cuadros de la animación; se desplaza
+  con steps() para mostrar un cuadro cada vez (como un flipbook).
+  - Capas con position: absolute dentro de .cutin: cada div hace una cosa (máscara, banda de color, líneas...).
+  - Variables CSS con valor de respaldo: var(--cx-top, var(--box-top, auto)) usa la primera que exista.
+  Así cada página personaliza el avatar con [data-page='...'] sin duplicar reglas.
+  - Este archivo tiene varios @media con max-width (escritorio primero), a diferencia del resto del proyecto
+  que es mobile first: aquí se explican los ajustes que el avatar necesita al achicar la pantalla.
+  - prefers-reduced-motion y html[data-loading] controlan accesibilidad y la carga inicial.
+*/
+/*
  * Avatar de Iván (recortes de página). Cada página usa dos tiras WebP de cuadros de 600×780:
  * una entrada de 12 cuadros (24 en el hero) que se reproduce una vez y un reposo de 24 cuadros.
  * Capas de atrás hacia delante: .cutin > .cutin__body (inclinada) > .cutin__fall > banda, estela,
  * .cutin__drift > .cutin__art > clips, y las líneas diagonales. Con steps(n, jump-none) la tira
  * salta de cuadro en cuadro sin interpolar, y con image-rendering: pixelated no se suaviza.
  */
+/*
+  .cutin (bloque): contenedor del avatar. Posicionado en absoluto y con z-index: 0 para quedar detrás del texto.
+  pointer-events: none = no captura clics. isolation: isolate crea un contexto de apilamiento propio.
+  backface-visibility: hidden evita parpadeos al transformar. La caja se coloca con variables (--cx-*).
+*/
 .cutin {
   position: absolute;
   z-index: 0;
@@ -25,6 +42,10 @@
   position: absolute;
   inset: 0;
   will-change: transform;
+  /*
+    mask-image con linear-gradient: las máscaras usan la transparencia del degradado para ocultar bordes.
+    transparent = se oculta, #000 = se ve. Aquí el borde izquierdo (y opcionalmente el derecho) se difumina.
+  */
   mask-image: linear-gradient(
     90deg,
     transparent 0,
@@ -34,6 +55,7 @@
   );
 }
 /* Fundido inferior: hacia abajo el avatar se vuelve transparente y deja ver lo que hay detrás. */
+/* Selector de atributo: solo aplica si el elemento tiene data-fade. Funde la parte inferior (arriba se ve, abajo desaparece). */
 .cutin[data-fade] {
   will-change: transform;
   mask-image: linear-gradient(
@@ -41,11 +63,16 @@
     transparent var(--fade-to, var(--box-fade-to))
   );
 }
+/*
+  Capa que cae al entrar: animación cut-fall (0,6 s, curva de caída, retraso de 0,1 s). "backwards" mantiene
+  el estado inicial (invisible, desplazado) durante el retraso.
+*/
 .cutin__fall {
   position: absolute;
   inset: 0;
   animation: cut-fall 0.6s var(--ease-drop) 0.1s backwards;
 }
+/* Estela: degradado de colores translúcidos con forma de paralelogramo (clip-path) detrás del avatar. */
 .cutin__wash {
   position: absolute;
   left: 4%;
@@ -60,6 +87,7 @@
   );
   clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
 }
+/* Banda de color de selección (--sel) cruzando el avatar, recortada en diagonal con clip-path. */
 .cutin__band {
   position: absolute;
   left: -12%;
@@ -69,18 +97,21 @@
   background: var(--sel);
   clip-path: polygon(0 34%, 100% 0, 100% 64%, 0 100%);
 }
+/* Capa de "deriva" (movimiento suave). Ahora vacía a propósito: ver su comentario sobre el rendimiento. */
 .cutin__drift {
   position: absolute;
   inset: 0;
   /* Sin balanceo continuo: girar en cada fotograma una capa de ~800×1000 px con máscara bajaba la
      página a ~20 fps. El movimiento lo ponen las tiras (reposo y caminata). */
 }
+/* Capa del arte: transform-origin fija desde qué punto escala/gira; entra con el zoom rápido de cut-in. */
 .cutin__art {
   position: absolute;
   inset: 0;
   transform-origin: 60% 40%;
   animation: cut-in 0.22s var(--ease-p3r) backwards;
 }
+/* Líneas diagonales finas: repeating-linear-gradient repite un patrón (2 px de línea, 8 px de hueco) con -24deg de ángulo. */
 .cutin__lines {
   position: absolute;
   inset: 0;
@@ -90,11 +121,17 @@
     transparent 2px 10px
   );
 }
+/* Recorte: overflow: hidden oculta lo que se salga, así solo se ve UN cuadro de la tira. */
 .cutin__clip {
   position: absolute;
   inset: 0;
   overflow: hidden;
 }
+/*
+  La tira de cuadros. Sus valores llegan por variables: --d duración, --n número de cuadros, --i repeticiones,
+  --w retraso. steps(n, jump-none) salta de cuadro en cuadro sin interpolar. "forwards" deja el último cuadro al terminar.
+  image-rendering: pixelated mantiene el pixel art nítido al escalar (sin suavizado).
+*/
 .cutin__strip {
   display: block;
   max-width: none;
@@ -148,6 +185,10 @@
   background: linear-gradient(rgba(7, 17, 12, 0), var(--color-bg));
 }
 
+/*
+  ---------- Fotogramas clave ----------
+  Cada @keyframes describe una animación. "from" es el inicio y "to" el final; con porcentajes se definen pasos intermedios.
+*/
 @keyframes cut-fall {
   from { transform: translate(-120px, -260px); opacity: 0; }
   to { transform: none; opacity: 1; }
@@ -157,12 +198,18 @@
   0% { transform: scale(1.3) translate(6%, 4%); opacity: 0; }
   100% { transform: none; opacity: 1; }
 }
+/* avatar-play: desliza la tira hasta var(--e) (el desplazamiento final, calculado según el número de cuadros). */
 @keyframes avatar-play {
   from { transform: translateX(0); }
   to { transform: translateX(var(--e)); }
 }
+/*
+  avatar-gone / avatar-show: ocultan o muestran una capa. Con 1 ms de duración y un retraso (animation-delay)
+  funcionan como un "interruptor" en el momento justo (cuando acaba la entrada empieza el reposo).
+*/
 @keyframes avatar-gone { to { opacity: 0; } }
 @keyframes avatar-show { to { opacity: 1; } }
+/* avatar-rest-a / avatar-rest-b: se turnan: A visible en la primera mitad del bucle, B en la segunda. */
 @keyframes avatar-rest-a {
   0%, 49.9% { opacity: 1; }
   50%, 100% { opacity: 0; }
@@ -171,6 +218,7 @@
   0%, 49.9% { opacity: 0; }
   50%, 100% { opacity: 1; }
 }
+/* avatar-walk: balanceo de caminata calculado (valores pequeños en %); se usa con step-end para que salte entre posiciones. */
 @keyframes avatar-walk {
     0.000% { transform: translate(0.0000%, 0.0000%); }
     6.250% { transform: translate(0.0139%, 0.1282%); }
@@ -191,6 +239,10 @@
 }
 
 /* Menos de 1024 px el recorte pasa a ser un fondo suave, no compite con el texto. */
+/*
+  Pantallas de MENOS de 1024 px (max-width). Excepción al mobile first: aquí se parte del diseño de escritorio
+  y se ajusta el avatar al achicar la pantalla. Cada página se identifica con el atributo data-page.
+*/
 @media (max-width: 1023px) {
   .cutin {
     opacity: 0.22;
@@ -198,6 +250,7 @@
   /* Más pequeño y hacia el borde: la cara no se queda detrás del titular ni de los textos. */
   /* El Hero se ve más: a media escala exacta (390×507), pegado a la derecha y con opacidad 0,75. El menú
      lleva un contorno oscuro (index.astro) para seguir leyéndose encima. */
+/* [data-page='...']: selector de atributo. Cada regla redefine las variables --cx-* (posición y tamaño) y la opacidad. */
   .cutin[data-page='hero'] {
     --cx-width: 390px;
     --cx-height: 507px;
@@ -237,6 +290,7 @@
    completa y a media escala exacta (300×390 px, cada píxel del dibujo = medio píxel), así se ve nítido.
    Se funde hacia abajo con el fondo y el título de la página queda montado sobre ese borde; el contenido
    empieza debajo, sobre fondo liso, sin nada detrás. */
+/* Móvil (hasta 767 px). */
 @media (max-width: 767px) {
   .cutin[data-page='stack'],
   .cutin[data-page='journey'],
@@ -266,6 +320,10 @@
     --fade-from: 56%;
     --fade-to: 84%;
   }
+/*
+  :has(): selecciona el elemento PADRE según lo que contiene. Aquí: la .page que tenga un .cutin de esa página
+  dentro; le damos más padding-top para que el contenido empiece debajo del avatar.
+*/
   .page:has(> .cutin[data-page='stack']) > .page__inner,
   .page:has(> .cutin[data-page='journey']) > .page__inner,
   .page:has(> .cutin[data-page='projects']) > .page__inner,
@@ -287,6 +345,7 @@
 
 /* Tableta vertical (768–1023 px): la misma franja, a escala real (600×780) y recortada por el fundido a cabeza
    y hombros; el contenido empieza debajo. */
+/* Rango intermedio con dos límites: entre 768 y 1023 px de ancho. */
 @media (min-width: 768px) and (max-width: 1023px) {
   .cutin[data-page='stack'],
   .cutin[data-page='journey'],
@@ -313,6 +372,10 @@
     padding-top: 340px;
   }
 }
+/*
+  Movimiento reducido: se quitan las animaciones y se muestra el último cuadro de la entrada (translateX(var(--e)));
+  los reposos animados se ocultan.
+*/
 @media (prefers-reduced-motion: reduce) {
   .cutin__fall,
   .cutin__drift,
@@ -335,6 +398,10 @@
 
 /* Mientras cargan el avatar y las fuentes (scripts/ready.ts) la página no se ve y nada se anima;
    al terminar, la transición, el avatar y los textos arrancan a la vez. */
+/*
+  data-loading: atributo que pone un script mientras cargan el avatar y las fuentes. La página se oculta y las animaciones
+  se pausan para que todo arranque a la vez. !important fuerza la regla por encima de otras.
+*/
 html[data-loading] .page-enter {
   visibility: hidden;
 }
@@ -346,6 +413,7 @@ html[data-loading] .page-enter *::after {
 }
 
 /* Móvil apaisado: el avatar del inicio va detrás, a la derecha y más tenue (la franja no cabe en 375 px de alto). */
+/* orientation: landscape + max-height: móvil girado (apaisado). El avatar del inicio se reduce y se hace más tenue. */
 @media (orientation: landscape) and (max-height: 500px) {
   .cutin[data-page='hero'] {
     opacity: 0.45;

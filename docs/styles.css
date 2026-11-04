@@ -38,11 +38,19 @@
 ==========================================================================
 */
 
+/*
+  NOTA DE REPASO (conceptos extra que aparecen más abajo):
+  - Selectores BEM: .bloque__elemento--modificador (ej. .nav__link--active).
+  - Flexbox (display: flex) alinea elementos en fila o columna; Grid (display: grid) en filas y columnas.
+  - rem = unidad relativa al tamaño de fuente base (1rem = 16px normalmente).
+  - Animaciones por scroll: animation-timeline: view() (ver sección 8).
+*/
 /* 
 ==========================================================================
    1. VARIABLES GLOBALES (CONFIGURACIÓN)
 ========================================================================== 
 */
+/* :root es el elemento <html>. Las variables declaradas aquí (--nombre) se usan en cualquier parte con var(--nombre). */
 :root {
     /* --- PALETA DE COLORES (Professional Green) --- */
 
@@ -98,6 +106,7 @@
    2. RESET Y BASES (LA MATEMÁTICA DEL CSS)
 ========================================================================== 
 */
+/* * = todos los elementos. Quitamos márgenes/rellenos por defecto del navegador para controlar el espaciado nosotros. */
 * {
     margin: 0;
     padding: 0;
@@ -115,6 +124,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+/* Imágenes responsivas: nunca más anchas que su contenedor (max-width) y display: block elimina el hueco bajo la imagen. */
 img {
     max-width: 100%;
     height: auto;
@@ -130,6 +140,7 @@ img {
 
 /* 3.1 Entrada General (Fade In Up)
    Usada para secciones principales al hacer scroll */
+/* @keyframes define los fotogramas clave: "from" es el inicio, "to" el final. Se aplican con la propiedad animation. */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -144,6 +155,7 @@ img {
 
 /* 3.2 Gradiente Infinito (Hero Background) 
    Mueve el fondo lentamente para dar vida */
+/* background-position se anima de 0% a 100% y vuelve: con un fondo más grande que el elemento (background-size) parece que el degradado se desplaza. */
 @keyframes gradientMove {
     0% {
         background-position: 0% 50%;
@@ -258,6 +270,7 @@ img {
    4. TIPOGRAFÍA Y UTILIDADES
 ========================================================================== 
 */
+/* Selector agrupado con comas: la misma regla para h1, h2, h3 y h4. */
 h1,
 h2,
 h3,
@@ -293,6 +306,7 @@ p {
     max-width: 70ch;
 }
 
+/* Enlaces: sin subrayado y con transición de 0,3 s. "transition" suaviza el paso entre dos estados (aquí, al pasar el ratón). */
 a {
     color: var(--color-primary);
     text-decoration: none;
@@ -304,6 +318,7 @@ a:hover {
     text-decoration: dashed;
 }
 
+/* Nota: son clases con mayúsculas; en CSS los nombres de clase distinguen mayúsculas y minúsculas. */
 /* Highlights de código */
 .HTML {
     color: rgba(255, 115, 0, 0.74);
@@ -325,6 +340,7 @@ a:hover {
    5. LAYOUT Y UTILIDADES
 ========================================================================== 
 */
+/* Contenedor centrado: margin: 0 auto centra horizontalmente un bloque con ancho máximo. */
 .container {
     width: 100%;
     max-width: var(--container-width);
@@ -337,6 +353,7 @@ a:hover {
    6. COMPONENTE: HEADER
 ========================================================================== 
 */
+/* Cabecera: la animación showheader (sección 3) la hace caer suavemente al cargar la página. */
 .header {
     background-color: var(--bg-surface);
     border-bottom: 1px solid var(--color-primary-light);
@@ -345,6 +362,7 @@ a:hover {
     animation: showheader 1s ease-out forwards;
 }
 
+/* __container (elemento BEM): Flexbox en columna (móvil). align-items centra en el eje horizontal; gap separa los hijos. */
 .header__container {
     display: flex;
     flex-direction: column;
@@ -389,6 +407,7 @@ a:hover {
     /* Prepare for hover animation */
 }
 
+/* Modificador BEM --active: marca el enlace de la página actual. */
 .nav__link--active {
     background: var(--gradient-primary);
     color: #ffffff;
@@ -403,6 +422,7 @@ a:hover {
     /* Prepare for hover animation */
 }
 
+/* :not(...) excluye al enlace activo para que el efecto hover no lo pise. */
 .nav__link:hover:not(.nav__link--active),
 .action__link:hover {
     background-color: var(--color-primary-light);
@@ -451,6 +471,7 @@ a:hover {
    7. COMPONENTE: Lateral Bar
 ========================================================================== 
 */
+/* Mobile first: la barra lateral está OCULTA en móvil y solo se muestra en pantallas de 1024 px o más (ver sección 10). */
 .sidebar {
     display: none;
 }
@@ -459,6 +480,10 @@ a:hover {
 ==========================================================================
    7. COMPONENTE: HERO
 ========================================================================== 
+*/
+/*
+  #hero: selector de id (único en la página). background-size: 300% hace el fondo 3 veces más grande
+  y gradientMove lo desplaza para animar el degradado.
 */
 #hero {
     padding: 4rem 0;
@@ -471,6 +496,7 @@ a:hover {
     margin-bottom: 3rem;
 }
 
+/* Estos elementos empiezan invisibles (opacity: 0) y la animación los muestra; "forwards" deja el estado final. */
 .hero__title {
     color: var(--color-primary-dark);
     font-weight: 800;
@@ -511,6 +537,7 @@ a:hover {
     font-size: 0.85rem;
 }
 
+/* aspect-ratio: 1/1 la hace cuadrada; object-fit: cover recorta la imagen para llenar el marco sin deformarla. */
 .figure__photo {
     width: 100%;
     max-width: 300px;
@@ -529,6 +556,7 @@ a:hover {
 }
 
 /* Botones */
+/* Botones en columna en móvil (flex-direction: column); en escritorio pasan a fila (sección 10). */
 .hero__buttons {
     display: flex;
     flex-direction: column;
@@ -553,6 +581,7 @@ a:hover {
     transition: transform .2s ease, box-shadow .2s ease;
 }
 
+/* Modificadores BEM de botón: --primary (relleno con degradado) y --secondary (solo borde). */
 .button--primary {
     background: var(--gradient-primary);
     color: white;
@@ -599,6 +628,10 @@ a:hover {
     animation: enphasis 5s ease-in-out infinite;
 }
 
+/*
+  Texto con degradado: el fondo se recorta a la forma de las letras (background-clip: text)
+  y el color del texto se vuelve transparente para dejarlo ver.
+*/
 .stat__data {
     display: block;
     font-size: 2.5rem;
@@ -621,6 +654,11 @@ a:hover {
    internos para que aparezcan progresivamente (Staggered Effect). */
 
 /* Títulos de sección */
+/*
+  Animaciones ligadas al scroll: animation-timeline: view() hace que la animación avance según la posición
+  del elemento en pantalla (no según el tiempo). animation-range indica en qué tramo de la entrada se reproduce.
+  Es una característica moderna: no funciona en todos los navegadores (si falta, el elemento se ve normal).
+*/
 .trip__title,
 .values__title,
 .skills-titulo,
@@ -688,6 +726,7 @@ a:hover {
 }
 
 /* Grid de Valores */
+/* Grid: grid-template-columns: 1fr = una columna que ocupa todo el espacio (móvil). En escritorio pasa a dos columnas. */
 .value__list {
     display: grid;
     gap: 20px;
@@ -745,6 +784,7 @@ a:hover {
 }
 
 /* Estilos específicos Skill */
+/* Cada tarjeta de skill tiene su propio id y colores (degradado de fondo + borde izquierdo). */
 #skill1__container {
     /* HTML */
     background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
@@ -779,6 +819,7 @@ a:hover {
 }
 
 /* Barras de Progreso */
+/* Barra de progreso: el contenedor (.skill__bar) con posición relativa y la barra interna (.skill__progress) absoluta dentro. */
 .skill__bar {
     background-color: #e0e0e0;
     height: 24px;
@@ -799,6 +840,10 @@ a:hover {
     /* animation-delay: calc(var(--index, 0) * 0.2s); */
 }
 
+/*
+  ::after = pseudo-elemento: una caja generada por CSS (content: "" la crea vacía). Aquí es el brillo (shimmer) de la barra,
+  que empieza fuera (left: -100%). Las líneas de animation comentadas lo activarían.
+*/
 .skill__progress::after {
     content: "";
     position: absolute;
@@ -811,6 +856,10 @@ a:hover {
     /* animation-delay: 2s; */
 }
 
+/*
+  Modificadores por tecnología: el ancho (width) representa el nivel; animation-duration regula el tiempo de llenado.
+  Las variables --index se pueden usar con calc() para escalonar retardos.
+*/
 /* Colores y Duraciones Específicas */
 .skill__progress--html {
     background: linear-gradient(90deg, #f97316 0%, #fb923c 100%);
@@ -903,6 +952,7 @@ a:hover {
 */
 
 /* --- TABLET Y DESKTOP PEQUEÑO (Min-width: 768px) --- */
+/* Mobile first: lo que va dentro de @media (min-width: 768px) sobrescribe los estilos base solo en tablet/escritorio. */
 @media (min-width: 768px) {
 
     /* Tipografía */
@@ -1019,6 +1069,7 @@ a:hover {
 
 /* --- DESKTOP GRANDE (Min-width: 1024px) --- */
 /* --- DESKTOP GRANDE (Min-width: 1024px) --- */
+/* Escritorio (1024 px o más): aparece la barra lateral fija y el contenido se desplaza a la derecha con margin-left. */
 @media (min-width: 1024px) {
 
     .nav__mobile {
@@ -1027,6 +1078,7 @@ a:hover {
 
     /* Ajuste del layout para el sidebar usando margin-left en el contenido */
     /* Ajuste del layout para el sidebar usando margin-left en el contenido */
+    /* margin-left + width: calc(100% - 80px) dejan sitio a la barra lateral. calc() permite mezclar unidades. */
     header,
     main,
     footer {
@@ -1042,6 +1094,7 @@ a:hover {
         padding-left: 0;
     }
 
+    /* position: fixed la ancla a la ventana. Al pasar el ratón (:hover) se ensancha; overflow: hidden oculta el texto mientras está colapsada. */
     .sidebar {
         display: flex;
         position: fixed;
@@ -1085,6 +1138,7 @@ a:hover {
         transform: translateX(5px);
     }
 
+    /* ".sidebar__option i": las etiquetas <i> dentro de la opción son los iconos (Font Awesome). */
     .sidebar__option i {
         width: 24px;
         margin-right: 0.5rem;
@@ -1116,6 +1170,7 @@ a:hover {
         margin-top: auto;
     }
 
+    /* Clases de Font Awesome (librería de iconos): se les da un tamaño común. */
     .fa-solid,
     .fa-brands,
     .fa-sharp {

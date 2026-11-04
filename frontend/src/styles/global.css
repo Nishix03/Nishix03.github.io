@@ -1,7 +1,19 @@
+/*
+  global.css — punto de entrada de los estilos. Solo contiene @import: carga Tailwind, las fuentes y
+  los demás archivos CSS en un orden concreto. Es el único CSS que importa el código de la página;
+  el resto llega a través de este archivo.
+  Conceptos:
+  - @import: incluye el contenido de otro archivo CSS en este punto.
+  - El ORDEN importa: en CSS, lo que viene después puede sobrescribir lo anterior. Por eso Tailwind va
+  primero y tokens.css va antes que los archivos que usan sus variables.
+  - sprite-keyframes.css no aparece aquí: revisa dónde se importa (es un archivo generado por script).
+*/
 @import 'tailwindcss';
+/* Fuentes locales con Fontsource (paquetes npm): Figtree para texto y Pixelify Sans para el estilo pixel. */
 @import '@fontsource-variable/figtree';
 @import '@fontsource-variable/figtree/wght-italic.css';
 @import '@fontsource-variable/pixelify-sans';
+/* Archivos propios: primero los tokens (variables), luego base, animaciones y componentes. */
 @import './tokens.css';
 @import './base.css';
 @import './motion.css';
