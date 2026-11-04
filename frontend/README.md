@@ -37,7 +37,7 @@ npm test          # pruebas (necesita npm run build antes)
 
 ```
 frontend/
-├─ public/              favicon y, cuando existan, sprites/ y render3d/ (assets de Codex y Blender)
+├─ public/              favicon, avatar/ (renders 3D del personaje por apartado) y sprites/ (assets de Codex)
 ├─ src/
 │  ├─ styles/           tokens.css (variables), base.css, motion.css (keyframes), option.css (selección P3R),
 │  │                    pose.css (figuras por apartado), pixel.css
@@ -71,6 +71,6 @@ Cada personaje es un `<Clip>` con varios clips (reposo, flechas, giro…) del pa
 ## Qué falta (no es código)
 
 - Nada de sprites: el paquete por acción de Codex ya está conectado (ver abajo). Para revisar los clips sueltos: `art/sprites/ready-to-integrate/preview.html`.
-- Renders 3D del personaje (hero y una pose por apartado) → Blender. Hoy el hero y las figuras usan el boceto.
+- Renders 3D del personaje: ya están puestos en cada apartado (`public/avatar/`, componente `AvatarCutin`).
 - URL real de LinkedIn en `src/content/en/contact.ts`.
 - Versión en español (`/es`).

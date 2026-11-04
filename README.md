@@ -45,7 +45,7 @@ que corre en el compositor del navegador y se mantiene fluido.
 ```
 .
 ├─ frontend/                 Proyecto Astro: es el sitio que se publica
-│  ├─ public/                Favicon y sprites ya procesados (sprites/clips, manifest)
+│  ├─ public/                Favicon, avatar 3D por apartado (avatar/) y sprites ya procesados (sprites/)
 │  ├─ art/sprites/           Fuentes del arte pixel (.piskel, PNG) y el paquete "ready-to-integrate"
 │  ├─ scripts/               Utilidades de Node para generar/copiar sprites
 │  ├─ src/
@@ -200,5 +200,5 @@ El workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) se ej
 
 ## Estado y pendientes
 
-- Renders 3D del personaje (Hero y una pose por apartado), pendientes de Blender; hoy se usan las figuras del boceto.
+- Los renders 3D del personaje ya están integrados: cada apartado tiene su avatar animado en `frontend/public/avatar/` (entrada y reposo).
 - Añadir la URL real de LinkedIn en `frontend/src/content/*/contact.ts`.
