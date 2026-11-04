@@ -13,6 +13,7 @@ const icon = sprites.iconNishixAI;
 <header class="header">
   <div class="header__bar">
     <a class="header__brand focus-ring" href={localePath(locale)}>
+      <img class="header__logo" src="/brand/nishix-nx-pixel.png" alt="" width="44" height="28" />
       IVÁN RODAS <span class="header__handle mono">{ui.handle}</span>
     </a>
 
@@ -96,6 +97,14 @@ const icon = sprites.iconNishixAI;
     font-size: 13px;
     color: var(--color-mint);
   }
+  .header__logo {
+    flex: none;
+    width: 44px;
+    height: 28px;
+    margin-right: 10px;
+    object-fit: contain;
+    image-rendering: pixelated;
+  }
   /* 40 px entre opciones: el tajo de una no puede tocar a la siguiente. */
   .header__nav {
     display: flex;
@@ -158,6 +167,11 @@ const icon = sprites.iconNishixAI;
     }
     .header__handle {
       display: none;
+    }
+    .header__logo {
+      width: 32px;
+      height: 24px;
+      margin-right: 7px;
     }
     .header__tools {
       order: 2;

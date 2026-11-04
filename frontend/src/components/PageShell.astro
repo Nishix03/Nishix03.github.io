@@ -1,4 +1,5 @@
 ---
+import FloatingSquares from './FloatingSquares.astro';
 /**
  * Marco de cada página (plan §16.1-16.2): la página entra con un círculo desde arriba a la derecha
  * y dos barridos (color de selección y blanco) la cruzan. Palabra gigante y número grande de fondo,
@@ -45,6 +46,7 @@ const {
     </div>
   )}
   <slot name="bg" />
+  <FloatingSquares />
   <div class="page__inner" style={`--pad-top:${padTop}px`}>
     <slot />
   </div>

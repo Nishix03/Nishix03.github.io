@@ -7,7 +7,7 @@ import type { Technology } from '../types';
 export const rankCaps = { 1: 30, 2: 45, 3: 60, 4: 75, 5: 85 } as const;
 
 export const stackIntro =
-  "Mastery is self-assessed and capped by evidence: RANK 1 (course) ≤ 30% · RANK 2 (personal project) ≤ 45% · RANK 3 (shipped) ≤ 60% · RANK 4 (production) ≤ 75% · RANK 5 (team or award) ≤ 85%. I'm a student: nothing is at 100%.";
+  'Technologies I use in my studies and projects. Percentages are a self-assessment of my practical experience, supported by the courses and work listed on each card. Levels range from R1 (coursework) to R5 (team projects or awards).';
 
 const tech = (
   id: string,

@@ -122,7 +122,7 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
                   src={`${base}-rest-0.webp`}
                   alt=""
                   decoding="async"
-                  style={`${strip(24)};--d:2400ms;--w:0.8s;--e:-95.8333%`}
+                  style={`${strip(24)};--d:3200ms;--w:0.8s;--e:-95.8333%`}
                 />
               </span>
               <span class="cutin__clip cutin__clip--hero-b">
@@ -131,7 +131,7 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
                   src={`${base}-rest-1.webp`}
                   alt=""
                   decoding="async"
-                  style={`${strip(24)};--d:2400ms;--w:0.8s;--e:-95.8333%`}
+                  style={`${strip(24)};--d:3200ms;--w:0.8s;--e:-95.8333%`}
                 />
               </span>
             </>
@@ -159,6 +159,17 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
                   style={`${strip(24)};--d:4000ms;--w:${seconds};--e:-95.8333%`}
                 />
               </span>
+              <div class="cutin__jewelry">
+                <span class="cutin__clip cutin__clip--entry" style={`--t:${seconds}`}>
+                  <img class="cutin__strip" src={`${base}-entry.webp`} alt="" decoding="async"
+                    style={`${strip(view.entryFrames)};--d:${view.entryMs}ms;--i:1;${entryEnd}`} />
+                </span>
+                <span class:list={['cutin__clip', 'cutin__clip--rest', { 'cutin__clip--walk': view.walk }]}
+                  style={`--t:${seconds}`}>
+                  <img class="cutin__strip" src={`${base}-rest.webp`} alt="" decoding="async"
+                    style={`${strip(24)};--d:4000ms;--w:${seconds};--e:-95.8333%`} />
+                </span>
+              </div>
             </>
           )}
         </div>

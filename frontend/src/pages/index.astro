@@ -79,7 +79,6 @@ const bubbles = [
                   <span class="option__slash" aria-hidden="true" />
                   <span class="option__plate" aria-hidden="true" />
                   <span class="option__label">{option.label}</span>
-                  <span class="option__sub">{option.sub}</span>
                 </a>
               </li>
             ))}
@@ -96,7 +95,7 @@ const bubbles = [
         <div class="actor hero__late hero__butterfly" data-loop>
           <!-- La ruta la pone fx-fly; el aleteo lo dibuja la tira. Sobre la silueta se posa (hover). -->
           <div class="fx-fly hero__butterfly-route">
-            <Clip name="butterfly" clips={['p3-butterfly-fly', 'p3-butterfly-hover']} />
+            <Clip name="butterfly" scale={1.15} clips={['p3-butterfly-fly', 'p3-butterfly-hover']} />
           </div>
         </div>
       </div>
@@ -119,12 +118,6 @@ const bubbles = [
   /* El tamaño de cada opción baja con el ancho de la pantalla: «PROJECTS» no se sale en 390 px. */
   .hero__options :global(.option) {
     font-size: min(var(--opt-size), 10.5vw);
-  }
-  @media (max-width: 767px) {
-    /* Las etiquetas pequeñas (Persona, Skills…) se salían de la pantalla: el nombre ya dice el apartado. */
-    .hero__options :global(.option__sub) {
-      display: none;
-    }
   }
   /* Pantallas muy estrechas: franja menta casi sin ancho y textos que bajan con el ancho (a 320 px todo cabe). */
   @media (max-width: 479px) {
@@ -428,8 +421,8 @@ const bubbles = [
   .hero__butterfly {
     left: 10px;
     top: 40px;
-    width: 45px;
-    height: 35px;
+    width: 51.75px;
+    height: 40.25px;
   }
 
   /* A la izquierda: a la derecha quedaba encima del avatar. */
@@ -453,5 +446,44 @@ const bubbles = [
   /* Posada sobre la silueta: la ruta se detiene y solo bate las alas */
   .hero__butterfly[data-rest] .hero__butterfly-route {
     animation-play-state: paused;
+  }
+
+  /* Monitores anchos: una composición común para texto y avatar, con proporciones
+     próximas a laptop. El escenario decorativo no debe ensanchar la columna de texto. */
+  @media (min-width: 1600px) {
+    .hero {
+      min-height: calc(100svh - var(--header-h));
+    }
+    .hero__inner {
+      max-width: 1440px;
+      min-height: inherit;
+      box-sizing: border-box;
+      padding: 104px 48px 80px 120px;
+      display: grid;
+      grid-template-columns: minmax(0, 720px) minmax(0, 1fr);
+      gap: 24px;
+      align-items: center;
+    }
+    .hero__name {
+      font-size: 96px;
+    }
+    .hero__pitch {
+      margin-top: 24px;
+    }
+    .hero__stage {
+      min-width: 0;
+      height: 440px;
+    }
+    .hero__hint {
+      left: calc((100% - 1440px) / 2 + 120px);
+      bottom: 28px;
+    }
+    .hero > :global(.cutin[data-page='hero']) {
+      --hero-avatar-width: clamp(840px, 50vw, 1120px);
+      --cx-width: var(--hero-avatar-width);
+      --cx-height: calc(var(--hero-avatar-width) * 1.3);
+      --cx-top: calc(100% - var(--hero-avatar-width) * 1.3 + 20px);
+      --cx-right: -48px;
+    }
   }
 </style>
