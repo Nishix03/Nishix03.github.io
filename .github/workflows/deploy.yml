@@ -1,42 +1,67 @@
+# deploy.yml — workflow de GitHub Actions.
+# Un "workflow" es una receta automática (en YAML) que GitHub ejecuta en sus servidores cuando
+# pasa algo en el repositorio (un push, un clic manual, etc.). Esto es la "entrega continua" (CD):
+# cada cambio en main se compila y se publica solo, sin subir archivos a mano.
+# YAML usa sangría (espacios) para anidar, como las llaves en Java; los comentarios empiezan con #.
+
 # Publica el portafolio (Astro, carpeta frontend/) en GitHub Pages en cada push a main.
 # También se puede lanzar a mano desde la pestaña Actions (workflow_dispatch).
+# Nombre que se ve en la pestaña Actions de GitHub.
 name: Publicar en GitHub Pages
 
+# `on` = cuándo se dispara el workflow.
 on:
+  # Al hacer push a la rama main.
   push:
     branches: [main]
+  # Permite el botón "Run workflow" para lanzarlo manualmente.
   workflow_dispatch:
 
 # Permisos mínimos: leer el código, escribir en Pages y firmar el despliegue.
+# (Principio de mínimo privilegio: el workflow solo recibe lo que necesita.)
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: read # leer el contenido del repositorio
+  pages: write # publicar en GitHub Pages
+  id-token: write # pedir un token de identidad que verifica que el despliegue es legítimo
 
 # Un solo despliegue a la vez; si llega otro push, el que está en curso termina.
 concurrency:
+  # Todos los despliegues comparten el grupo "pages" y por eso se ponen en fila.
   group: pages
+  # false = no cancelar el que ya está corriendo (el nuevo espera su turno).
   cancel-in-progress: false
 
+# Un "job" es un conjunto de pasos que corre en una máquina virtual. Aquí hay dos: build y deploy.
 jobs:
+  # Job 1: construir el sitio.
   build:
+    # Máquina virtual limpia con Ubuntu (Linux) que GitHub presta durante la ejecución.
     runs-on: ubuntu-latest
     steps:
       - name: Descargar el código
+        # `uses` = reutilizar una acción ya hecha por otros; checkout clona el repo en la máquina.
         uses: actions/checkout@v4
       - name: Instalar, compilar y empaquetar el sitio
+        # Acción oficial de Astro: instala dependencias (npm), ejecuta el build y sube el resultado.
         uses: withastro/action@v3
+        # `with` son los parámetros de la acción.
         with:
-          path: ./frontend
-          node-version: 22
+          path: ./frontend # carpeta del proyecto Astro dentro del repo
+          node-version: 22 # versión de Node.js que se usará
 
+  # Job 2: publicar lo construido.
   deploy:
+    # `needs` hace que espere a que "build" termine bien; si build falla, no se publica.
     needs: build
     runs-on: ubuntu-latest
+    # El "entorno" github-pages registra el despliegue y muestra su URL en GitHub.
     environment:
       name: github-pages
+      # Toma la URL final de la salida del paso con id "deployment" (expresión ${{ ... }}).
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Publicar en GitHub Pages
+        # `id` da nombre al paso para poder leer sus resultados arriba.
         id: deployment
+        # Acción oficial que toma el paquete subido por build y lo publica.
         uses: actions/deploy-pages@v4

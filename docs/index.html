@@ -1,65 +1,109 @@
 <!-- Primera versión de mi portafolio online (Esqueleto HTML)-->
 
+<!--
+    GUÍA RÁPIDA PARA LEER ESTE ARCHIVO (comentarios para Iván)
+    ----------------------------------------------------------
+    HTML es el "esqueleto" de una página: describe QUÉ contenido hay (títulos, párrafos,
+    imágenes, enlaces), no cómo se ve (eso lo hace el CSS en styles.css).
+    Los elementos se escriben con etiquetas: <p>texto</p> = etiqueta de apertura + contenido +
+    etiqueta de cierre. Se anidan como cajas dentro de cajas (parecido a un árbol de objetos).
+    Los atributos (class="...", id="...", href="...") dan información extra a cada etiqueta.
+    Estructura general del documento:
+      <head>  -> información sobre la página (no se ve): metadatos, SEO, fuentes, CSS
+      <body>  -> lo que sí se ve: menú lateral, cabecera, contenido principal y pie de página
+    Esta carpeta docs/ es la que publica GitHub Pages, por eso este archivo es la primera
+    versión del portafolio en HTML puro (sin frameworks).
+    Nota: un comentario HTML como este no se muestra en la página y no puede contener dos
+    guiones seguidos dentro de su texto.
+-->
+
+<!-- Declara que es un documento HTML5 (si falta, el navegador entra en "modo antiguo") -->
 <!DOCTYPE html>
+<!-- Elemento raíz. lang="en" indica el idioma principal: ayuda a lectores de pantalla, traductores y buscadores -->
 <html lang="en">
 
+<!-- HEAD: datos "sobre" la página que el visitante no ve directamente -->
 <head>
-    <!-- 
+    <!--
     ========================================
     METADATOS ESENCIALES
     ========================================
     -->
 
+    <!-- Codificación de caracteres UTF-8: permite tildes, ñ y emojis sin que salgan símbolos raros -->
     <meta charset="UTF-8">
+    <!-- Hace la página responsive: usa el ancho real del dispositivo en móviles en vez de simular una pantalla de escritorio -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título que aparece en la pestaña del navegador (aquí hay dos <title>; solo uno debería existir, el navegador usa el primero) -->
     <title>Portfolio V3 - Home</title>
+    <!-- Enlaza la hoja de estilos CSS externa que da el aspecto visual -->
     <link rel="stylesheet" href="styles.css">
 
     <!--SEO Básico-->
+    <!-- SEO = optimización para buscadores. Este título es el que Google suele mostrar como encabezado del resultado -->
     <title>Iván Rodas - Developer Profile | Web Dev in formation</title>
+    <!-- Descripción breve que Google puede mostrar bajo el título en los resultados -->
     <meta name="description" content="Professional profile of Iván Rodas. Web Dev in formation">
+    <!-- Palabras clave (hoy los buscadores casi no las usan, pero no estorban) -->
     <meta name="keywords"
         content="professional profile, web developer, web dev, portfolio, HTML, CSS, JavaScript, web develpoment">
+    <!-- Autor de la página -->
     <meta name="author" content="Iván Rodas">
+    <!-- Instrucciones para los robots de los buscadores: index = guardar la página, follow = seguir sus enlaces -->
     <meta name="robots" content="index, follow">
 
     <!-- Open Graph para Redes Sociales -->
+    <!-- Open Graph (og:) es un protocolo de Facebook que usan WhatsApp, LinkedIn, etc. para armar la "vista previa" al compartir el enlace: título, descripción, imagen... -->
     <meta property="og:title" content="Iván Rodas - My Personal Profile">
     <meta property="og:description"
         content="Discover my learning trip for web develop  ment, my projects and my passion for tech.">
+    <!-- Imagen de la vista previa (pendiente de completar) -->
     <meta property="og:image" content="">
+    <!-- URL oficial de la página al compartirla (pendiente de completar) -->
     <meta property="og:url" content="">
+    <!-- Tipo de contenido: perfil de una persona -->
     <meta property="og:type" content="profile">
     <meta property="og:site_name" content="My Personal Profile">
 
     <!-- Twitter Card -->
+    <!-- Lo mismo que Open Graph pero para X/Twitter; summary_large_image = tarjeta con imagen grande -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Iván Rodas - Web Developer">
     <meta name="twitter:description" content="My personal profile as web developer.">
     <meta name="twitter:image" content="https://miperfilpersonal.com/assets/images/twitter-card.jpg">
+    <!-- Cuenta de X/Twitter del creador -->
     <meta name="twitter:creator" content="@nishix_03">
 
     <!-- URLs Canónicas -->
+    <!-- canonical = la dirección "oficial" de esta página; evita que Google la vea duplicada en varias URLs -->
     <link rel="canonical" href="https://miperfilpersonal.com/">
+    <!-- alternate + hreflang = indica a Google que existen versiones de la misma página en otros idiomas -->
     <link rel="alternate" hreflang="es" href="https://miperfilpersonal.com/es/">
     <link rel="alternate" hreflang="en" href="https://miperfilpersonal.com/en/">
 
     <!-- Favicons -->
+    <!-- Favicon = iconito de la pestaña. Se ofrecen varios formatos y tamaños según dispositivo -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+    <!-- Icono que usa iPhone/iPad al guardar la página en la pantalla de inicio -->
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+    <!-- Manifiesto web: datos para instalar el sitio como app (PWA) -->
     <link rel="manifest" href="/site.webmanifest">
 
     <!--Google Fonts-->
+    <!-- preconnect = abrir de antemano la conexión con los servidores de fuentes para que carguen más rápido -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Hoja de estilos de Google Fonts con las tipografías elegidas; display=swap muestra texto con una fuente temporal mientras carga la definitiva -->
     <link
         href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:slnt,wght,CRSV,ELSH,ELXP@-8..0,100..900,0..1,0..100,0..100&family=Orbitron:wght@400..900&family=Press+Start+2P&family=Share+Tech+Mono&family=VT323&display=swap"
         rel="stylesheet">
 
 
     <!-- CDN - libreria de iconos✨ -->
+    <!-- CDN = red de servidores que alojan librerías para usarlas sin descargarlas. Font Awesome da los iconos (clases fa-...) -->
+    <!-- integrity = huella (hash) que verifica que el archivo no fue alterado; crossorigin y referrerpolicy cuidan la privacidad y la seguridad -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -67,16 +111,21 @@
 
 </head>
 
+<!-- BODY: todo lo que el visitante ve en pantalla -->
 <body>
-    <!-- 
+    <!--
     ========================================
     HEADER PRINCIPAL
     ========================================
     -->
 
+    <!-- Barra lateral de iconos. <nav> es una etiqueta SEMÁNTICA: indica "aquí hay navegación", y los lectores de pantalla pueden saltar directo a ella -->
+    <!-- Clases BEM: bloque__elemento--modificador, p. ej. sidebar__option--home. Así el CSS queda ordenado -->
     <nav class="sidebar">
 
+        <!-- <li> es un ítem de lista (lo correcto sería envolverlo en <ul>); cada ítem lleva un icono y su etiqueta de texto -->
         <li class="sidebar__option sidebar__option--home">
+            <!-- <i> con clases de Font Awesome pinta un icono -->
             <i class="fa-solid fa-house"></i>
             <span class="sidebar__label sidebar__label--home">Home</span>
         </li>
@@ -112,18 +161,22 @@
         </li>
     </nav>
 
+    <!-- <header> (semántica): cabecera de la página con la marca personal y la navegación -->
     <header class="header">
         <!-- Logo y Marca Personal -->
         <div class="header__container">
             <div class="header__brand">
+                <!-- <h1> = título principal. Idealmente solo hay uno por página (aquí también hay otro en el hero) -->
                 <h1 class="header__name">Iván Rodas ⚛︎</h1>
                 <p class="header__tagline">Software Engineer: FullStack Web Developer</p>
             </div>
 
             <!-- Navegación Principal -->
+            <!-- aria-label da un nombre accesible a este <nav> para distinguirlo de los otros (menú lateral, pie) -->
             <nav class="nav__mobile" aria-label="Main Navigation">
                 <div class="nav__list">
                     <li class="nav__item">
+                        <!-- <a href> = enlace. aria-current="page" avisa a los lectores de pantalla que esta es la página actual; la clase --active le da el estilo destacado -->
                         <a href="/HomePage/HomePageV1.html" aria-current="page"
                             class="nav__link nav__link--active">Home</a>
                     </li>
@@ -150,6 +203,7 @@
             <!-- Acciones Rápidas -->
             <div class="header__actions">
                 <li class="actions__item">
+                    <!-- El atributo download hace que el navegador descargue el PDF en vez de abrirlo; aria-label da el texto que leerá un lector de pantalla -->
                     <a href="/assets/documents/cv-ivan-rodas.pdf" download aria-label="Descargar CV en PDF"
                         class="action__link">📄 Download
                         my CV</a>
@@ -157,6 +211,7 @@
 
                 <li class="actions__item">
                     <p class="actions__subitem">Language Selector: </p>
+                    <!-- <select> = lista desplegable; cada <option> es una opción (selected = la que aparece por defecto) -->
                     <select aria-label="Language Selection" class="actions_subitem">
                         <option value="sp" selected>SP</option>
                         <option value="en">EN</option>
@@ -170,34 +225,42 @@
             </div>
     </header>
 
-    <!-- 
+    <!--
     ========================================
     CONTENIDO PRINCIPAL
     ========================================
     -->
 
+    <!-- <main> (semántica): el contenido principal y único de la página; los lectores de pantalla pueden saltar directo aquí. role="main" es redundante pero inofensivo -->
     <main id="contenido__principal" role="main">
 
 
         <!-- Hero Section -->
+        <!-- "Hero" = la primera sección grande, con la presentación. <section> agrupa contenido relacionado; aria-labelledby apunta al id de su título para nombrarla -->
         <section id="hero" aria-labelledby="hero">
             <div class="hero__container">
                 <h1 class="hero__title">¡Hi! I'm Iván Rodas (Nishix_03)</h1>
+                <!-- <strong> = texto importante (se muestra en negrita y tiene significado, a diferencia de <b>) -->
                 <p class="hero__subtitle"><strong>Software Engineer: FullStack Web Developer</strong></p>
 
                 <!-- Imagen de Perfil -->
                 <section class="hero__description">
+                    <!-- <figure> + <figcaption> = imagen con su pie de foto asociado (semántica) -->
                     <figure class="hero__figure">
+                        <!-- <picture> permite ofrecer distintas imágenes según la pantalla o el formato; el navegador usa el primer <source> que pueda y, si no, el <img> -->
                         <picture>
+                            <!-- media="(min-width: 768px)": solo se usa en pantallas de 768 px o más; type indica el formato (WebP, ligero y moderno) -->
                             <source media="(min-width: 768px)" srcset="assets/photos/example.webp"
                                 type="image/webp">
                             <source media="(min-width: 768px)" srcset="assets/photos/example.webp">
+                            <!-- alt = texto alternativo (accesibilidad y SEO); width/height reservan el espacio para que la página no "salte"; loading="eager" la carga de inmediato porque está arriba -->
                             <img src="assets/photos/example.webp" alt="Iván Rodas - Software Engineer"
                                 width="200" height="200" loading="eager" class="figure__photo">
                         </picture>
                         <figcaption class="photo_desc">Example of photo</figcaption>
                     </figure>
 
+                    <!-- <span> = contenedor en línea sin significado, útil para dar estilo (aquí colores por tecnología) a una palabra -->
                     <p class="hero__description__text">I'm learning <span class="HTML">HTML</span> and <span
                             class="CSS">CSS</span> in order to create
                         web
@@ -209,6 +272,7 @@
                 </section>
 
                 <!-- Call to Actions -->
+                <!-- CTA = "llamadas a la acción": botones-enlace. href="#id" salta a la sección de esta misma página que tenga ese id -->
                 <div class="hero__buttons">
                     <a href="#my-blog" class="hero__button button--secondary">View My Blog</a>
                     <a href="#my-skills" class="hero__button button--primary">View My Skills</a>
@@ -220,6 +284,7 @@
                 <div class="hero__stats">
 
                     <div class="hero__stat" id="hero__stat1">
+                        <!-- <data value="..."> asocia al texto visible un valor que las máquinas pueden leer -->
                         <data class="stat__data" value="1">1+</data>
                         <span class="stat__label">Months learning</span>
                     </div>
@@ -262,11 +327,13 @@
                             skills
                             and
                             create
+                            <!-- <em> = énfasis (cursiva con significado: se leerá con otro tono en un lector de pantalla) -->
                             <em>better web experiences</em>.
                         </p>
                     </div>
                 </div>
 
+                <!-- <blockquote> = cita textual; <cite> = fuente o autor de la cita -->
                 <blockquote class="cite__container">
                     <p class="cite__content">
                         "Software is art. I'm the painter"
@@ -278,6 +345,7 @@
 
                 <div class="values__container">
                     <h3 class="values__title">My Values</h3>
+                    <!-- <dl> = lista de descripciones: cada <dt> es el término y su <dd> la explicación (pares nombre / valor) -->
                     <dl class="value__list">
                         <div class="value__item">
                             <dt class="value__name"><strong>🎯 Dedication:</strong></dt>
@@ -310,6 +378,7 @@
             <h3 class="skills-titulo">My Skills</h3>
 
             <p class="skills__subtitle">The detailed progress bars about my knowledge</p>
+            <!-- <ul> = lista sin orden; cada habilidad es un <li> con su etiqueta y una barra de progreso hecha con dos <div> (el CSS define el ancho del relleno) -->
             <ul class="skills__list">
 
                 <li class="skill__item skill__item--html" id="skill1__container">
@@ -363,7 +432,7 @@
             </ul>
         </section>
 
-        <!-- TODO: Blog Reciente 
+        <!-- TODO: Blog Reciente
         <section id="my-blog" aria-labelledby="blog-titulo">
             <h2 id="blog-titulo">Learning Blog</h2>
             <p>
@@ -383,16 +452,17 @@
             <span>📖 5 mins of lecture</span>
         </article>
         </section> -->
+        <!-- Nota: el bloque de arriba está comentado (pendiente de hacer). Usa <article> (contenido que se entiende solo, como una entrada de blog) y <time datetime> (fecha legible por máquinas) -->
     </main>
 
 
-    <!-- 
+    <!--
     ========================================
     FOOTER COMPLETO
     ========================================
     -->
 
-    <!-- TODO: Contacto 
+    <!-- TODO: Contacto
     <section class="contact__methods" aria-labelledby="footer-contact">
         <h2 id="footer-contact">Contact</h2>
         <div class="contact__method">
@@ -419,6 +489,7 @@
     </section>
 -->
 
+    <!-- <footer> (semántica): pie de página. role="contentinfo" lo identifica para lectores de pantalla -->
     <footer class="footer" role="contentinfo">
         <div class="footer__container">
 
@@ -436,6 +507,7 @@
 
         <!-- Footer Bottom -->
         <div>
+            <!-- &copy; es una "entidad HTML": se muestra como el símbolo © -->
             <p class="footer__copyright">&copy; 2025 Iván Rodas - My Personal Profile. All rights reserved.</p>
 
             <nav class="legal__links" aria-label="Enlaces legales">

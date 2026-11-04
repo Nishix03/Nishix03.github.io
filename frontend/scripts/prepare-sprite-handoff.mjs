@@ -1,12 +1,45 @@
-/** Exports an offline asset kit. Does not write to src/ or public/. */
+/**
+ * prepare-sprite-handoff.mjs — prepara el "paquete de entrega" de clips de animación.
+ *
+ * Exports an offline asset kit. Does not write to src/ or public/.
+ * (En español: genera un kit de recursos sin tocar el código de la web ni lo publicado. Su salida
+ * queda en art/sprites/ready-to-integrate; después `sync-clips.mjs` copia a la web lo aprobado.)
+ *
+ * Qué hace, paso a paso:
+ *  1. Lee imágenes fuente (cuadrículas con varias poses de un personaje).
+ *  2. Recorta cada pose, la ajusta al tamaño final y limita sus colores a una paleta fija.
+ *  3. Arma "tiras" (hojas) con los cuadros de cada clip, en PNG y WebP sin pérdida.
+ *  4. Escribe manifest.json, CSS de animación, archivos .piskel editables, un reporte de
+ *     validación y una página preview.html para revisar todo a ojo.
+ *
+ * Conceptos nuevos:
+ *  - Node.js + ESM (.mjs): JavaScript ejecutado fuera del navegador, con `import ... from`.
+ *    Se corre desde la terminal; es como un programa con main() en Java.
+ *  - sharp: librería para manipular imágenes (recortar, redimensionar, componer, convertir).
+ *  - Buffer: bloque de bytes en memoria (como byte[]). Una imagen "raw" tiene 4 bytes por píxel
+ *    (R, G, B, A = rojo, verde, azul y transparencia).
+ *  - async/await: las operaciones con archivos/imágenes son lentas y devuelven promesas;
+ *    `await` espera su resultado. Funciona al nivel superior porque es un módulo ES.
+ *  - assert: comprobación que lanza un error si algo no se cumple (como una aserción en Java).
+ *  - Cuantizar: reducir colores a los de una paleta, cambiando cada píxel por el más parecido.
+ */
+
+// sharp: procesamiento de imágenes.
 import sharp from 'sharp';
+// fs/promises: crear carpetas, leer y escribir archivos (con promesas).
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+// Convierte la URL de este archivo en una ruta del sistema (en ESM no existe __dirname).
 import { fileURLToPath } from 'node:url';
+// path: unir rutas sin preocuparse por / o \.
 import path from 'node:path';
+// assert/strict: comparaciones estrictas que lanzan error si fallan.
 import assert from 'node:assert/strict';
 
+// Carpeta frontend/ (un nivel arriba de scripts/).
 const root = fileURLToPath(new URL('../', import.meta.url));
+// Carpeta del kit de entrega; aquí se escribe todo lo generado.
 const kit = path.join(root, 'art/sprites/ready-to-integrate');
+// Colores permitidos (hexadecimal sin #). Cada píxel final será uno de estos.
 const colors = [
   '0b111c',
   '171725',
@@ -41,8 +74,18 @@ const colors = [
   '197e98',
   '07110c',
 ];
+// Convierte cada color hex en [r, g, b]: separa pares de dígitos y parseInt(n, 16) los pasa a número.
 const palette = colors.map((c) => c.match(/../g).map((n) => parseInt(n, 16)));
+// range(a, n): lista de n números consecutivos desde a. Ej.: range(6, 3) = [6, 7, 8].
 const range = (a, n) => Array.from({ length: n }, (_, i) => a + i);
+// Definición de cada imagen fuente:
+//  - columns/rows: cómo está repartida la cuadrícula de poses
+//  - size: tamaño final de cada cuadro [ancho, alto]
+//  - bodyHeight: altura objetivo del cuerpo del personaje dentro del cuadro
+//  - clips: animaciones que se arman con esas poses (indices = qué poses y en qué orden,
+//    fps = cuadros por segundo, loop = si se repite, action = descripción de para qué sirve,
+//    mirror = reflejar horizontalmente, hitFrame/terminalFrame... = cuadros clave)
+//  - anchor / preserveLayout: opciones especiales de colocación (ver más abajo)
 const definitions = {
   'blue-eyes': {
     columns: 4,
@@ -83,6 +126,7 @@ const definitions = {
     rows: 4,
     size: [96, 96],
     bodyHeight: 76,
+    // Crea un clip por dirección: cada una usa 4 poses consecutivas de la cuadrícula.
     clips: Object.fromEntries(
       ['up', 'down', 'left', 'right'].map((direction, i) => [
         direction,
@@ -110,6 +154,7 @@ const definitions = {
         loop: true,
         action: 'Patrulla hacia la derecha; traslación externa',
       },
+      // mirror: true = misma animación reflejada, para no dibujar dos veces el lado contrario.
       'walk-left': {
         indices: range(0, 8),
         mirror: true,
@@ -150,6 +195,7 @@ const definitions = {
     rows: 3,
     size: [45, 35],
     bodyHeight: 25,
+    // anchor 'center': el punto de referencia es el centro del cuerpo (vuela), no los pies.
     anchor: 'center',
     clips: {
       fly: {
@@ -187,6 +233,7 @@ const definitions = {
     size: [118, 172],
     bodyHeight: 168,
     clips: {
+      // Un clip de un solo cuadro (imagen fija): fps 0.
       still: {
         indices: [0],
         fps: 0,
@@ -199,6 +246,7 @@ const definitions = {
     columns: 4,
     rows: 3,
     size: [256, 256],
+    // preserveLayout: mantiene la posición relativa respecto a la carta fija (el dragón "sale" de ella).
     preserveLayout: true,
     clips: {
       summon: {
@@ -211,6 +259,8 @@ const definitions = {
     },
   },
 };
+// Manifiesto: el índice JSON con todos los clips generados; `actions` indica qué clip usa cada
+// página (hero, projects, stack, contact) según la tecla o evento.
 const manifest = {
   version: 2,
   status: 'ready-for-implementation-not-installed',
@@ -243,11 +293,16 @@ const manifest = {
     contact: { idle: 'frisk-idle', enter: 'frisk-greet' },
   },
 };
+// Crea las carpetas de salida (`recursive` evita error si ya existen).
 await mkdir(path.join(kit, 'sheets'), { recursive: true });
 await mkdir(path.join(kit, 'editable'), { recursive: true });
+// Texto CSS que se va acumulando (una animación por clip).
 let css = '/* Prepared keyframes. This file is NOT imported by the application. */\n';
+// Reporte de validación: una fila por clip generado.
 const report = [];
 
+// bbox(): calcula el rectángulo mínimo ("bounding box") que contiene los píxeles visibles
+// (alfa >= 180). `data` es el Buffer raw: el alfa de cada píxel está en el 4.º byte (índice + 3).
 function bbox(data, width, height) {
   let left = width,
     top = height,
@@ -261,9 +316,12 @@ function bbox(data, width, height) {
         right = Math.max(right, x);
         bottom = Math.max(bottom, y);
       }
+  // Si no se encontró ningún píxel visible, el cuadro está vacío: se detiene con un error.
   assert(right >= left, 'Empty generated keyframe');
   return { left, top, width: right - left + 1, height: bottom - top + 1 };
 }
+// quantize(): cambia cada píxel por el color más cercano de la paleta.
+// Los casi transparentes (alfa < 180) quedan totalmente transparentes; el resto, totalmente opaco.
 function quantize(data) {
   for (let i = 0; i < data.length; i += 4) {
     if (data[i + 3] < 180) {
@@ -273,6 +331,7 @@ function quantize(data) {
     let nearest = palette[0],
       distance = Infinity;
     for (const c of palette) {
+      // Distancia al cuadrado entre dos colores (diferencias de R, G y B elevadas al cuadrado).
       const d = c.reduce((sum, v, j) => sum + (v - data[i + j]) ** 2, 0);
       if (d < distance) {
         distance = d;
@@ -284,6 +343,9 @@ function quantize(data) {
   }
   return data;
 }
+// cardAnchor(): en el clip del dragón saliendo de la carta, localiza la carta (por su color
+// marrón/naranja) y devuelve su centro horizontal (x), su borde inferior (y) y su ancho.
+// Sirve de punto fijo para alinear todos los cuadros.
 function cardAnchor(data, width, height) {
   let left = width,
     right = -1,
@@ -302,9 +364,13 @@ function cardAnchor(data, width, height) {
   assert(right >= left, 'Card anchor not detected');
   return { x: (left + right) / 2, y: bottom, width: right - left + 1 };
 }
+// Bucle principal: procesa cada imagen fuente definida arriba.
+// `[asset, def]` desestructura cada par [nombre, definición].
 for (const [asset, def] of Object.entries(definitions)) {
   const input = path.join(kit, 'sources', asset + '.png');
+  // metadata() da ancho, alto, etc. de la imagen.
   const meta = await sharp(input).metadata();
+  // Solo para el dragón que sale de la carta: una capa extra alineada con la imagen principal.
   const registeredLayer = def.preserveLayout
     ? await sharp(path.join(kit, 'sources', 'blue-eyes-emerge-layer.png'))
         .resize(meta.width, meta.height, { kernel: 'nearest' })
@@ -312,18 +378,22 @@ for (const [asset, def] of Object.entries(definitions)) {
         .toBuffer()
     : undefined;
   const cells = [];
+  // PASO 1: recorta cada pose de la cuadrícula.
   for (let i = 0; i < def.columns * def.rows; i++) {
+    // Columna y fila de la celda i (% = resto de la división, Math.floor = parte entera).
     const col = i % def.columns,
       row = Math.floor(i / def.columns);
     const left = Math.round((col * meta.width) / def.columns),
       top = Math.round((row * meta.height) / def.rows);
     const width = Math.round(((col + 1) * meta.width) / def.columns) - left,
       height = Math.round(((row + 1) * meta.height) / def.rows) - top;
+    // extract() recorta; raw() entrega los píxeles crudos (RGBA) como Buffer.
     const raw = await sharp(input)
       .extract({ left, top, width, height })
       .ensureAlpha()
       .raw()
       .toBuffer();
+    // Rectángulo que contiene al personaje en esa celda.
     const bounds = bbox(raw, width, height);
     const card = def.preserveLayout ? cardAnchor(raw, width, height) : undefined;
     const content = registeredLayer
@@ -333,6 +403,7 @@ for (const [asset, def] of Object.entries(definitions)) {
           .raw()
           .toBuffer()
       : raw;
+    // Aplica la paleta y vuelve a convertir los bytes crudos en un PNG.
     const png = await sharp(quantize(content), { raw: { width, height, channels: 4 } })
       .png()
       .toBuffer();
@@ -340,6 +411,8 @@ for (const [asset, def] of Object.entries(definitions)) {
   }
   const [width, height] = def.size;
   // A single scale per atlas preserves relative pose sizes; the summon locks the card anchor.
+  // (Un único factor de escala por imagen mantiene las proporciones entre poses; se toma el menor
+  // de varios límites para que ninguna pose se salga del cuadro.)
   const scale = def.preserveLayout
     ? Math.min(
         96 / cells[0].card.width,
@@ -356,8 +429,11 @@ for (const [asset, def] of Object.entries(definitions)) {
         (width - 6) / Math.max(...cells.map((c) => c.bounds.width)),
         (height - 6) / Math.max(...cells.map((c) => c.bounds.height)),
       );
+  // frames: cuadros finales completos; overlays: solo el personaje sobre fondo transparente
+  // (sin la carta), usado por el clip de la carta.
   const frames = [];
   const overlays = [];
+  // Carta fija (reverso) que se dibuja detrás en el clip de la carta.
   const fixedCard = def.preserveLayout
     ? await sharp(path.join(kit, 'sheets', 'yugioh-card-back-still.png'))
         .trim({ background: '#00000000' })
@@ -365,8 +441,10 @@ for (const [asset, def] of Object.entries(definitions)) {
         .png()
         .toBuffer()
     : undefined;
+  // PASO 2: ajusta y coloca cada pose dentro de un cuadro del tamaño final.
   for (const c of cells) {
     const box = c.bounds;
+    // Tamaño reducido de la pose (mínimo 1 px); 'nearest' mantiene los bordes nítidos de pixel-art.
     const w = Math.max(1, Math.round(box.width * scale)),
       h = Math.max(1, Math.round(box.height * scale));
     const pose = await sharp(c.png)
@@ -374,6 +452,8 @@ for (const [asset, def] of Object.entries(definitions)) {
       .resize(w, h, { kernel: 'nearest' })
       .png()
       .toBuffer();
+    // Posición dentro del cuadro: centrada en horizontal; en vertical, apoyada abajo (a 3 px),
+    // centrada (anchor 'center') o alineada a la carta (preserveLayout).
     const left = def.preserveLayout
         ? Math.round(width / 2 + (box.left - c.card.x) * scale)
         : Math.floor((width - w) / 2),
@@ -389,6 +469,7 @@ for (const [asset, def] of Object.entries(definitions)) {
           .png()
           .toBuffer(),
       );
+    // Compone el cuadro final sobre un lienzo transparente (la carta fija detrás, si existe).
     frames.push(
       await sharp({ create: { width, height, channels: 4, background: '#00000000' } })
         .composite([
@@ -401,21 +482,28 @@ for (const [asset, def] of Object.entries(definitions)) {
         .toBuffer(),
     );
   }
+  // PASO 3: arma cada clip (animación) de esta imagen fuente.
   for (const [state, clip] of Object.entries(def.clips)) {
+    // Identificador del clip, p. ej. "springtrap-walk-right".
     const id = asset === 'boyfriend-arrows' ? `boyfriend-${state}` : `${asset}-${state}`;
+    // Cuadros del clip; si `mirror`, cada uno se refleja con flop() (espejo horizontal).
+    // Promise.all espera a que todas las operaciones en paralelo terminen.
     const poses = await Promise.all(
       clip.indices.map((i) => (clip.mirror ? sharp(frames[i]).flop().png().toBuffer() : frames[i])),
     );
+    // Une los cuadros en una tira horizontal (cada cuadro desplazado `width` píxeles).
     const png = await sharp({
       create: { width: width * poses.length, height, channels: 4, background: '#00000000' },
     })
       .composite(poses.map((input, i) => ({ input, left: i * width, top: 0 })))
       .png()
       .toBuffer();
+    // Guarda la tira como PNG y como WebP sin pérdida (lossless).
     await writeFile(path.join(kit, 'sheets', id + '.png'), png);
     await sharp(png)
       .webp({ lossless: true })
       .toFile(path.join(kit, 'sheets', id + '.webp'));
+    // Para la carta, también se guarda una tira solo con el personaje (sin carta).
     if (def.preserveLayout) {
       const overlaySheet = await sharp({
         create: { width: width * poses.length, height, channels: 4, background: '#00000000' },
@@ -430,17 +518,22 @@ for (const [asset, def] of Object.entries(definitions)) {
         .webp({ lossless: true })
         .toFile(path.join(kit, 'sheets', id + '-overlay.webp'));
     }
+    // Guarda también cada cuadro suelto (00.png, 01.png...) para revisarlos o editarlos.
     await mkdir(path.join(kit, 'keyframes', id), { recursive: true });
     for (let i = 0; i < poses.length; i++)
       await writeFile(
         path.join(kit, 'keyframes', id, `${String(i).padStart(2, '0')}.png`),
         poses[i],
       );
+    // Punto de anclaje: la referencia para colocar el clip en la página
+    // (borde inferior de la carta, centro del cuerpo o los pies).
     const anchor = def.preserveLayout
       ? { x: width / 2, y: height - 5, kind: 'card-bottom' }
       : def.anchor === 'center'
         ? { x: width / 2, y: height / 2, kind: 'body-center' }
         : { x: width / 2, y: height - 3, kind: 'feet' };
+    // Registra el clip en el manifiesto con todos sus datos (tamaño, cuadros, duración, archivos...).
+    // `...clip` copia las propiedades del clip; `indices: undefined` hace que no aparezca en el JSON.
     manifest.clips[id] = {
       ...clip,
       indices: undefined,
@@ -476,9 +569,15 @@ for (const [asset, def] of Object.entries(definitions)) {
         file: `keyframes/${id}/${String(i).padStart(2, '0')}.png`,
       })),
     };
+    // Genera el @keyframes CSS: en cada porcentaje de la línea de tiempo desplaza la tira
+    // para mostrar el cuadro siguiente.
     css += `@keyframes kf-${id} { ${poses.map((_, i) => `${(100 * i) / poses.length}% { transform:translateX(-${i * width}px); }`).join(' ')} 100% { transform:translateX(-${(poses.length - 1) * width}px); } }\n`;
     // Explicit discrete poses give every frame equal time and hold the final one-shot pose.
+    // (steps(1, end) = saltos bruscos entre cuadros, sin transición suave; `forwards` deja el último
+    // cuadro visible cuando la animación no se repite.)
     css += `.clip-${id} { width:${width * poses.length}px; height:${height}px; image-rendering:pixelated;${poses.length > 1 ? ` animation:kf-${id} ${poses.length / clip.fps}s steps(1, end) ${clip.loop ? 'infinite' : '1 forwards'};` : ''} }\n`;
+    // Archivo .piskel: formato del editor de pixel-art Piskel, para retocar el clip a mano.
+    // base64 = bytes representados como texto, para poder guardar el PNG dentro del JSON.
     const layer = {
       name: state,
       opacity: 1,
@@ -505,36 +604,46 @@ for (const [asset, def] of Object.entries(definitions)) {
       }),
     );
     // Validate actual exports, including the final frame of one-shot sequences.
+    // (Vuelve a leer el WebP escrito y comprueba que sea idéntico al PNG original.)
     const decoded = await sharp(path.join(kit, 'sheets', id + '.webp'))
       .ensureAlpha()
       .raw()
       .toBuffer();
     const reference = await sharp(png).ensureAlpha().raw().toBuffer();
     assert(decoded.equals(reference), `${id}: WebP must be lossless`);
+    // Debe existir al menos un píxel transparente (alfa = 0, en el byte 4 de cada píxel).
     assert(
       decoded.some((v, i) => i % 4 === 3 && v === 0),
       `${id}: missing transparency`,
     );
+    // Set de cuadros únicos: sirve para saber cuántos cuadros distintos tiene el clip.
     const hashes = new Set(poses.map((p) => p.toString('base64')));
     report.push({ id, frames: poses.length, distinct: hashes.size, width, height, lossless: true });
   }
 }
+// Respeto a la preferencia "reducir movimiento" del sistema: se apagan las animaciones...
 css +=
   '@media (prefers-reduced-motion:reduce) { [class*="clip-"] { animation:none !important; } }\n';
+// ...y cada clip muestra un cuadro fijo representativo (reducedMotionFrame).
 for (const c of Object.values(manifest.clips))
   if (c.reducedMotionFrame)
     css += `@media (prefers-reduced-motion:reduce) { .clip-${c.id} { transform:translateX(-${c.reducedMotionFrame * c.width}px); } }\n`;
+// Escribe los archivos finales del kit: CSS, manifiesto y reporte de validación.
 await writeFile(path.join(kit, 'keyframes.css'), css);
 await writeFile(path.join(kit, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
 await writeFile(path.join(kit, 'validation.json'), JSON.stringify(report, null, 2) + '\n');
+// Una tarjeta HTML por clip para la página de revisión.
 const cards = Object.values(manifest.clips)
   .map(
     (c) =>
       `<section data-clip="${c.id}"><h2>${c.id}</h2><p>${c.action}</p><p>${c.frames} cuadros · ${c.width}×${c.height} · ${c.fps} fps · ${c.loop ? 'ciclo' : 'una vez'}</p><div class="window" style="width:${c.width}px;height:${c.height}px"><img class="clip-${c.id}" src="${c.file}" alt="${c.action}" data-frames="${c.frames}" data-width="${c.width}"></div><p><button data-replay>Reproducir</button> <button data-step>Cuadro siguiente</button> <a href="${c.png}">PNG</a> · <a href="editable/${c.id}.piskel">Piskel</a></p><details><summary>Ver todos los keyframes</summary><img class="sheet" src="${c.png}" alt="Cuadros de ${c.id}"></details></section>`,
   )
   .join('');
+// preview.html: página autónoma (funciona sin servidor) para ver las animaciones, pausarlas,
+// repetirlas o avanzar cuadro a cuadro antes de aprobar el kit.
 await writeFile(
   path.join(kit, 'preview.html'),
   `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Sprites listos para implementar</title><link rel="stylesheet" href="keyframes.css"><style>body{margin:32px;background:#07110c;color:#d3f3e0;font:16px system-ui}h1,h2{color:#a8f0c8}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}section{padding:20px;border:1px solid #397052;overflow:auto}.window{overflow:hidden;background:repeating-conic-gradient(#18241f 0% 25%,#24362b 0% 50%) 0 0/16px 16px}.window img{max-width:none;display:block}button{padding:10px;background:#a8f0c8;color:#07110c;border:0;margin-bottom:8px}a{color:#49e0f0}.sheet{image-rendering:pixelated;max-width:none}body.paused .window img{animation-play-state:paused!important}</style><h1>Paquete listo para implementar</h1><p>Estos recursos no están conectados a las páginas. Revisión de acciones y keyframes; funciona sin servidor.</p><button id="pause">Pausar / continuar todo</button><main>${cards}</main><script>document.querySelector('#pause').onclick=()=>document.body.classList.toggle('paused');document.querySelectorAll('[data-replay]').forEach(b=>b.onclick=()=>{const i=b.closest('section').querySelector('.window img');i.style.animation='none';i.style.transform='';void i.offsetWidth;i.style.animation='';i.dataset.frame='0'});document.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>{const i=b.closest('section').querySelector('.window img');const f=(Number(i.dataset.frame||0)+1)%Number(i.dataset.frames);i.style.animation='none';i.style.transform='translateX(-'+(f*Number(i.dataset.width))+'px)';i.dataset.frame=f});</script></html>`,
 );
+// Mensaje final en la terminal.
 console.log(`Prepared ${report.length} clips in ${kit}; no application source files written.`);
