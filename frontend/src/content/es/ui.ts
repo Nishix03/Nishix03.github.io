@@ -31,7 +31,7 @@ export const ui = {
     about: { title: 'Sobre mí', word: 'PERSONA', num: '01' },
     projects: {
       title: 'Proyectos',
-      hint: '¿Qué vínculo quieres ver? · el rango sale de la evidencia',
+      hint: 'Proyectos personales y en equipo. Selecciona uno para conocer su objetivo, mi participación y las tecnologías utilizadas.',
       word: 'SOCIAL LINK',
       num: '02',
       rank: 'RANGO',

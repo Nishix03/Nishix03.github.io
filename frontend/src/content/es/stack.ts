@@ -2,7 +2,7 @@ import type { Technology } from '../types';
 import { stack as stackEn } from '../en/stack';
 
 export const stackIntro =
-  'El dominio es una autoevaluación con tope según la evidencia: RANGO 1 (curso) ≤ 30 % · RANGO 2 (proyecto personal) ≤ 45 % · RANGO 3 (entregado) ≤ 60 % · RANGO 4 (producción) ≤ 75 % · RANGO 5 (equipo o premio) ≤ 85 %. Soy estudiante: nada está al 100 %.';
+  'Tecnologías que utilizo en mi formación y en mis proyectos. Los porcentajes son una autoevaluación de mi experiencia práctica, respaldada por los cursos y trabajos indicados en cada tarjeta. Los niveles van de R1 (formación) a R5 (proyectos de equipo o premiados).';
 
 // Mismas tecnologías, rangos y porcentajes que en inglés; solo se traduce la evidencia.
 const evidence: Record<string, string> = {

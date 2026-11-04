@@ -1,0 +1,113 @@
+/* Stack on small desktops: reserve a separate lane for the portrait. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .page > .page__inner .stack__intro,
+  .page > .page__inner .stack__layout {
+    max-width: calc(100% - 400px);
+  }
+  .page > .page__inner .stack__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .page > .cutin[data-page='stack'] {
+    --cx-width: 480px;
+    --cx-height: 624px;
+    --cx-right: -40px;
+    --cx-top: max(40px, calc(100svh - var(--header-h) - 648px));
+    --fade-from: 83%;
+    --fade-to: 100%;
+    /* Enlarge the portrait inside its lane without painting over the cards. */
+    clip-path: inset(-999px -999px -999px 40px);
+  }
+  .page > .cutin[data-page='stack']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(7, 17, 12, 0.65) 8%, rgba(7, 17, 12, 0.3) 16%, transparent 26%),
+      linear-gradient(0deg, #07110c 3%, rgba(7, 17, 12, 0.85) 10%, transparent 22%);
+  }
+}
+
+/* Shared desktop composition: keep text, cards and portraits in the same frame. */
+@media (min-width: 1600px) {
+  .page {
+    --page-max: 1440px;
+    --gutter: 40px;
+    --wide-avatar-right: calc((100% - 1440px) / 2 - 64px);
+    min-height: max(var(--page-min, 800px), calc(100svh - var(--header-h)));
+  }
+  .page > .page__inner {
+    padding-top: clamp(56px, var(--pad-top), 88px);
+    padding-bottom: 64px;
+  }
+  .page__word {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .page > .cutin[data-page='projects'] {
+    --cx-right: var(--wide-avatar-right);
+    --cx-width: 600px;
+    --cx-height: 780px;
+    --cx-top: 48px;
+  }
+  .page > .page__inner .projects__layout {
+    max-width: 960px;
+    gap: 32px;
+  }
+  .page > .page__inner .projects__list { flex-basis: 450px; }
+  .page > .cutin[data-page='stack'] {
+    /* Fit hands and keyboard into the viewport, preserving the portrait ratio. */
+    --stack-avatar-width: min(clamp(640px, 44vw, 840px), calc((100svh - 100px) / 1.3));
+    --cx-right: -40px;
+    --cx-width: var(--stack-avatar-width);
+    --cx-height: calc(var(--stack-avatar-width) * 1.3);
+    --cx-top: 16px;
+    --fade-from: 88%;
+    --fade-to: 99%;
+  }
+  .page > .cutin[data-page='stack']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(0deg, #07110c 3%, rgba(7, 17, 12, 0.85) 10%, transparent 22%);
+  }
+  .page > .page__inner .stack__layout { max-width: 900px; }
+  .page > .page__inner .stack__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .page > .cutin[data-page='journey'] {
+    --cx-right: calc(var(--wide-avatar-right) + 24px);
+    --cx-width: 500px;
+    --cx-height: 650px;
+    --cx-top: 16px;
+  }
+  .page > .page__inner .journey__top { max-width: 900px; }
+  .page > .page__inner .timeline__cards { gap: 12px; }
+  .page > .page__inner .about__intro {
+    gap: 64px;
+    align-items: center;
+  }
+  .page > .page__inner .about__portrait {
+    flex-basis: 360px;
+    height: 440px;
+  }
+  .page > .page__inner .cutin[data-page='about'] {
+    --cx-width: 420px;
+    --cx-height: 546px;
+    --cx-left: -24px;
+    --cx-top: -32px;
+  }
+  .page > .page__inner .about__text { max-width: 820px; }
+  .page > .page__inner .about__how { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .page > .cutin[data-page='contact'] {
+    --cx-right: calc(var(--wide-avatar-right) + 24px);
+    --cx-width: 620px;
+    --cx-height: 806px;
+    --cx-bottom: 76px;
+  }
+  .page > .page__inner .contact__layout { max-width: 880px; }
+}

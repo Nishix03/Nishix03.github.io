@@ -1,0 +1,46 @@
+---
+// Uneven spacing and staggered phases keep the background from moving in rows.
+const squares = [
+  [6, 24, 6, 17, -5, 14], [18, 78, 4, 21, -14, -10],
+  [29, 48, 8, 19, -8, 18], [42, 91, 5, 24, -19, -12],
+  [54, 19, 4, 20, -11, 10], [64, 66, 7, 23, -4, -16],
+  [75, 36, 5, 18, -13, 12], [88, 84, 9, 25, -17, -14],
+  [95, 56, 4, 22, -7, 16], [36, 12, 5, 26, -20, -8],
+];
+---
+
+<div class="floating-squares" aria-hidden="true" data-loop>
+  {squares.map(([x, y, size, duration, delay, drift]) => (
+    <span style={`left:${x}%;top:${y}%;--size:${size}px;--duration:${duration}s;--delay:${delay}s;--drift:${drift}px`} />
+  ))}
+</div>
+
+<style>
+  .floating-squares {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  span {
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    border: 1px solid rgba(168, 240, 200, .48);
+    opacity: 0;
+    animation: square-rise var(--duration) linear var(--delay) infinite;
+  }
+  @keyframes square-rise {
+    0% { transform: translate(0, 60px); opacity: 0; }
+    25% { opacity: .38; }
+    75% { opacity: .26; }
+    100% { transform: translate(var(--drift), -180px); opacity: 0; }
+  }
+  @media (max-width: 767px) {
+    span:nth-child(n + 7) { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .floating-squares { display: none; }
+  }
+</style>

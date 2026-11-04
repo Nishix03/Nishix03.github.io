@@ -1,7 +1,7 @@
 import type { Milestone } from '../types';
 
 export const journeyIntro =
-  'Studies and milestones, in order. Locked ones are the road ahead, not achievements.';
+  'My education, projects and learning milestones. The timeline separates completed achievements from upcoming goals, which are marked as locked.';
 
 export const education = {
   kicker: 'EDUCATION · IN PROGRESS',
@@ -31,13 +31,13 @@ export const milestones: Milestone[] = [
 export const diary = {
   kicker: 'EXPEDITION LOG · OCT 2026',
   title: 'Won futurX 2026 with LeeContigo IA',
-  body: '1st place out of 500+ participants from 9 countries. 6 merged PRs on the team repo: XP system, sounds, tutorial fix and the G1–G5 guarantees.',
+  body: 'Our team placed first among more than 500 participants from 9 countries. I contributed the points and level system, sounds, a tutorial fix and automated tests of user flows, through six contributions merged into the team repository.',
   link: {
     label: 'Read the USAT news ↗',
     href: 'https://www.usat.edu.pe/noticias/estudiantes-de-ingenieria-de-sistemas-y-computacion-usat-obtienen-el-primer-lugar-en-la-hackathon-futurx-2026/',
   },
   learned:
-    'Learned: I leaned on Claude to plan which branch each teammate would own to improve the prototype’s features, so we could work in parallel without stepping on each other’s code. I also learned to analyze how people interact with an interface built for a specific audience or niche.',
+    'I learned to organize development across separate branches, using Claude to help plan tasks and support parallel work. I also gained experience analyzing how people use an interface designed around their needs.',
 };
 
 export const platzi = {

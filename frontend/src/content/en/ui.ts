@@ -31,7 +31,7 @@ export const ui = {
     about: { title: 'About me', word: 'PERSONA', num: '01' },
     projects: {
       title: 'Projects',
-      hint: 'Whose link do you want to view? · rank comes from evidence',
+      hint: 'Personal and team projects. Select one to explore its purpose, my contribution and the technologies used.',
       word: 'SOCIAL LINK',
       num: '02',
       rank: 'RANK',
