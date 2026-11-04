@@ -1,7 +1,13 @@
+/**
+ * Textos en español de la página "Proyectos". No repite la lista completa: toma los proyectos en inglés y
+ * les superpone los textos traducidos.
+ */
 import type { Project } from '../types';
 import { projects as projectsEn } from '../en/projects';
 
 // Mismos proyectos que en inglés (numeral, arcano, rango, enlaces); aquí solo cambia el texto.
+// Diccionario cuya clave es el numeral romano del proyecto (I, II...) y cuyo valor es un Project parcial
+// (`Partial<Project>`: solo los campos que cambian). Si un campo no aparece aquí se queda el del inglés.
 const es: Record<string, Partial<Project>> = {
   I: {
     tag: 'EN DESARROLLO · Astro · React · TS',
@@ -51,4 +57,6 @@ const es: Record<string, Partial<Project>> = {
   },
 };
 
+// map() recorre los proyectos en inglés y, para cada uno, mezcla (spread) los textos de `es` usando su
+// numeral como clave.
 export const projects: Project[] = projectsEn.map((project) => ({ ...project, ...es[project.numeral] }));

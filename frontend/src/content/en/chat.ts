@@ -1,16 +1,34 @@
+/**
+ * Textos en inglés del chat NishixAI (un asistente de prueba). Hay dos partes: los textos fijos de la ventana
+ * (`chat`) y las preguntas sugeridas con su respuesta escrita de antemano (`chatQuestions`).
+ *
+ * Concepto: `import type` trae solo un tipo de TypeScript (ChatQuestion, definido en content/types.ts); no
+ * existe en el código final del navegador. El tipo obliga a que cada pregunta tenga label y answer.
+ */
 import type { ChatQuestion } from '../types';
 
-/** Prototipo: respuestas fijas. La versión real responderá desde un archivo de datos sobre Iván (plan §17.5). */
+/**
+ * Prototipo: respuestas fijas. La versión real responderá desde un archivo de datos sobre Iván (plan §17.5).
+ * Cada campo es un texto de la interfaz del chat.
+ */
 export const chat = {
+  // Nombre mostrado en la cabecera de la ventana.
   title: 'NishixAI',
+  // Aviso de que es un prototipo con respuestas fijas.
   subtitle: 'Prototype · pre-written answers about Iván',
+  // Primer mensaje que dice el asistente.
   greeting: 'Hi! I am NishixAI. Ask me about Iván: his studies, projects or availability.',
+  // Respuesta cuando el usuario escribe algo que no es una pregunta sugerida.
   fallback:
     'In this prototype I can only answer the suggested questions. The real version will answer from a fixed file of facts about Iván.',
+  // Texto gris dentro de la caja de escribir.
   placeholder: 'Ask about Iván…',
+  // Etiqueta para lectores de pantalla (accesibilidad) de la caja de escribir.
   inputLabel: 'Ask NishixAI about Iván',
 };
 
+// Botones de preguntas sugeridas. `ChatQuestion[]` = lista (array) de objetos con:
+//   label  -> el texto del botón;  answer -> la respuesta que aparece al pulsarlo.
 export const chatQuestions: ChatQuestion[] = [
   {
     label: 'Who is Iván?',

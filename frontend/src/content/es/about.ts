@@ -1,7 +1,18 @@
+/**
+ * Textos en español de la página "Sobre mí". En vez de repetir todo, parte del objeto en inglés y cambia lo
+ * traducible.
+ *
+ * Concepto: `...aboutEn` es el operador spread: copia todos los campos del objeto en inglés. Los campos que
+ * se escriben después reemplazan a los copiados (como sobrescribir un método heredado en Java).
+ */
+// `about as aboutEn` renombra lo importado para no chocar con el `about` que se exporta aquí.
 import { about as aboutEn } from '../en/about';
 
+// Mismo objeto que en inglés, con los textos en español.
 export const about = {
+  // Primero se copia todo el contenido en inglés...
   ...aboutEn,
+  // ...y de aquí en adelante se reemplazan los textos por su traducción (mismos campos que en inglés).
   eyebrow: 'ESTUDIANTE DE INGENIERÍA DE SISTEMAS · USAT · 4.º CICLO',
   lead: 'Soy un creador de experiencias personalizadas. Convierto lo que una persona o un negocio necesita de verdad en una web o un agente de IA que se siente hecho para ellos, no una plantilla con su logo encima.',
   body: [
@@ -38,6 +49,8 @@ export const about = {
     { label: 'Fotografía', text: 'Fotos nocturnas y viajes: Barranquilla, Pimentel' },
     { label: 'Estilo', text: 'Ropa negra y holgada' },
   ],
+  // Del CV solo se cambia la etiqueta; sub y href se conservan del inglés.
   cv: { ...aboutEn.cv, label: 'Descargar CV' },
+  // Botón de contacto en español; la ruta interna se ajusta con localePath en la página.
   talk: { label: 'Hablemos', sub: 'Contacto', href: '/contact' },
 };

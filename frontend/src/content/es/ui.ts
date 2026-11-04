@@ -1,3 +1,8 @@
+/**
+ * Textos de la interfaz en español: misma estructura y campos que content/en/ui.ts (menú, botones, etiquetas
+ * de accesibilidad y títulos de cada apartado), con el texto traducido.
+ * Si falta un campo respecto al inglés, TypeScript lo avisa gracias al tipo en content/index.ts.
+ */
 import type { PageKey } from '../types';
 
 export const ui = {

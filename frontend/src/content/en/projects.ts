@@ -1,8 +1,19 @@
+/**
+ * Datos en inglés de la página "Projects". Cada proyecto es una carta de tarot (estilo Persona 3 Reload).
+ * El tipo Project (content/types.ts) define los campos; la versión en español (content/es/projects.ts) reutiliza
+ * esta lista y solo reemplaza los textos traducibles.
+ */
 import type { Project } from '../types';
 
-/** Un proyecto = un arcano del tarot de P3R (plan §14.5). Rank sale de la evidencia, no de la opinión. */
+/**
+ * Un proyecto = un arcano del tarot de P3R (plan §14.5). Rank sale de la evidencia, no de la opinión.
+ * `Project[]` significa "lista de objetos Project".
+ */
 export const projects: Project[] = [
   {
+    // Campos de cada proyecto: numeral/arcana/arcanaTitle/symbol = la carta de tarot; name y tag = nombre y etiqueta;
+    // rank = nivel 1-5 según evidencia; status y type = estado y tipo; screenshot = texto marcador de la captura;
+    // description y stack = descripción y tecnologías; cta y href = texto y enlace del botón.
     numeral: 'I',
     arcana: 'MAGICIAN',
     arcanaTitle: 'THE MAGICIAN',

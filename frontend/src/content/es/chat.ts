@@ -1,5 +1,11 @@
+/**
+ * Textos en español del chat NishixAI: mismos campos que content/en/chat.ts (title, subtitle, greeting,
+ * fallback, placeholder, inputLabel) y mismas preguntas sugeridas, ya traducidas.
+ * content/index.ts exige que tengan la misma forma que el inglés.
+ */
 import type { ChatQuestion } from '../types';
 
+// Textos fijos de la ventana del chat (ver los campos en la versión en inglés).
 export const chat = {
   title: 'NishixAI',
   subtitle: 'Prototipo · respuestas escritas sobre Iván',
@@ -10,6 +16,7 @@ export const chat = {
   inputLabel: 'Pregúntale a NishixAI sobre Iván',
 };
 
+// Preguntas sugeridas: label = texto del botón, answer = respuesta prefijada.
 export const chatQuestions: ChatQuestion[] = [
   {
     label: '¿Quién es Iván?',

@@ -1,14 +1,30 @@
+/**
+ * Datos en inglés del apartado "Stack": las tecnologías que uso, con un porcentaje honesto de dominio.
+ * Alimenta la página stack. Los tipos están en content/types.ts (Technology). La versión en español
+ * (content/es/stack.ts) reutiliza esta lista y solo traduce la evidencia.
+ */
 import type { Technology } from '../types';
 
 /**
  * Regla de honestidad (plan §16.4): el porcentaje es autoevaluación y nunca pasa del tope de su RANK.
  * R1 curso ≤ 30 · R2 proyecto personal ≤ 45 · R3 entregado ≤ 60 · R4 producción ≤ 75 · R5 equipo o premio ≤ 85.
+ *
+ * Si un porcentaje supera su tope, la función tech() lanza un error al arrancar (ver más abajo).
  */
+// Tope de porcentaje por rango. `as const` congela el objeto: sus valores pasan a ser literales de solo lectura
+// (parecido a un `final` en Java).
 export const rankCaps = { 1: 30, 2: 45, 3: 60, 4: 75, 5: 85 } as const;
 
+// Lista final de tecnologías, en el orden en que se muestran.
+// Texto introductorio que explica las reglas de los rangos.
 export const stackIntro =
   "Mastery is self-assessed and capped by evidence: RANK 1 (course) ≤ 30% · RANK 2 (personal project) ≤ 45% · RANK 3 (shipped) ≤ 60% · RANK 4 (production) ≤ 75% · RANK 5 (team or award) ≤ 85%. I'm a student: nothing is at 100%.";
 
+// Función "fábrica": crea un objeto Technology a partir de sus datos y comprueba la regla de honestidad.
+// Si el porcentaje supera el tope, lanza un Error (como un throw new Exception en Java) y la web no compila.
+// Parámetros: id, name, code (2 letras del icono provisional), background/foreground (colores del icono),
+// rank (1-5), percent (autoevaluación) y evidence (de dónde sale el nivel).
+// `Technology['rank']` toma del tipo Technology el tipo de su campo rank (1|2|3|4|5).
 const tech = (
   id: string,
   name: string,
@@ -19,6 +35,7 @@ const tech = (
   percent: number,
   evidence: string,
 ): Technology => {
+  // Validación: se detiene aquí si el porcentaje es mayor que el tope de su rango.
   if (percent > rankCaps[rank]) {
     throw new Error(`${name}: ${percent}% supera el tope de RANK ${rank} (${rankCaps[rank]}%)`);
   }

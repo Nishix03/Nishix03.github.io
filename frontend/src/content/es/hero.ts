@@ -1,6 +1,11 @@
+/**
+ * Textos en español de la portada (Hero). Los apartados, tamaños, colores y poses vienen del inglés;
+ * aquí solo se traducen los títulos y el texto de presentación.
+ */
 import type { HeroOption } from '../types';
 import { heroOptions as optionsEn } from '../en/hero';
 
+// Textos sueltos de la portada (mismos campos que en inglés).
 export const hero = {
   label: 'ESTUDIANTE DE INGENIERÍA DE SISTEMAS · USAT · PERÚ',
   name: 'Iván Rodas',
@@ -17,6 +22,8 @@ export const hero = {
 };
 
 // Mismos apartados, tamaños y colores que en inglés; cambian el nombre y la etiqueta.
+// Traducción de cada opción: clave = apartado, valor = [título, subtítulo]. `[string, string]` es una tupla
+// (lista de exactamente dos textos). `HeroOption['page']` toma los apartados válidos del tipo.
 const labels: Record<HeroOption['page'], [string, string]> = {
   about: ['Sobre mí', 'Persona'],
   projects: ['Proyectos', 'Social Links'],
@@ -25,6 +32,7 @@ const labels: Record<HeroOption['page'], [string, string]> = {
   contact: ['Contacto', 'Vínculo'],
 };
 
+// Recorre las opciones en inglés y reemplaza label y sub con la traducción; lo demás se conserva.
 export const heroOptions: HeroOption[] = optionsEn.map((option) => ({
   ...option,
   label: labels[option.page][0],
