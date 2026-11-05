@@ -51,7 +51,7 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
               <span class="project-row__in">
                 <span class="project-row__badge">{project.numeral}</span>
                 <span class="projects__row-text">
-                  <span class="projects__arcana mono">{project.arcana}</span>
+                  <span class="projects__category mono">{project.category}</span>
                   <span class="projects__name">{project.name}</span>
                   <span class="projects__tag mono">{project.tag}</span>
                 </span>
@@ -253,12 +253,12 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     flex: 1;
     min-width: 0;
   }
-  .projects__arcana,
+  .projects__category,
   .projects__tag {
     display: block;
     opacity: 0.75;
   }
-  .projects__arcana {
+  .projects__category {
     font-size: 11px;
   }
   .projects__name {

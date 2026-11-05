@@ -7,9 +7,9 @@ export const hero = {
   sideWord: 'IVÁN RODAS',
   headline: 'Creo páginas web y agentes de IA que automatizan los procesos de tu negocio.',
   support:
-    'Lo que me diferencia: nunca dejo de aprender y hago trabajos ultra personalizados para mis clientes y para mí. Prueba: formo parte del equipo que ganó futurX 2026 con un tutor de lectura con IA.',
+    'Lo que me diferencia: Aprendo constantemente y desarrollo soluciones a medida para mis clientes y mis propios proyectos. Formo parte del equipo ganador de futurX 2026, donde creamos un tutor de lectura con IA.',
   poseNote:
-    'Bucle sutil: respiración, un gesto lento y un parpadeo. Tira de sprites WebP, 15 fps, 2,5 s, con transparencia.',
+    'Animación sutil: Movimiento del pelo, los accesorios y los pliegues de la ropa, con los ojos cerrados. Ciclo de 6,4 segundos con transparencia.',
   hints: [
     { key: '↑↓', text: 'Mover' },
     { key: 'Enter', text: 'Confirmar' },

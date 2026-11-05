@@ -3,7 +3,7 @@ import type { PageKey } from '../types';
 export const ui = {
   siteTitle: 'Iván Rodas — portfolio',
   description:
-    'Iván Rodas, Systems Engineering student (USAT). Full-stack projects, honest stack, and the road so far.',
+    'Iván Rodas, Systems Engineering student (USAT). Full-stack projects, web development skills and my journey so far.',
   handle: '@Nishix_03',
   nav: [
     { page: 'about', label: 'About' },

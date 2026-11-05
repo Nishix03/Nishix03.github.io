@@ -2,9 +2,9 @@ import type { Contact } from '../types';
 
 /** Servicios y diferencial (líneas separadas) más la situación actual. */
 export const contactIntro = [
-  { lead: 'Services:', text: 'website implementation + AI agents that automate processes in your business.' },
-  { lead: 'My edge:', text: 'constant drive to learn and ultra-personalized content, for me and for every client.' },
-  { lead: '', text: 'Systems Engineering student at USAT (4th semester); also open to internships and junior full-stack roles.' },
+  { lead: 'Services:', text: 'Websites and AI agents that automate your business processes.' },
+  { lead: 'My edge:', text: 'Continuous learning and solutions tailored to each client’s needs.' },
+  { lead: '', text: 'I’m a fourth-semester Systems Engineering student at USAT, open to internships and junior full-stack development roles.' },
 ];
 
 /**
@@ -39,6 +39,6 @@ export const contacts: Contact[] = [
 
 export const footer = {
   credit:
-    '© 2026 Iván Rodas · 3D render and pixel sprites made with AI assistance. Fan art: Yu-Gi-Oh! and Persona 3. Third-party characters belong to their respective owners.',
+    '© 2026 Iván Rodas · 3D rendering and pixel art sprites created with AI assistance.',
   orbs: 'ORBS 0/7',
 };

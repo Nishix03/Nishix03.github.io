@@ -1,12 +1,10 @@
 import type { Project } from '../types';
 
-/** Un proyecto = un arcano del tarot de P3R (plan §14.5). Rank sale de la evidencia, no de la opinión. */
+/** Project categories describe the purpose of each application. */
 export const projects: Project[] = [
   {
     numeral: 'I',
-    arcana: 'MAGICIAN',
-    arcanaTitle: 'THE MAGICIAN',
-    symbol: 'magician',
+    category: 'HEALTHCARE MANAGEMENT',
     name: 'GastroClinic',
     tag: 'IN DEVELOPMENT · Astro · React · TS',
     rank: 2,
@@ -21,9 +19,7 @@ export const projects: Project[] = [
   },
   {
     numeral: 'II',
-    arcana: 'PRIESTESS',
-    arcanaTitle: 'THE PRIESTESS',
-    symbol: 'priestess',
+    category: 'EDUCATIONAL TECHNOLOGY',
     name: 'LeeContigo IA',
     tag: 'TEAM · 1ST PLACE futurX 2026',
     rank: 5,
@@ -31,22 +27,20 @@ export const projects: Project[] = [
     type: 'AI READING TUTOR / TEAM',
     screenshot: '[Screenshot of the live demo]',
     description:
-      'An AI reading tutor developed by a team that won futurX 2026, with more than 500 participants from 9 countries. I contributed the points and level system, sounds, a tutorial fix and automated tests, through six merged contributions. The team handled the AI integration.',
+      'An AI reading tutor developed by a team that won futurX 2026, with more than 500 participants from 9 countries. I contributed the points and leveling system, sounds, a tutorial fix and automated tests, through six merged contributions. The team handled the AI integration.',
     stack: 'Team repo by Alvaro-mendoza-12 · Playwright e2e',
     cta: 'Open live demo ↗',
     href: 'https://lee-contigo-ia.vercel.app',
   },
   {
     numeral: 'III',
-    arcana: 'EMPRESS',
-    arcanaTitle: 'THE EMPRESS',
-    symbol: 'empress',
+    category: 'BUSINESS WEBSITES',
     name: 'Business prototypes · Chiclayo',
     tag: 'DEMO · 6 INDUSTRIES',
     rank: 3,
     status: 'DEMO',
     type: 'WEB SYSTEM / 6 INDUSTRIES',
-    screenshot: '[Contact sheet of the 6 heroes]',
+    screenshot: '[Overview of the six prototypes]',
     description:
       'Six website prototypes for different business sectors in Chiclayo. They share a technical foundation and are adapted to each business through configuration. Reviews covered keyboard navigation, accessibility and performance.',
     stack: 'Shared core · JSON schema · Playwright · axe · Lighthouse',
@@ -55,9 +49,7 @@ export const projects: Project[] = [
   },
   {
     numeral: 'IV',
-    arcana: 'EMPEROR',
-    arcanaTitle: 'THE EMPEROR',
-    symbol: 'emperor',
+    category: 'PERSONAL PRODUCTIVITY',
     name: 'Task manager',
     tag: 'OTHER WORK · HTML/CSS/JS',
     rank: 2,
@@ -71,9 +63,7 @@ export const projects: Project[] = [
   },
   {
     numeral: 'V',
-    arcana: 'HIEROPHANT',
-    arcanaTitle: 'THE HIEROPHANT',
-    symbol: 'hierophant',
+    category: 'APPOINTMENT MANAGEMENT',
     name: 'Appointment manager',
     tag: 'OTHER WORK · JAVA SWING',
     rank: 2,

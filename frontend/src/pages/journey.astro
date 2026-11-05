@@ -41,7 +41,7 @@ const page = ui.pages.journey;
         <!-- Mini Iván camina por el carril de hitos al ritmo del Iván grande: la tira dibuja dos pasos en
              2,4 s (el balanceo del grande) y el carril lo desplaza de izquierda a derecha. -->
         <div class="fx-trek timeline__walker-track">
-          <!-- Pisada neón, como la de Springtrap: un destello bajo los pies en cada paso (2 por ciclo de 800 ms). -->
+          <!-- Dos pisadas por ciclo, sincronizadas con el balanceo del avatar grande. -->
           <span class="timeline__step"></span>
           <span class="timeline__walker-box">
             <img
@@ -51,7 +51,7 @@ const page = ui.pages.journey;
               width="768"
               height="128"
               decoding="async"
-              style="--d:2400ms;--n:8;--e:-87.5%;--w:1.3s"
+              style="--d:var(--journey-cycle, 2400ms);--n:8;--e:-87.5%;--w:0.7s"
             />
           </span>
         </div>
@@ -265,7 +265,8 @@ const page = ui.pages.journey;
     height: 152px; /* los pies (ancla de suelo) quedan sobre la barra */
   }
   .timeline__walker-track {
-    animation-duration: 33s; /* tres veces más lento que antes, como sus pasos */
+    animation-duration: 33s;
+    animation-delay: .7s;
     position: absolute;
     left: 0;
     bottom: 0;
@@ -299,7 +300,7 @@ const page = ui.pages.journey;
       0 0 12px var(--color-neon),
       0 0 24px rgba(57, 255, 136, 0.55);
     opacity: 0;
-    animation: walker-step 1200ms var(--ease-p3r) 1.3s infinite;
+    animation: walker-step calc(var(--journey-cycle, 2400ms) / 2) var(--ease-p3r) .7s infinite;
   }
   /* Destello en el primer tercio del paso (cuando apoya el pie) y quieto el resto. */
   @keyframes walker-step {
@@ -369,6 +370,10 @@ const page = ui.pages.journey;
   }
   /* Móvil: línea de tiempo vertical (una columna, cronológica); los bloqueados se agrupan bajo «Next». */
   @media (max-width: 767px) {
+    /* Four walk cycles cross the shorter lane without slowing down the steps. */
+    .timeline .timeline__walker-track {
+      animation-duration: calc(var(--journey-cycle, 2400ms) * 4);
+    }
     .timeline .timeline__cards {
       grid-template-columns: 1fr;
       gap: 0;

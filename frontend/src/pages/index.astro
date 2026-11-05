@@ -253,7 +253,8 @@ const bubbles = [
   .hero__bubble {
     position: absolute;
     bottom: -20px;
-    border: 2px solid rgba(168, 240, 200, 0.55);
+    border: 2px solid rgba(168, 240, 200, 0.75);
+    box-shadow: 0 0 6px rgba(57, 255, 136, .16);
     animation: rise linear infinite;
   }
 
@@ -320,10 +321,11 @@ const bubbles = [
     letter-spacing: 0.06em;
   }
   .hero__name {
+    position: relative;
+    isolation: isolate;
     margin: 0 0 14px;
     display: inline-block;
     padding: 6px 40px 10px 18px;
-    background: var(--color-paper);
     color: var(--color-bg);
     font-weight: 900;
     font-style: italic;
@@ -331,6 +333,14 @@ const bubbles = [
     font-size: clamp(56px, 8vw, 112px);
     line-height: 0.86;
     letter-spacing: -0.02em;
+  }
+  /* Clip only the plate so the accent in IVÁN remains fully visible. */
+  .hero__name::before {
+    content: '';
+    position: absolute;
+    inset: -0.18em 0 0;
+    z-index: -1;
+    background: var(--color-paper);
     clip-path: polygon(0 10%, 100% 0, 96% 100%, 2% 92%);
   }
   .hero__options {

@@ -3,7 +3,7 @@ import type { ChatQuestion } from '../types';
 export const chat = {
   title: 'NishixAI',
   subtitle: 'Prototipo · respuestas escritas sobre Iván',
-  greeting: '¡Hola! Soy NishixAI. Pregúntame sobre Iván: sus estudios, proyectos o disponibilidad.',
+  greeting: '¡Hola! Soy NishixAI. Pregúntame sobre Iván: Sus estudios, proyectos o disponibilidad.',
   fallback:
     'En este prototipo solo respondo las preguntas sugeridas. La versión real responderá desde un archivo fijo con datos sobre Iván.',
   placeholder: 'Pregunta sobre Iván…',
@@ -19,21 +19,21 @@ export const chatQuestions: ChatQuestion[] = [
   {
     label: '¿futurX 2026?',
     answer:
-      'Su equipo ganó el 1.er puesto en futurX 2026 con LeeContigo IA. Su parte: el sistema de progreso, los sonidos, una corrección del tutorial y las garantías e2e G1–G5, en 6 PR integrados. La integración de IA la hizo el equipo.',
+      'Su equipo ganó el 1.er puesto en futurX 2026 con LeeContigo IA. Su aporte: El sistema de progreso, los sonidos, una corrección del tutorial y las pruebas de extremo a extremo G1–G5, con seis contribuciones integradas. La integración de IA la hizo el equipo.',
   },
   {
     label: 'Proyecto actual',
     answer:
-      'GastroClinic: un gestor de citas y panel interno para una clínica familiar. Hoy es una demo de frontend con datos ficticios; está aprendiendo el backend paso a paso.',
+      'GastroClinic: Un gestor de citas y un panel interno para una clínica familiar. Hoy es una demo de frontend con datos ficticios; está aprendiendo el backend paso a paso.',
   },
   {
     label: 'Estudios en Platzi',
     answer:
-      'Platzi Expert+ desde 2024: 17 cursos aprobados y la ruta de Fundamentos de Desarrollo Web Profesional (feb 2026). Lo último: cursos de Java y SQL (oct 2026).',
+      'Estudia en Platzi con el plan Expert+ desde 2024. Ha aprobado 17 cursos y completado la ruta de Fundamentos de Desarrollo Web Profesional (febrero de 2026). Sus cursos más recientes son de Java y SQL (octubre de 2026).',
   },
   {
     label: '¿Disponible?',
     answer:
-      'Sí: ofrezco implementación de páginas web + agentes de IA que automatizan procesos de negocio, y estoy abierto a prácticas y puestos junior full-stack. Mi diferencial: ganas constantes de aprender y trabajo ultra personalizado. Correo: ivannishix@gmail.com',
+      'Sí. Ofrece desarrollo de sitios web y agentes de IA para automatizar procesos de negocio. También busca prácticas y puestos de desarrollo full-stack de nivel júnior. Su diferencial: Aprendizaje constante y soluciones a medida. Puedes escribirle a ivannishix@gmail.com.',
   },
 ];
