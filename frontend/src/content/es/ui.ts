@@ -3,7 +3,7 @@ import type { PageKey } from '../types';
 export const ui = {
   siteTitle: 'Iván Rodas — portafolio',
   description:
-    'Iván Rodas, estudiante de Ingeniería de Sistemas (USAT). Proyectos full-stack, un stack honesto y el camino recorrido.',
+    'Iván Rodas, estudiante de Ingeniería de Sistemas (USAT). Proyectos full-stack, experiencia con tecnologías web y trayectoria profesional.',
   handle: '@Nishix_03',
   nav: [
     { page: 'about', label: 'Sobre mí' },

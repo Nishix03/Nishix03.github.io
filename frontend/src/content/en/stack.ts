@@ -7,7 +7,7 @@ import type { Technology } from '../types';
 export const rankCaps = { 1: 30, 2: 45, 3: 60, 4: 75, 5: 85 } as const;
 
 export const stackIntro =
-  'Technologies I use in my studies and projects. Percentages are a self-assessment of my practical experience, supported by the courses and work listed on each card. Levels range from R1 (coursework) to R5 (team projects or awards).';
+  'Technologies I use in my studies and projects. Percentages are a self-assessment of my practical experience, supported by the courses and work listed on each card. Levels range from R1 (coursework) to R5 (team or award-winning projects).';
 
 const tech = (
   id: string,

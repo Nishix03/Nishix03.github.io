@@ -4,11 +4,11 @@ export const hero = {
   label: 'SYSTEMS ENGINEERING STUDENT · USAT · PERÚ',
   name: 'Iván Rodas',
   sideWord: 'IVÁN RODAS',
-  headline: 'I build websites and AI agents that automate the processes of your business.',
+  headline: 'I build websites and AI agents that automate your business processes.',
   support:
-    "What sets me apart: I never stop learning, and I make ultra-personalized work for my clients and for myself. Proof: I'm part of the team that won futurX 2026 with an AI reading tutor.",
+    "What sets me apart: I keep learning and build tailored solutions for my clients and my own projects. I’m part of the team that won futurX 2026, where we developed an AI reading tutor.",
   poseNote:
-    'Subtle loop: breathing, one slow gesture, a blink. WebP sprite sheet, 15 fps, 2.5 s, alpha. 150 ms cross-fade on selection.',
+    'Subtle animation: Movement in the hair, accessories and clothing folds, with the eyes closed. A transparent 6.4-second loop.',
   hints: [
     { key: '↑↓', text: 'Move' },
     { key: 'Enter', text: 'Confirm' },

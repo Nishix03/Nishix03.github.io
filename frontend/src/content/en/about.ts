@@ -2,24 +2,24 @@
 export const about = {
   eyebrow: 'SYSTEMS ENGINEERING STUDENT · USAT · 4TH SEMESTER',
   place: 'Chiclayo, Perú · @Nishix_03',
-  lead: 'I’m a creator of personalized experiences. I turn what a person or a business really needs into a website or an AI agent that feels made for them, not a template with their logo on it.',
+  lead: 'I create personalized digital experiences. I turn the needs of each person or business into a website or an AI agent designed around them.',
   body: [
-    'I started with Java desktop apps (Swing). Now I build for the web, end to end: the interface, the backend and the automations in between. I’m a 4th-semester Systems Engineering student at USAT, in Chiclayo.',
-    'I learn by building and by writing things down: notes organized by topic, Platzi paths, and prototypes I keep iterating until they feel right. I work with AI tools as teammates, and I care about the details most people skip: the pixel, the transition, the wording. For me, software is art.',
+    'I started with Java desktop apps (Swing). Now I build complete web solutions: The interface, the backend and the automations that connect them. I’m a 4th-semester Systems Engineering student at USAT, in Chiclayo.',
+    'I learn through practice and writing: I organize notes by topic, follow Platzi learning paths and improve my prototypes iteratively. I work with AI tools as teammates, and I care about the details most people overlook: The pixels, the transitions and the wording. For me, software is art.',
   ],
   howTitle: 'How I work',
   how: [
     {
       title: 'Honest demos',
-      text: 'Every prototype says “(demo)” and uses no invented numbers: the Chiclayo prototypes, GastroClinic with fictional data.',
+      text: 'I clearly label demos and avoid unsupported figures. The Chiclayo prototypes and GastroClinic use fictional data.',
     },
     {
       title: 'If it isn’t tested, it isn’t done',
-      text: 'Playwright and axe on this site; end-to-end guarantees G1–G5 on LeeContigo IA.',
+      text: 'I use Playwright and axe on this site, and I developed the G1–G5 end-to-end tests for LeeContigo IA.',
     },
     {
-      title: 'Small, explained commits',
-      text: 'I planned how the futurX team split its commits; here, one commit per logical change.',
+      title: 'Small, documented commits',
+      text: 'I planned how the futurX team organized its commits. In this portfolio, I keep each logical change in a separate commit.',
     },
   ],
   nowTitle: 'Now',

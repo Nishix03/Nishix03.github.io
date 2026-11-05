@@ -31,9 +31,9 @@ export const milestones: Milestone[] = [
 export const diary = {
   kicker: 'EXPEDITION LOG · OCT 2026',
   title: 'Won futurX 2026 with LeeContigo IA',
-  body: 'Our team placed first among more than 500 participants from 9 countries. I contributed the points and level system, sounds, a tutorial fix and automated tests of user flows, through six contributions merged into the team repository.',
+  body: 'Our team placed first among more than 500 participants from 9 countries. I contributed the points and leveling system, sounds, a tutorial fix and automated tests of user flows, through six contributions merged into the team repository.',
   link: {
-    label: 'Read the USAT news ↗',
+    label: 'Read the USAT article ↗',
     href: 'https://www.usat.edu.pe/noticias/estudiantes-de-ingenieria-de-sistemas-y-computacion-usat-obtienen-el-primer-lugar-en-la-hackathon-futurx-2026/',
   },
   learned:
@@ -44,10 +44,10 @@ export const platzi = {
   url: 'https://platzi.com/p/ivannishix/',
   kicker: 'CERTIFICATES',
   items: [
-    'Platzi Expert+ · student since 2024',
+    'Platzi Expert+ · Student since 2024',
     '17 courses passed (Web Development school)',
     'Path completed: Professional Web Development Fundamentals (Feb 2026)',
-    'Latest: Java SE: SQL and Databases, Java, Databases and SQL Fundamentals (Oct 2026)',
+    'Latest: Java SE: SQL and Databases, Java, Database and SQL Fundamentals (Oct 2026)',
   ],
   cta: 'View my Platzi profile ↗',
 };

@@ -13,9 +13,7 @@ export type HeroOption = {
 
 export type Project = {
   numeral: string;
-  arcana: string;
-  arcanaTitle: string;
-  symbol: 'magician' | 'priestess' | 'empress' | 'emperor' | 'hierophant';
+  category: string;
   name: string;
   tag: string;
   rank: 1 | 2 | 3 | 4 | 5;

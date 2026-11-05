@@ -128,7 +128,7 @@
 }
 /* Journey: el reposo es un solo cuadro con balanceo; la cara no cambia. */
 .cutin__clip--walk .cutin__strip {
-  animation: avatar-walk 2400ms step-end var(--t, 1s) infinite;
+  animation: avatar-walk var(--journey-cycle, 2400ms) step-end var(--t, 1s) infinite;
   animation-direction: normal;
 }
 /* Hero: dos reposos de 3,2 s, consecutivos, forman un bucle suave de 6,4 s. */

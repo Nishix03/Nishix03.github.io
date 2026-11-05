@@ -42,10 +42,10 @@ export const platzi = {
   url: platziEn.url,
   kicker: 'CERTIFICADOS',
   items: [
-    'Platzi Expert+ · estudiante desde 2024',
+    'Platzi Expert+ · Estudiante desde 2024',
     '17 cursos aprobados (Escuela de Desarrollo Web)',
-    'Ruta completada: Fundamentos de Desarrollo Web Profesional (feb 2026)',
-    'Lo último: Java SE: SQL y Bases de Datos, Java, Fundamentos de Bases de Datos y SQL (oct 2026)',
+    'Ruta completada: Fundamentos de Desarrollo Web Profesional (febrero de 2026)',
+    'Lo último: Java SE: SQL y Bases de Datos, Java, Fundamentos de Bases de Datos y SQL (octubre de 2026)',
   ],
   cta: 'Ver mi perfil de Platzi ↗',
 };

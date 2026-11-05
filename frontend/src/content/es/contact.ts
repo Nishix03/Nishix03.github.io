@@ -4,9 +4,9 @@ import { contacts as contactsEn, contactGlyphs } from '../en/contact';
 export { contactGlyphs };
 
 export const contactIntro = [
-  { lead: 'Servicios:', text: 'implementación de páginas web + agentes de IA que automatizan procesos de tu negocio.' },
-  { lead: 'Mi diferencial:', text: 'ganas constantes de aprender y contenido ultra personalizado, para mí y para cada cliente.' },
-  { lead: '', text: 'Estudiante de Ingeniería de Sistemas en la USAT (4.º ciclo); también abierto a prácticas y puestos junior full-stack.' },
+  { lead: 'Servicios:', text: 'Desarrollo de sitios web y agentes de IA para automatizar los procesos de tu negocio.' },
+  { lead: 'Mi diferencial:', text: 'Aprendizaje constante y soluciones adaptadas a las necesidades de cada cliente.' },
+  { lead: '', text: 'Soy estudiante de Ingeniería de Sistemas en la USAT (4.º ciclo). También busco oportunidades de prácticas y puestos de desarrollo full-stack de nivel júnior.' },
 ];
 
 // Mismos medios y enlaces; cambian las etiquetas y el saludo de WhatsApp.
@@ -26,6 +26,6 @@ export const contacts: Contact[] = contactsEn.map((contact) => ({ ...contact, ..
 
 export const footer = {
   credit:
-    '© 2026 Iván Rodas · Render 3D y sprites pixel hechos con ayuda de IA. Fan art: Yu-Gi-Oh! y Persona 3. Los personajes pertenecen a sus respectivos dueños.',
+    '© 2026 Iván Rodas · Renderizado 3D y sprites de pixel art creados con ayuda de IA.',
   orbs: 'ORBES 0/7',
 };

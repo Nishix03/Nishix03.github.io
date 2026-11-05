@@ -1,18 +1,20 @@
 import type { Project } from '../types';
 import { projects as projectsEn } from '../en/projects';
 
-// Mismos proyectos que en inglés (numeral, arcano, rango, enlaces); aquí solo cambia el texto.
+// Mismos proyectos que en inglés; aquí se traducen las categorías y los textos.
 const es: Record<string, Partial<Project>> = {
   I: {
+    category: 'GESTIÓN CLÍNICA',
     tag: 'EN DESARROLLO · Astro · React · TS',
     status: 'EN DESARROLLO',
     type: 'APP WEB / CLÍNICA',
-    screenshot: '[Captura de la landing pública, sin datos de pacientes]',
+    screenshot: '[Captura del sitio público, sin datos de pacientes]',
     description:
-      'Aplicación web en desarrollo para una clínica familiar: incluye un sitio público, gestión de citas y un panel interno. Busca sustituir una herramienta de pago por una solución a medida. La versión actual utiliza datos de prueba; el backend sigue en desarrollo.',
-    cta: 'Repositorio privado: solo capturas',
+      'Aplicación web en desarrollo para una clínica familiar: Incluye un sitio público, gestión de citas y un panel interno. Busca sustituir una herramienta de pago por una solución a medida. La versión actual utiliza datos de prueba; el backend sigue en desarrollo.',
+    cta: 'Repositorio privado: Solo capturas',
   },
   II: {
+    category: 'TECNOLOGÍA EDUCATIVA',
     tag: 'EQUIPO · 1.er PUESTO futurX 2026',
     status: 'DEMO EN VIVO',
     type: 'TUTOR DE LECTURA CON IA / EQUIPO',
@@ -23,16 +25,18 @@ const es: Record<string, Partial<Project>> = {
     cta: 'Abrir la demo ↗',
   },
   III: {
+    category: 'SITIOS WEB PARA NEGOCIOS',
     name: 'Prototipos de negocios · Chiclayo',
     tag: 'DEMO · 6 RUBROS',
     type: 'SISTEMA WEB / 6 RUBROS',
-    screenshot: '[Hoja de contacto de los 6 héroes]',
+    screenshot: '[Vista de los seis prototipos]',
     description:
       'Seis prototipos de sitios web para distintos rubros de Chiclayo. Comparten una base técnica y se adaptan a cada negocio mediante su configuración. Se revisaron la navegación con teclado, la accesibilidad y el rendimiento.',
     stack: 'Núcleo compartido · esquema JSON · Playwright · axe · Lighthouse',
     cta: '[URL de la demo en GitHub Pages]',
   },
   IV: {
+    category: 'PRODUCTIVIDAD PERSONAL',
     name: 'Gestor de tareas',
     tag: 'OTROS TRABAJOS · HTML/CSS/JS',
     type: 'APP WEB / PERSONAL',
@@ -41,6 +45,7 @@ const es: Record<string, Partial<Project>> = {
     cta: '[Enlace en vivo]',
   },
   V: {
+    category: 'GESTIÓN DE CITAS',
     name: 'Gestor de citas',
     tag: 'OTROS TRABAJOS · JAVA SWING',
     status: 'ESCRITORIO',
