@@ -34,6 +34,15 @@ export default function NishixChat(props: Props) {
   const listRef = useRef<HTMLOListElement>(null);
 
   useEffect(() => {
+    const button = toggleRef.current;
+    const island = button?.closest('astro-island[data-open-chat]');
+    if (!island) return;
+    island.removeAttribute('data-open-chat');
+    island.removeAttribute('aria-busy');
+    setOpen(true);
+  }, []);
+
+  useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open]);
 

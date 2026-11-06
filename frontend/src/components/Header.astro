@@ -20,7 +20,7 @@ const navIcons = {
 <header class="header">
   <div class="header__bar">
     <a class="header__brand focus-ring" href={localePath(locale)}>
-      <img class="header__logo" src="/brand/nishix-nx-pixel.png" alt="" width="44" height="28" />
+      <img class="header__logo" src="/brand/nishix-nx-header.webp" alt="" width="44" height="28" />
       IVÁN RODAS <span class="header__handle mono">{ui.handle}</span>
     </a>
 
@@ -56,7 +56,7 @@ const navIcons = {
 
     <div class="header__tools">
       <NishixChat
-        client:idle
+        client:chat
         transition:persist={`nishixai-${locale}`}
         title={chat.title}
         subtitle={chat.subtitle}

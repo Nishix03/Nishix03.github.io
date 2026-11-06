@@ -1,4 +1,5 @@
 ---
+import AvatarStrip from './AvatarStrip.astro';
 /**
  * Recorte del avatar de Iván para una página. Dentro de .page (position: relative): se coloca con
  * `placement` y entra cayendo girado. Decorativo (aria-hidden): el contenido de la página es HTML.
@@ -84,7 +85,6 @@ const view = views[page];
 // La caja va en variables --box-* (valores de escritorio). avatar.css usa --cx-* cuando una pantalla los
 // cambia y si no cae en --box-*: una variable escrita en style ganaría a la de la hoja de estilos.
 const box = view.box.replace(/\b(right|top|left|bottom|width|height):/g, '--box-$1:');
-const base = `/avatar/${page}`;
 const seconds = `${view.entryMs / 1000}s`;
 const strip = (frames: number) => `width:${frames * 100}%;--n:${frames}`;
 const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
@@ -107,67 +107,33 @@ const entryEnd = `--e:${(-(view.entryFrames - 1) * 100) / view.entryFrames}%`;
           {page === 'hero' ? (
             <>
               <span class="cutin__clip cutin__clip--hero-entry">
-                <img
-                  class="cutin__strip"
-                  src={`${base}-entry.webp`}
-                  alt=""
-                  fetchpriority="high"
-                  decoding="async"
-                  style={`${strip(24)};--d:800ms;--i:1;--e:-95.8333%`}
-                />
+                <AvatarStrip file={`${page}-entry`} portrait={page} priority="high" style={`${strip(24)};--d:800ms;--i:1;--e:-95.8333%`} />
               </span>
               <span class="cutin__clip cutin__clip--hero-a">
-                <img
-                  class="cutin__strip"
-                  src={`${base}-rest-0.webp`}
-                  alt=""
-                  decoding="async"
-                  style={`${strip(24)};--d:3200ms;--w:0.8s;--e:-95.8333%`}
-                />
+                <AvatarStrip file={`${page}-rest-0`} portrait={page} style={`${strip(24)};--d:3200ms;--w:0.8s;--e:-95.8333%`} />
               </span>
               <span class="cutin__clip cutin__clip--hero-b">
-                <img
-                  class="cutin__strip"
-                  src={`${base}-rest-1.webp`}
-                  alt=""
-                  decoding="async"
-                  style={`${strip(24)};--d:3200ms;--w:0.8s;--e:-95.8333%`}
-                />
+                <AvatarStrip file={`${page}-rest-1`} portrait={page} style={`${strip(24)};--d:3200ms;--w:0.8s;--e:-95.8333%`} />
               </span>
             </>
           ) : (
             <>
               <span class="cutin__clip cutin__clip--entry" style={`--t:${seconds}`}>
-                <img
-                  class="cutin__strip"
-                  src={`${base}-entry.webp`}
-                  alt=""
-                  fetchpriority="high"
-                  decoding="async"
-                  style={`${strip(view.entryFrames)};--d:${view.entryMs}ms;--i:1;${entryEnd}`}
-                />
+                <AvatarStrip file={`${page}-entry`} portrait={page} priority="high" style={`${strip(view.entryFrames)};--d:${view.entryMs}ms;--i:1;${entryEnd}`} />
               </span>
               <span
                 class:list={['cutin__clip', 'cutin__clip--rest', { 'cutin__clip--walk': view.walk }]}
                 style={`--t:${seconds}`}
               >
-                <img
-                  class="cutin__strip"
-                  src={`${base}-rest.webp`}
-                  alt=""
-                  decoding="async"
-                  style={`${strip(24)};--d:4000ms;--w:${seconds};--e:-95.8333%`}
-                />
+                <AvatarStrip file={`${page}-rest`} portrait={page} style={`${strip(24)};--d:4000ms;--w:${seconds};--e:-95.8333%`} />
               </span>
               <div class="cutin__jewelry">
                 <span class="cutin__clip cutin__clip--entry" style={`--t:${seconds}`}>
-                  <img class="cutin__strip" src={`${base}-entry.webp`} alt="" decoding="async"
-                    style={`${strip(view.entryFrames)};--d:${view.entryMs}ms;--i:1;${entryEnd}`} />
+                  <AvatarStrip file={`${page}-entry`} portrait={page} style={`${strip(view.entryFrames)};--d:${view.entryMs}ms;--i:1;${entryEnd}`} />
                 </span>
                 <span class:list={['cutin__clip', 'cutin__clip--rest', { 'cutin__clip--walk': view.walk }]}
                   style={`--t:${seconds}`}>
-                  <img class="cutin__strip" src={`${base}-rest.webp`} alt="" decoding="async"
-                    style={`${strip(24)};--d:4000ms;--w:${seconds};--e:-95.8333%`} />
+                  <AvatarStrip file={`${page}-rest`} portrait={page} style={`${strip(24)};--d:4000ms;--w:${seconds};--e:-95.8333%`} />
                 </span>
               </div>
             </>

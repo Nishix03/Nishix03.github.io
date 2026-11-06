@@ -146,6 +146,16 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
     const slot = document.createElement('li');
     slot.className = 'projects__slot';
     const narrow = window.matchMedia('(max-width: 767px)');
+    const lifetime = new AbortController();
+    let autoScroll: AbortController | undefined;
+    const clearScroll = () => {
+      autoScroll?.abort();
+      delete document.documentElement.dataset.autoScroll;
+    };
+    document.addEventListener('astro:before-swap', () => {
+      lifetime.abort();
+      clearScroll();
+    }, { once: true });
     const place = () => {
       const row = list.querySelector('.project-row[aria-pressed="true"]')?.closest('li');
       if (narrow.matches && row) {
@@ -166,17 +176,23 @@ const stars = (rank: number) => '★'.repeat(rank) + '☆'.repeat(5 - rank);
       // Mientras dura el desplazamiento automático el cursor no cambia la selección (select-group.ts);
       // se limpia con scrollend y, por si el navegador no lo emite, a los 1,5 s.
       const root = document.documentElement;
+      clearScroll();
+      autoScroll = new AbortController();
+      const { signal } = autoScroll;
       root.dataset.autoScroll = 'true';
-      const done = () => delete root.dataset.autoScroll;
-      window.addEventListener('scrollend', done, { once: true });
-      window.setTimeout(done, 1500);
+      window.addEventListener('scrollend', clearScroll, { once: true, signal });
+      const timer = window.setTimeout(clearScroll, 1500);
       const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      requestAnimationFrame(() => {
+      const frame = requestAnimationFrame(() => {
         const top = row.getBoundingClientRect().top + window.scrollY - 72; // 72 px: cabecera fija y aire
         window.scrollTo({ top, behavior: calm ? 'auto' : 'smooth' });
       });
+      signal.addEventListener('abort', () => {
+        clearTimeout(timer);
+        cancelAnimationFrame(frame);
+      }, { once: true });
     });
-    narrow.addEventListener('change', place);
+    narrow.addEventListener('change', place, { signal: lifetime.signal });
     place();
   });
 </script>

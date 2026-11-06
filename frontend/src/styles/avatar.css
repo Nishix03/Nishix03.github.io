@@ -342,7 +342,8 @@
   }
   .cutin__clip--entry .cutin__strip,
   .cutin__clip--hero-entry .cutin__strip {
-    transform: translateX(var(--e));
+    width: 100% !important;
+    transform: none;
   }
   .cutin__clip--rest,
   .cutin__clip--hero-a,
@@ -351,16 +352,16 @@
   }
 }
 
-/* Mientras cargan el avatar y las fuentes (scripts/ready.ts) la página no se ve y nada se anima;
-   al terminar, la transición, el avatar y los textos arrancan a la vez. */
-html[data-loading] .page-enter {
-  visibility: hidden;
-}
-html[data-loading] .page-enter,
-html[data-loading] .page-enter *,
-html[data-loading] .page-enter *::before,
-html[data-loading] .page-enter *::after {
-  animation-play-state: paused !important;
+/* Solo el retrato espera sus tiras. El contenido y el barrido se muestran al navegar. */
+@media (scripting: enabled) {
+  html[data-loading] .cutin {
+    visibility: hidden;
+  }
+
+  html[data-loading] .cutin,
+  html[data-loading] .cutin * {
+    animation-play-state: paused !important;
+  }
 }
 
 /* Móvil apaisado: el avatar del inicio va detrás, a la derecha y más tenue (la franja no cabe en 375 px de alto). */

@@ -1,0 +1,24 @@
+---
+interface Props {
+  file: string;
+  portrait: string;
+  style: string;
+  priority?: 'high' | 'auto';
+}
+
+const { file, portrait, style, priority = 'auto' } = Astro.props;
+---
+
+<picture>
+  <source media="(prefers-reduced-motion: reduce) and (max-width: 767px)" srcset={`/avatar/${portrait}-still-mobile.webp`} />
+  <source media="(prefers-reduced-motion: reduce)" srcset={`/avatar/${portrait}-still.webp`} />
+  <source media="(max-width: 767px)" srcset={`/avatar/${file}-mobile.webp`} />
+  <img
+    class="cutin__strip"
+    src={`/avatar/${file}.webp`}
+    alt=""
+    decoding="async"
+    fetchpriority={priority}
+    style={style}
+  />
+</picture>

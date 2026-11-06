@@ -1,8 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test as base, type Page } from '@playwright/test';
 
-// La página espera a que el avatar y las fuentes estén listos (scripts/ready.ts) antes de mostrarse.
-// Cada page.goto espera también a ese momento, como lo vería el visitante.
+// El contenido aparece primero. Las pruebas que usan el fixture esperan además al retrato
+// para comprobar las hojas y la interfaz con la animación ya iniciada.
 const test = base.extend({
   page: async ({ page }, use) => {
     const goto = page.goto.bind(page);
@@ -17,6 +17,42 @@ const test = base.extend({
 
 const pages = ['/', '/about', '/projects', '/stack', '/journey', '/contact', '/es/', '/es/contact'];
 
+test('en móvil el contenido aparece aunque las tiras del retrato sigan descargándose', async ({
+  browser,
+}) => {
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  let release = () => {};
+  const pending = new Promise<void>((resolve) => { release = resolve; });
+  await page.route('**/avatar/**', async (route) => {
+    await pending;
+    await route.continue();
+  });
+  try {
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('html')).toHaveAttribute('data-loading');
+    await expect(page.locator('main h1')).toBeVisible();
+    release();
+    await expect(page.locator('html')).not.toHaveAttribute('data-loading');
+    const entry = page.locator('.cutin__clip--hero-entry img');
+    await expect.poll(() => entry.evaluate((img: HTMLImageElement) => img.currentSrc))
+      .toMatch(/hero-entry-mobile\.webp$/);
+  } finally {
+    release();
+    await page.close();
+  }
+});
+
+test('NishixAI carga al pulsar el botón y responde al primer Enter', async ({ page }) => {
+  await page.goto('/');
+  const button = page.getByRole('button', { name: 'NishixAI' });
+  const island = page.locator('astro-island[client="chat"]');
+  await expect(island).toHaveAttribute('ssr');
+  await button.press('Enter');
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(island).not.toHaveAttribute('ssr');
+  await expect(page.locator('.chat__input')).toBeFocused();
+});
+
 test('sprites reales: cargan todas las hojas y conservan el tamaño de cuadro', async ({ page }) => {
   test.setTimeout(90_000); // recorre seis páginas con hojas grandes
   for (const path of pages) {
@@ -27,12 +63,18 @@ test('sprites reales: cargan todas las hojas y conservan el tamaño de cuadro', 
       const dimensions = await strip.evaluate((img: HTMLImageElement) => ({
         natural: img.naturalWidth,
         rendered: img.width,
-        height: img.naturalHeight,
+        height: img.height,
+        naturalHeight: img.naturalHeight,
+        declaredWidth: Number(img.getAttribute('width')),
+        declaredHeight: Number(img.getAttribute('height')),
       }));
       expect(dimensions.natural).toBeGreaterThan(0);
-      // Los clips pueden ir a escala entera (la carta va ×3): el ancho pintado es múltiplo exacto.
-      expect(dimensions.rendered % dimensions.natural).toBe(0);
-      expect(dimensions.height).toBeGreaterThan(0);
+      expect(dimensions.naturalHeight).toBeGreaterThan(0);
+      // La carta va a ×3 y la mariposa a ×1,15. El navegador redondea al píxel.
+      expect(Math.abs(dimensions.rendered - dimensions.declaredWidth)).toBeLessThanOrEqual(1);
+      expect(Math.abs(dimensions.height - dimensions.declaredHeight)).toBeLessThanOrEqual(1);
+      expect(Math.abs(dimensions.height - dimensions.rendered * dimensions.naturalHeight / dimensions.natural))
+        .toBeLessThanOrEqual(1.5);
     }
   }
 });

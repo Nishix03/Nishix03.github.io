@@ -14,18 +14,6 @@ const locale = localeFromUrl(Astro.url);
 const { ui } = getContent(locale);
 const { title = ui.siteTitle, home = false } = Astro.props;
 
-// El avatar es lo primero que se ve: su tira de entrada se pide antes que el CSS de las páginas y las fuentes.
-const avatarPages = ['about', 'projects', 'stack', 'journey', 'contact'];
-const section = Astro.url.pathname.split('/').filter(Boolean).at(-1) ?? '';
-const avatar = home ? 'hero' : avatarPages.includes(section) ? section : undefined;
-// Todas las tiras de la página (entrada y reposo) a la vez: así no aparece una antes que otra.
-const avatarFiles = !avatar
-  ? []
-  : avatar === 'hero'
-    ? ['hero-entry', 'hero-rest-0', 'hero-rest-1']
-    : avatar === 'journey'
-      ? ['journey-entry', 'journey-rest', 'journey-walk']
-      : [`${avatar}-entry`, `${avatar}-rest`];
 ---
 
 <!doctype html>
@@ -39,11 +27,6 @@ const avatarFiles = !avatar
     {locales.map((l) => (
       <link rel="alternate" hreflang={l} href={new URL(switchLocale(Astro.url, l), Astro.site ?? Astro.url).href} />
     ))}
-    {avatarFiles.map((file) => (
-      <link rel="preload" as="image" href={`/avatar/${file}.webp`} fetchpriority="high" />
-    ))}
-    <!-- Sin JavaScript la página no esperaría nunca: se muestra tal cual. -->
-    <noscript><style>html[data-loading] .page-enter { visibility: visible !important; }</style></noscript>
     <title>{title}</title>
     <!-- Transición entre páginas: la hacemos nosotros (barrido + círculo), así que se apaga la de Astro. -->
     <ClientRouter fallback="swap" />

@@ -5,10 +5,18 @@ import tailwindcss from '@tailwindcss/vite';
 // Sitio estático: se puede publicar en GitHub Pages tal cual.
 export default defineConfig({
   site: 'https://nishix03.github.io',
-  integrations: [react()],
-  // Con <ClientRouter /> las páginas se precargan cuando su enlace aparece en pantalla (no al pasar
-  // el ratón: en móvil no hay ratón y cada cambio de página tardaba ~1 s). Cada página pesa ~8 KB
-  // comprimida; Astro no precarga si el visitante activó el ahorro de datos.
-  prefetch: { prefetchAll: true, defaultStrategy: 'viewport' },
+  integrations: [
+    react(),
+    {
+      name: 'nishix-chat-on-demand',
+      hooks: {
+        'astro:config:setup': ({ addClientDirective }) => {
+          addClientDirective({ name: 'chat', entrypoint: './src/scripts/chat-on-demand.ts' });
+        },
+      },
+    },
+  ],
+  // Anticipa la navegación con ratón o teclado sin pedir todas las rutas visibles.
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   vite: { plugins: [tailwindcss()] },
 });
