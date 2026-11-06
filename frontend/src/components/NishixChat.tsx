@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
-import { ArrowRight, X } from 'lucide-react';
+import { ArrowRight, MessageSquare, X } from 'lucide-react';
 import './NishixChat.css';
 
 type Question = { label: string; answer: string };
@@ -85,6 +85,7 @@ export default function NishixChat(props: Props) {
         <span className="option__icon chat__icon" aria-hidden="true">
           {icon}
         </span>
+        <MessageSquare className="chat__toggle-icon" size={16} aria-hidden="true" />
         <span className="option__label">{title}</span>
       </button>
 
@@ -110,7 +111,7 @@ export default function NishixChat(props: Props) {
             </button>
           </div>
 
-          <ol ref={listRef} className="chat__list" aria-live="polite">
+          <ol ref={listRef} className="chat__list" aria-live="polite" tabIndex={0}>
             {messages.map((message, index) => (
               <li
                 key={index}

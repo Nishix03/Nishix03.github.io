@@ -136,16 +136,6 @@ const glyph = (id: string) => {
   .contact__list :global(.option__label) {
     overflow-wrap: normal;
   }
-  /* El correo es el dato clave: en móvil se reduce lo justo para que quepa en una sola línea. */
-  @media (max-width: 767px) {
-    .contact__list li:first-child :global(.option) {
-      flex-wrap: nowrap;
-      font-size: min(var(--opt-size), 4.6vw);
-    }
-    .contact__list li:first-child :global(.option__sub) {
-      display: none;
-    }
-  }
   .contact__soon {
     white-space: nowrap;
     font-size: clamp(18px, 5.2vw, var(--opt-size));
@@ -185,7 +175,9 @@ const glyph = (id: string) => {
     width: 3px;
     height: 3px;
   }
-  .option:is(:hover, :focus-visible, [data-sel='true']) .contact__ico {
-    color: var(--color-bg);
+  @media (min-width: 768px) {
+    .option:is(:hover, :focus-visible, [data-sel='true']) .contact__ico {
+      color: var(--color-bg);
+    }
   }
 </style>

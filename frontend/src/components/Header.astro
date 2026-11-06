@@ -8,6 +8,13 @@ const locale = localeFromUrl(Astro.url);
 const { ui, chat, chatQuestions } = getContent(locale);
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const icon = sprites.iconNishixAI;
+const navIcons = {
+  about: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z',
+  projects: 'M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z',
+  stack: 'M8 3v4m8-4v4M8 17v4m8-4v4M3 8h4m-4 8h4m10-8h4m-4 8h4M7 7h10v10H7Z',
+  journey: 'M5 21V4m0 1c5-4 9 4 14 0v10c-5 4-9-4-14 0',
+  contact: 'M3 5h18v14H3Zm0 1 9 7 9-7',
+};
 ---
 
 <header class="header">
@@ -36,6 +43,10 @@ const icon = sprites.iconNishixAI;
         >
           <span class="option__slash" aria-hidden="true" />
           <span class="option__plate" aria-hidden="true" />
+          <svg class="header__nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d={navIcons[item.page]} />
+          </svg>
           <span class="option__label">{item.label}</span>
         </a>
       ))}
@@ -62,6 +73,9 @@ const icon = sprites.iconNishixAI;
 </header>
 
 <style>
+  .header__nav-icon {
+    display: none;
+  }
   .header {
     position: sticky;
     top: 0;

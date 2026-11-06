@@ -1,0 +1,430 @@
+/* Composición de teléfono. La tableta conserva su menú desplegable. */
+@media (max-width: 767px) {
+  :root {
+    --gutter: clamp(12px, 4vw, 24px);
+    --header-h: 57px;
+    --mobile-nav-h: 58px;
+    --mobile-inset: env(safe-area-inset-bottom, 0px);
+    --mobile-bottom: calc(var(--mobile-nav-h) + var(--mobile-inset));
+    scroll-padding-block: calc(var(--header-h) + 8px) calc(var(--mobile-bottom) + 8px);
+  }
+
+  body .app {
+    overflow: clip;
+    padding-bottom: var(--mobile-bottom);
+  }
+
+  .app .back,
+  .header__bar .header__toggle,
+  .header__nav#site-menu .lang--menu {
+    display: none;
+  }
+
+  .header .header__bar {
+    gap: 8px;
+    padding: 5px var(--gutter);
+  }
+
+  .header__bar .header__brand {
+    flex: 0 1 auto;
+    font-size: clamp(12px, 3.2vw, 16px);
+    line-height: 1.05;
+    white-space: normal;
+  }
+
+  .header__bar .header__tools {
+    flex: none;
+    gap: 6px;
+  }
+
+  .header__bar .header__tools .lang--bar {
+    display: flex;
+  }
+
+  .header__nav#site-menu {
+    position: fixed;
+    inset: auto 0 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    height: var(--mobile-bottom);
+    padding: 0 0 var(--mobile-inset);
+    border-top: 1px solid var(--line);
+    border-bottom: 0;
+    background: var(--color-bg);
+    box-shadow: 0 -8px 24px #0005;
+  }
+
+  #site-menu .header__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 3px 1px 1px;
+    font-size: clamp(10px, 2.9vw, 13px);
+    line-height: 1.1;
+    font-style: normal;
+    text-align: center;
+    text-transform: none;
+    color: var(--color-mint);
+    transform: none;
+    border-top: 3px solid transparent;
+  }
+
+  #site-menu .header__link[aria-current='page'] {
+    border-color: var(--color-coral);
+    color: var(--color-coral);
+  }
+
+  #site-menu .header__link .option__label,
+  .header__tools .chat__toggle .option__label {
+    color: inherit;
+  }
+
+  #site-menu :is(.option__plate, .option__slash),
+  .header__tools .chat__toggle :is(.option__plate, .option__slash),
+  .contact__list :is(.option__plate, .option__slash),
+  .projects__list :is(.project-row__plate, .project-row__slash) {
+    display: none;
+  }
+
+  #site-menu .header__nav-icon {
+    display: block;
+    width: 19px;
+    height: 19px;
+  }
+
+  #site-menu .header__link:focus-visible {
+    outline-offset: -4px;
+  }
+
+  /* Inicio: nombre y menú juntos, con espacio para el retrato superior. */
+  section.hero .hero__inner {
+    padding: clamp(230px, 39svh, 330px) var(--gutter) 28px;
+    gap: 0;
+  }
+
+  section.hero .hero__name {
+    font-size: clamp(32px, 11vw, 55px);
+    padding: 7px 20px 10px 12px;
+  }
+
+  .hero .hero__stack .hero__label {
+    margin-bottom: 12px;
+    font-size: 12px;
+    letter-spacing: .025em;
+  }
+
+  section.hero .hero__options {
+    gap: 5px;
+  }
+
+  .hero .hero__options .option {
+    align-items: center;
+    font-size: clamp(23px, 6.8vw, 33px);
+  }
+
+  .hero .hero__options .option__slash {
+    animation: none;
+  }
+
+  .hero .hero__main .hero__pitch {
+    margin-top: 25px;
+  }
+
+  /* Franja común de sección. Los retratos reutilizan las tiras que ya carga cada página. */
+  .page {
+    --mobile-portrait-h: clamp(220px, 62vw, 296px);
+    --mobile-art: clamp(232px, 69vw, 340px);
+    background: linear-gradient(155deg, #112c20, var(--color-bg) var(--mobile-portrait-h));
+  }
+
+  .page .page__word {
+    inset: 14px auto auto -3px !important;
+    font-size: clamp(76px, 24vw, 150px) !important;
+    transform: none !important;
+    color: #a8f0c812;
+  }
+
+  .app .page .page__num {
+    inset: calc(var(--mobile-portrait-h) - 75px) auto auto var(--gutter);
+    font: 800 14px/1 var(--font-pixel);
+    color: var(--color-coral);
+  }
+
+  .page .cutin {
+    --cx-width: var(--mobile-art);
+    --cx-height: calc(var(--mobile-art) * 1.3);
+    --cx-left: auto;
+    --cx-right: -8%;
+    --cx-top: -10px;
+    --fade-from: 55%;
+    --fade-to: 82%;
+    clip-path: inset(0 0 max(0px, calc(var(--cx-height) - var(--mobile-portrait-h) - 10px)) 0);
+  }
+
+  .page .cutin .cutin__band {
+    top: 39%;
+    height: 10%;
+    left: -16%;
+    background: var(--color-coral);
+  }
+
+  .page .cutin .cutin__wash,
+  .page .cutin .cutin__lines {
+    display: none;
+  }
+
+  .app .page.page-enter > .page__inner {
+    padding: calc(var(--mobile-portrait-h) - 52px) var(--gutter) 36px;
+  }
+
+  .page .page__inner h1.display {
+    width: fit-content;
+    max-width: 65%;
+    margin: 0 0 14px;
+    font-size: clamp(34px, 8.5vw, 52px);
+    line-height: 1.02;
+    letter-spacing: -.035em;
+    text-transform: none;
+    text-shadow: 0 2px 5px var(--color-bg);
+  }
+
+  .page .page__inner :is(.journey__lead, .contact__intro) {
+    margin-top: 28px;
+    color: var(--color-ink);
+    line-height: 1.55;
+  }
+
+  .page .page__inner .contact__accent {
+    color: var(--color-coral);
+  }
+
+  .page .page__inner .contact__lead {
+    color: var(--color-neon);
+  }
+
+  /* About ya monta el retrato dentro de su introducción. */
+  .page .about .about__intro {
+    display: block;
+  }
+
+  .page .about__intro .about__portrait {
+    position: static;
+    height: 0;
+  }
+
+  .page .about__intro .about__text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page .about__text .about__title {
+    order: -1;
+    padding: 0;
+    color: var(--color-ink);
+    background: none;
+    clip-path: none;
+    transform: none;
+  }
+
+  .page .about__text .about__eyebrow {
+    margin: 30px 0 2px;
+    color: var(--color-mint);
+    font-size: 12px;
+  }
+
+  /* Proyectos: el detalle sigue a la opción seleccionada. */
+  .page .projects__hint {
+    max-width: 57%;
+    margin-bottom: 26px;
+    font: 400 14px/1.45 var(--font-sans);
+  }
+
+  .projects__list .project-row {
+    background: #101f17;
+    color: var(--color-ink);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    transform: none;
+  }
+
+  .projects__list .project-row:is(:focus-visible, [aria-pressed='true']) .project-row__in {
+    color: var(--color-ink);
+  }
+
+  .page .projects__list .project-row[aria-pressed='true'] {
+    background: #2c2022;
+    border-color: #87505c;
+  }
+
+  .projects__list .project-row::after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border: solid var(--color-coral);
+    border-width: 0 2px 2px 0;
+    transform: translateY(-75%) rotate(45deg);
+  }
+
+  .projects__list .project-row[aria-pressed='true']::after {
+    transform: translateY(-25%) rotate(225deg);
+  }
+
+  .project-row .project-row__in {
+    gap: 12px;
+    padding-right: 28px;
+  }
+
+  .project-row .project-row__badge,
+  .project-row[aria-pressed='true'] .project-row__badge {
+    width: 34px;
+    height: 34px;
+    border: 0;
+    background: var(--color-gold);
+    color: var(--color-bg);
+    font-size: 18px;
+    transform: none;
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  }
+
+  .project-row .projects__rank-value {
+    font-size: 24px;
+  }
+
+  .page .projects__layout .projects__display {
+    max-width: none;
+    min-width: 0;
+  }
+
+  .page .projects__details .detail {
+    padding: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .page .detail .detail__inner {
+    border-radius: 0;
+  }
+
+  /* Stack, trayectoria y contacto comparten paneles de bordes rectos. */
+  .page .stack__intro,
+  .page .journey__intro .education {
+    margin-top: 28px;
+    padding: 14px;
+    background: #101f17;
+    border: 1px solid var(--line);
+  }
+
+  .page .journey__intro .education {
+    margin-top: 0;
+    color: var(--color-ink);
+    border-color: #36747a;
+    clip-path: none;
+  }
+
+  .education .education__kicker {
+    color: var(--color-cyan);
+  }
+
+  .page .journey__facts .fact,
+  .page .stack__grid .tile {
+    border-radius: 0;
+    padding: 12px;
+  }
+
+  .fact .fact__n {
+    color: var(--color-neon);
+  }
+
+  .page .stack__layout .stack__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .page .stack__grid .tile {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 8px;
+  }
+
+  .page .tile .tile__icon {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .page .tile .tile__rank {
+    grid-area: 1 / 2;
+  }
+
+  .page .tile .tile__body {
+    grid-column: 1 / -1;
+    overflow-wrap: anywhere;
+  }
+
+  .contact__list li .option {
+    display: grid;
+    width: 100%;
+    min-height: 58px;
+    grid-template-columns: 36px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 10px;
+    row-gap: 2px;
+    padding: 10px 14px;
+    border: 1px solid #3c7557;
+    background: #10281b;
+    color: var(--color-ink);
+    font-size: 16px;
+    text-transform: none;
+    font-style: normal;
+    line-height: 1.2;
+    transform: none;
+  }
+
+  .contact__list .option .contact__ico {
+    grid-row: span 2;
+    color: var(--color-neon);
+  }
+
+  .contact__list .option .option__label {
+    overflow-wrap: anywhere;
+    color: var(--color-ink);
+  }
+
+  .contact__list .option .option__sub {
+    display: block;
+    color: var(--color-mint);
+  }
+
+  .contact__list .contact__soon {
+    white-space: normal;
+  }
+
+  .contact__list li a.option {
+    padding-right: 32px;
+  }
+
+  .contact__list a.option::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: calc(50% - 4px);
+    width: 8px;
+    height: 8px;
+    border: solid var(--color-coral);
+    border-width: 2px 2px 0 0;
+    transform: rotate(45deg);
+  }
+}
+
+@media (max-width: 767px) and (orientation: landscape) and (max-height: 500px) {
+  section.hero .hero__inner {
+    padding-top: 32px;
+  }
+}
