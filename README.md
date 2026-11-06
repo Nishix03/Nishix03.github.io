@@ -130,7 +130,7 @@ Atajos: **↑ ↓** mueven la selección, **Enter** abre, **Esc** vuelve al inic
 - Sin JavaScript el contenido sigue visible.
 - Mobile first y WCAG 2.2 AA: zonas táctiles de al menos 44 × 44 px, sin scroll horizontal desde
   320 px y avatar decorativo (`aria-hidden`).
-- Las páginas se precargan cuando su enlace entra en pantalla (`prefetch` en `astro.config.mjs`).
+- Astro anticipa la página cuando se mantiene el puntero o el foco sobre un enlace. El retrato se descarga al entrar en su sección.
 
 ## Idiomas y contenido
 
@@ -191,6 +191,8 @@ El workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) se ej
 - Commits en español, pequeños y uno por cada cambio lógico.
 
 ## Documentación adicional
+
+- [Guía técnica y auditoría de rendimiento](docs/GUIA_TECNICA.md).
 
 - [`frontend/README.md`](frontend/README.md): notas técnicas del frontend.
 - [`frontend/SPRITES.md`](frontend/SPRITES.md): entrega y uso de los sprites.
