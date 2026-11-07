@@ -15,22 +15,26 @@ const initButterfly = () => {
   // Se posa (o vuelve a volar) solo si el cursor se queda o se va de verdad: pasarlo rápido por encima
   // ya no cambia el clip a cada momento (eso hacía parpadear la mariposa).
   let wait: number | undefined;
-  const later = (fn: () => void) => {
+  let intent = 0;
+  const later = (rest: boolean) => {
+    const request = ++intent;
     window.clearTimeout(wait);
-    wait = window.setTimeout(fn, 140);
+    wait = window.setTimeout(async () => {
+      const clip = rest ? 'p3-butterfly-hover' : 'p3-butterfly-fly';
+      const image = actor.querySelector<HTMLImageElement>(`[data-clip-name="${clip}"]`);
+      if (!image || actor.dataset.clip === clip) return;
+      try {
+        await image.decode();
+      } catch {
+        return;
+      }
+      if (request !== intent || !actor.isConnected) return;
+      route?.toggleAttribute('data-rest', rest);
+      void play(actor, clip);
+    }, 140);
   };
-  stage.addEventListener('pointerenter', () =>
-    later(() => {
-      route?.setAttribute('data-rest', '');
-      play(actor, 'p3-butterfly-hover');
-    }),
-  );
-  stage.addEventListener('pointerleave', () =>
-    later(() => {
-      route?.removeAttribute('data-rest');
-      play(actor, 'p3-butterfly-fly');
-    }),
-  );
+  stage.addEventListener('pointerenter', () => later(true));
+  stage.addEventListener('pointerleave', () => later(false));
 };
 
 /** Se llama en cada astro:page-load: cada página arranca a sus actores. */

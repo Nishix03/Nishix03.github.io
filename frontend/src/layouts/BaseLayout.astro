@@ -28,6 +28,18 @@ const { title = ui.siteTitle, home = false } = Astro.props;
       <link rel="alternate" hreflang={l} href={new URL(switchLocale(Astro.url, l), Astro.site ?? Astro.url).href} />
     ))}
     <title>{title}</title>
+    <script is:inline>
+      (() => {
+        let timeout;
+        const arm = () => {
+          clearTimeout(timeout);
+          // El contenido sigue disponible si el retrato o el script principal no llegan.
+          timeout = setTimeout(() => delete document.documentElement.dataset.loading, 8000);
+        };
+        arm();
+        document.addEventListener('astro:after-swap', arm);
+      })();
+    </script>
     <!-- Transición entre páginas: la hacemos nosotros (barrido + círculo), así que se apaga la de Astro. -->
     <ClientRouter fallback="swap" />
   </head>

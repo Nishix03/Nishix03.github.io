@@ -8,9 +8,17 @@ import { revealWhenReady } from './ready';
 initKeys();
 initVisibilityPause();
 
-document.addEventListener('astro:page-load', () => {
+let activePage: Element | null = null;
+const initPage = () => {
+  const page = document.querySelector('.page-enter');
+  if (!page || page === activePage) return;
+  activePage = page;
   initSelectGroups();
   initLoopPause();
   initActors();
   void revealWhenReady();
-});
+};
+
+// El módulo se ejecuta con el DOM listo, sin esperar las imágenes decorativas.
+initPage();
+document.addEventListener('astro:page-load', initPage);

@@ -32,6 +32,11 @@ export const play = (
   actor.dataset.clip = id;
 
   const target = strip(actor, id);
+  // Solo hace falta forzar el reinicio si se vuelve a pedir el clip que ya estaba visible.
+  if (target && !target.hidden) {
+    target.hidden = true;
+    void target.offsetWidth;
+  }
   actor.querySelectorAll<HTMLImageElement>('[data-clip-name]').forEach((img) => {
     img.hidden = img !== target;
   });
@@ -41,11 +46,6 @@ export const play = (
   Object.entries(override).forEach(([name, value]) =>
     target.style.setProperty(name, String(value)),
   );
-  // Ocultar, forzar un cálculo de layout y mostrar: así se reinicia aunque ya fuera el clip visible.
-  target.hidden = true;
-  void target.offsetWidth;
-  target.hidden = false;
-
   const loops =
     (override['--play-iter'] ?? target.style.getPropertyValue('--clip-iter')) === 'infinite';
   if (loops) return new Promise(() => {});

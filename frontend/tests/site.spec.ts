@@ -1,14 +1,13 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test as base, type Page } from '@playwright/test';
 
-// El contenido aparece primero. Las pruebas que usan el fixture esperan además al retrato
-// para comprobar las hojas y la interfaz con la animación ya iniciada.
+// El fixture espera a que la interfaz y el retrato salgan de la espera compartida.
 const test = base.extend({
   page: async ({ page }, use) => {
     const goto = page.goto.bind(page);
     page.goto = async (...args) => {
       const res = await goto(...args);
-      await expect(page.locator('html')).not.toHaveAttribute('data-loading', { timeout: 5000 });
+      await expect(page.locator('html')).not.toHaveAttribute('data-loading', { timeout: 10000 });
       return res;
     };
     await use(page);
@@ -17,28 +16,88 @@ const test = base.extend({
 
 const pages = ['/', '/about', '/projects', '/stack', '/journey', '/contact', '/es/', '/es/contact'];
 
-test('en móvil el contenido aparece aunque las tiras del retrato sigan descargándose', async ({
+test('en móvil la interfaz y el retrato aparecen juntos al entrar y al navegar', async ({
   browser,
 }) => {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   let release = () => {};
-  const pending = new Promise<void>((resolve) => { release = resolve; });
+  const hold = () => new Promise<void>((resolve) => { release = resolve; });
+  let pending = hold();
   await page.route('**/avatar/**', async (route) => {
     await pending;
     await route.continue();
   });
   try {
-    await page.goto('/', { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('html')).toHaveAttribute('data-loading');
-    await expect(page.locator('main h1')).toBeVisible();
+    await page.goto('/about', { waitUntil: 'domcontentloaded' });
+    const assertPending = async () => {
+      await expect(page.locator('html')).toHaveAttribute('data-loading');
+      await expect(page.locator('main h1')).toBeHidden();
+      await expect(page.locator('.cutin')).toBeHidden();
+      await expect(page.locator('.page-enter')).toHaveCSS('animation-play-state', 'paused');
+    };
+    const assertVisible = async () => {
+      await expect(page.locator('html')).not.toHaveAttribute('data-loading', { timeout: 10000 });
+      await expect(page.locator('main h1')).toBeVisible();
+      await expect(page.locator('.cutin')).toBeVisible();
+    };
+    await assertPending();
     release();
-    await expect(page.locator('html')).not.toHaveAttribute('data-loading');
-    const entry = page.locator('.cutin__clip--hero-entry img');
+    await assertVisible();
+    const entry = page.locator('.cutin__art > .cutin__clip--entry img');
     await expect.poll(() => entry.evaluate((img: HTMLImageElement) => img.currentSrc))
-      .toMatch(/hero-entry-mobile\.webp$/);
+      .toMatch(/about-entry-mobile\.webp$/);
+    pending = hold();
+    await page.locator('#site-menu a[href="/stack"]').click();
+    await page.waitForURL('**/stack');
+    await assertPending();
+    release();
+    await assertVisible();
   } finally {
     release();
     await page.close();
+  }
+});
+
+test('el relevo de las tiras del retrato mantiene un clip completamente visible', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await expect(page.locator('.cutin')).not.toHaveAttribute('data-rest-pending', { timeout: 10000 });
+  const opacities = await page.locator('.cutin__art > .cutin__clip').evaluateAll((clips) => {
+    const animations = clips.flatMap((clip) => clip.getAnimations());
+    animations.forEach((animation) => animation.pause());
+    // Cambio de entrada a reposo, mitad y reinicio del bucle de reposo.
+    return [800, 800.5, 801, 3998, 4000, 4001, 7199, 7200].map((time) => {
+      animations.forEach((animation) => { animation.currentTime = time; });
+      return clips.map((clip) => Number(getComputedStyle(clip).opacity));
+    });
+  });
+  for (const sample of opacities) {
+    expect(sample).toContain(1);
+    expect(sample.every((value) => value === 0 || value === 1)).toBe(true);
+  }
+});
+
+test('pasar el cursor conserva el sprite visible mientras el siguiente se descarga', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  let release = () => {};
+  const pending = new Promise<void>((resolve) => { release = resolve; });
+  await page.route('**/p3-butterfly-hover.webp', async (route) => {
+    await pending;
+    await route.continue();
+  });
+  try {
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    const actor = page.locator('[data-actor="butterfly"]');
+    await page.locator('.hero__stage').hover();
+    await page.waitForTimeout(200); // El cambio por puntero se decide tras 140 ms.
+    await expect(actor.locator('img:not([hidden])')).toHaveAttribute('data-clip-name', 'p3-butterfly-fly');
+    release();
+    await expect(actor.locator('img:not([hidden])')).toHaveAttribute('data-clip-name', 'p3-butterfly-hover');
+    await page.mouse.move(0, 0);
+    await expect(actor.locator('img:not([hidden])')).toHaveAttribute('data-clip-name', 'p3-butterfly-fly');
+    await expect(page.locator('.cutin')).toBeVisible();
+  } finally {
+    release();
   }
 });
 

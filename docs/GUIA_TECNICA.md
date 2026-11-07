@@ -35,7 +35,7 @@ Instala el navegador de prueba con `npx playwright install chromium` la primera 
 
 Para actualizar el arte, conserva los originales en `art/` y las tiras de escritorio de 600 × 780 px por cuadro en `public/avatar/`. Regenera los derivados con `node scripts/build-responsive-assets.mjs` desde `frontend/` y revisa la entrada, el reposo y el modo de movimiento reducido. El script usa Sharp, que ya está en el proyecto. Si cambia el número de cuadros de una tira, ajusta también la configuración de [AvatarCutin](../frontend/src/components/AvatarCutin.astro).
 
-Al abrir una sección, el contenido y el barrido se pueden mostrar mientras se descarga el retrato. El retrato comienza cuando están listas sus tiras. Antes de publicar, comprueba un cambio de sección, un cambio de idioma, una selección de proyecto y la primera apertura de NishixAI con teclado y con toque.
+Al abrir una sección, la interfaz, el barrido y el retrato comienzan juntos cuando está lista la tira de entrada. Antes de publicar, comprueba un cambio de sección, un cambio de idioma, una selección de proyecto y la primera apertura de NishixAI con teclado y con toque.
 
 ## Alcance y método de la auditoría
 
@@ -53,6 +53,8 @@ Se compararon las 12 rutas de ambas compilaciones estáticas en Chromium mediant
 Para repetir la comparación, compila la referencia y el árbol actual en carpetas separadas. Sirve cada `dist`, aplica el mismo perfil en la pestaña Network de DevTools y repite las doce rutas con caché desactivada. En Performance registra FCP, LCP, CLS y tareas largas. En Network comprueba las transferencias y filtra por `avatar/`, `_astro/` y `font`. Para comparar tiempos de forma más estable, repite cada visita y toma la mediana con el equipo inactivo.
 
 ## Resultados
+
+Las mediciones corresponden a la auditoría del commit `b0881c7`, cuando el contenido se mostraba antes del retrato. La sincronización posterior cambia el momento de aparición y, por tanto, los tiempos de pintura.
 
 Cada celda muestra base → optimización.
 
@@ -101,6 +103,11 @@ Cada celda muestra base → optimización.
 - La recompresión WebP de escritorio sin pérdida con esfuerzo 6 agrandó las tres tiras. Las pruebas con calidad 90 y 94 también agrandaron las tiras de reposo. Se conservaron los originales.
 - El reescalado directo de la entrada WebP antes de decodificar y la codificación móvil inicial a calidad 94 dieron archivos mayores que la versión final. Se decodifican los píxeles antes de aplicar vecino más cercano.
 - Se mantuvieron las fuentes locales, los sprites pequeños y los estilos de interacción. La mayor parte del tráfico evitable venía de los retratos anticipados y la hidratación automática. Se conservó la publicación estática y las dependencias fijadas.
+
+### Ajuste posterior de carga y estabilidad visual
+
+- Se volvió a compartir la espera entre interfaz y retrato por decisión de diseño. Al decodificar la tira de entrada, el sitio revela ambos y reanuda el barrido. Si el reposo sigue cargando, el retrato mantiene el último cuadro de entrada hasta que esté listo. Tras ocho segundos se muestra el contenido aunque la entrada o el script principal sigan pendientes. El sitio conserva las tiras móviles, la imagen fija para movimiento reducido y la carga del chat bajo demanda.
+- Los relevos entre tiras usan pasos discretos. La mariposa mantiene el clip activo hasta decodificar el siguiente y descarta cambios de puntero que hayan quedado obsoletos. Las máscaras estáticas del retrato conservan su encuadre y dejan de solicitar capas de composición por adelantado.
 
 ## Verificación y límites
 

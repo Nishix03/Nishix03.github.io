@@ -20,11 +20,10 @@
 }
 /* El difuminado va en la capa que gira, así el borde que se funde es el del cuadro. Son máscaras: el
    avatar se vuelve transparente (no se pinta encima un degradado negro que tape la banda u otros
-   elementos). will-change las deja en su propia capa para que el compositor las aplique sin repintar. */
+   elementos). */
 .cutin__body {
   position: absolute;
   inset: 0;
-  will-change: transform;
   mask-image: linear-gradient(
     90deg,
     transparent 0,
@@ -35,7 +34,6 @@
 }
 /* Fundido inferior: hacia abajo el avatar se vuelve transparente y deja ver lo que hay detrás. */
 .cutin[data-fade] {
-  will-change: transform;
   mask-image: linear-gradient(
     #000 var(--fade-from, var(--box-fade-from)),
     transparent var(--fade-to, var(--box-fade-to))
@@ -117,11 +115,11 @@
 }
 /* Entrada: se reproduce una vez y se oculta al llegar el reposo (--t = lo que dura la entrada). */
 .cutin__clip--entry {
-  animation: avatar-gone 1ms linear var(--t, 1s) forwards;
+  animation: avatar-gone 1ms step-end var(--t, 1s) forwards;
 }
 .cutin__clip--rest {
   opacity: 0;
-  animation: avatar-show 1ms linear var(--t, 1s) forwards;
+  animation: avatar-show 1ms step-start var(--t, 1s) forwards;
 }
 .cutin__clip--rest .cutin__strip {
   animation-direction: alternate;
@@ -133,22 +131,29 @@
 }
 /* Hero: dos reposos de 3,2 s, consecutivos, forman un bucle suave de 6,4 s. */
 .cutin__clip--hero-entry {
-  animation: avatar-gone 1ms linear 0.8s forwards;
+  animation: avatar-gone 1ms step-end 0.8s forwards;
 }
 .cutin__clip--hero-a,
 .cutin__clip--hero-b {
   opacity: 0;
 }
 .cutin__clip--hero-a {
-  animation: avatar-rest-a 6.4s linear 0.8s infinite;
+  animation: avatar-rest-a 6.4s step-end 0.8s infinite;
 }
 .cutin__clip--hero-b {
-  animation: avatar-rest-b 6.4s linear 0.8s infinite;
+  animation: avatar-rest-b 6.4s step-end 0.8s infinite;
 }
 .cutin__clip--hero-a .cutin__strip,
 .cutin__clip--hero-b .cutin__strip {
   animation-direction: normal;
 }
+
+/* La entrada termina en su último cuadro mientras las tiras de reposo se decodifican. */
+.cutin[data-rest-pending] .cutin__clip,
+.cutin[data-rest-pending] :is(.cutin__clip--rest, .cutin__clip--hero-a, .cutin__clip--hero-b) .cutin__strip {
+  animation-play-state: paused !important;
+}
+
 /* Difuminado inferior para páginas cuyo recorte llega al borde de la sección. */
 .cutin-fade {
   position: absolute;
@@ -177,11 +182,11 @@
 @keyframes avatar-gone { to { opacity: 0; } }
 @keyframes avatar-show { to { opacity: 1; } }
 @keyframes avatar-rest-a {
-  0%, 49.9% { opacity: 1; }
+  0% { opacity: 1; }
   50%, 100% { opacity: 0; }
 }
 @keyframes avatar-rest-b {
-  0%, 49.9% { opacity: 0; }
+  0% { opacity: 0; }
   50%, 100% { opacity: 1; }
 }
 @keyframes avatar-walk {
@@ -352,14 +357,16 @@
   }
 }
 
-/* Solo el retrato espera sus tiras. El contenido y el barrido se muestran al navegar. */
+/* Una sola revelación para la interfaz y el retrato, también al navegar entre páginas. */
 @media (scripting: enabled) {
-  html[data-loading] .cutin {
+  html[data-loading] :is(.app, .skip) {
     visibility: hidden;
   }
 
-  html[data-loading] .cutin,
-  html[data-loading] .cutin * {
+  html[data-loading] .page-enter,
+  html[data-loading] .page-enter *,
+  html[data-loading] .page-enter *::before,
+  html[data-loading] .page-enter *::after {
     animation-play-state: paused !important;
   }
 }
